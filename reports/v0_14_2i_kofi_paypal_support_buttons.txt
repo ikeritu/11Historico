@@ -1,0 +1,12 @@
+﻿v0.14.2i - Ko-fi + PayPal support buttons
+Generado: 2026-06-13 22:24:22
+
+Backup creado en: D:\Proyectos\⚽ Futbol11\backup_before_v0_14_2i_20260613_222422
+OK: SupportButton.tsx actualizado.
+OK: SupportButton.css actualizado.
+OK: Ko-fi URL: https://ko-fi.com/I6M721AN3H
+OK: PayPal URL: https://www.paypal.com/paypalme/ikeritus
+OK: no se ha tocado leagueSimulator.ts.
+
+Ejecuta ahora:
+npm.cmd run build

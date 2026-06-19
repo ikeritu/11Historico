@@ -1,0 +1,11 @@
+﻿v0.14.2b - Rollback seguro del parche Copa v0.14.2
+Generado: 2026-06-13 00:43:54
+
+Restaurado desde: D:\Proyectos\⚽ Futbol11\backup_before_v0_14_2_20260613_003801\leagueSimulator.ts
+Archivo restaurado: D:\Proyectos\⚽ Futbol11\src\simulation\leagueSimulator.ts
+Copia del archivo roto guardada en: D:\Proyectos\⚽ Futbol11\backup_broken_v0_14_2_before_rollback_20260613_004354
+
+Estado esperado:
+- Build vuelve a pasar.
+- v0.14.1 se mantiene.
+- v0.14.2 queda revertido.

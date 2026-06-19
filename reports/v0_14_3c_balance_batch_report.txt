@@ -1,0 +1,63 @@
+﻿v0.14.3c - Simulacion batch 10 temporadas + control de realismo
+Generado: 2026-06-14 00:00:44
+
+Runs: 10
+Rating auditado: Overall 90 | ATA 93 | DEF 93 | CTRL 93 | POR 95
+
+Regla de decision:
+- Si Oviedo / Alaves / Osasuna bajan mucho: normal.
+- Si Villarreal desciende >=2/10 o zona 17-20 >=4/10: ajustar.
+- Si Villarreal desciende 1/10 o zona 17-20 2-3/10: vigilar, no ajustar.
+- Si Girona baja 2-3 veces en 10: tolerable.
+- Si Madrid/Barca copan siempre la Copa: retocar.
+
+Resumen de alertas:
+- VIGILAR: Villarreal tiene algun susto, pero no exige ajuste todavia.
+- OK: Girona baja 0-3 veces en 10; tolerable segun regla.
+- OK: Copa no esta monopolizada por Madrid/Barca.
+
+Descensos por equipo vigilado:
+- Real Oviedo: 8/10
+- Deportivo Alaves: 4/10
+- CA Osasuna: 5/10
+- Villarreal CF: 1/10
+- Girona FC: 2/10
+- Sevilla FC: 3/10
+- Valencia CF: 1/10
+
+Villarreal en zona peligrosa 17-20: 1/10
+Villarreal descensos: 1/10
+Girona descensos: 2/10
+Copas ganadas por Madrid/Barca: 1/10
+Copas ganadas por elite ampliada Madrid/Barca/Athletic/Atletico: 5/10
+Copas ganadas por campeon pequeno vigilado: 0/10
+
+Campeones de Copa:
+- Athletic Club Historico: 3
+- Burgos Club de Futbol: 1
+- CA Osasuna: 1
+- Villarreal CF: 1
+- Atletico de Madrid: 1
+- Levante UD: 1
+- Real Betis: 1
+- Real Madrid: 1
+
+Subcampeones de Copa:
+- Real Betis: 2
+- Atletico de Madrid: 1
+- Athletic Club Historico: 3
+- Real Sociedad: 2
+- Celta: 1
+- Rayo Vallecano: 1
+
+Detalle por simulacion:
+- Sim 1 | Liga Athletic: 3 (66 pts) | Copa: Athletic Club Historico vs Real Betis | Villarreal: 12 | Girona: 15 | Descenso: Sevilla FC, CA Osasuna, Deportivo Alaves
+- Sim 2 | Liga Athletic: 3 (70 pts) | Copa: Burgos Club de Futbol vs Atletico de Madrid | Villarreal: 11 | Girona: 9 | Descenso: Levante UD, CA Osasuna, Real Oviedo
+- Sim 3 | Liga Athletic: 3 (70 pts) | Copa: CA Osasuna vs Athletic Club Historico | Villarreal: 12 | Girona: 17 | Descenso: Deportivo Alaves, Real Oviedo, CA Osasuna
+- Sim 4 | Liga Athletic: 1 (78 pts) | Copa: Athletic Club Historico vs Real Sociedad | Villarreal: 15 | Girona: 13 | Descenso: CA Osasuna, RCD Mallorca, Real Oviedo
+- Sim 5 | Liga Athletic: 2 (73 pts) | Copa: Athletic Club Historico vs Celta | Villarreal: 15 | Girona: 19 | Descenso: Deportivo Alaves, Girona FC, Real Oviedo
+- Sim 6 | Liga Athletic: 2 (74 pts) | Copa: Villarreal CF vs Real Betis | Villarreal: 16 | Girona: 11 | Descenso: RCD Mallorca, Rayo Vallecano, CA Osasuna
+- Sim 7 | Liga Athletic: 4 (68 pts) | Copa: Atletico de Madrid vs Real Sociedad | Villarreal: 14 | Girona: 12 | Descenso: Deportivo Alaves, Real Oviedo, Sevilla FC
+- Sim 8 | Liga Athletic: 1 (82 pts) | Copa: Levante UD vs Athletic Club Historico | Villarreal: 18 | Girona: 7 | Descenso: Villarreal CF, Getafe CF, Real Oviedo
+- Sim 9 | Liga Athletic: 3 (67 pts) | Copa: Real Betis vs Rayo Vallecano | Villarreal: 8 | Girona: 19 | Descenso: Valencia CF, Girona FC, Real Oviedo
+- Sim 10 | Liga Athletic: 3 (68 pts) | Copa: Real Madrid vs Athletic Club Historico | Villarreal: 10 | Girona: 13 | Descenso: Sevilla FC, Getafe CF, Real Oviedo

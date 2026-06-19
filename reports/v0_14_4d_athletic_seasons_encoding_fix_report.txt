@@ -1,0 +1,18 @@
+﻿v0.14.4d - Fix quirÃºrgico encoding en athletic/seasons.ts
+Generado: 2026-06-14 01:35:13
+
+Backup creado en: D:\Proyectos\⚽ Futbol11\backup_before_v0_14_4d_20260614_013513
+OK: src\data\athletic\seasons.ts reemplazado por versiÃ³n corregida.
+
+Correcciones aplicadas:
+- JoaquÃƒÂ­n CaparrÃƒÂ³s -> JoaquÃ­n CaparrÃ³s
+- BeÃƒÂ±at -> BeÃ±at
+- JosÃƒÂ© ÃƒÂngel Ziganda -> JosÃ© Ãngel Ziganda
+- IÃƒÂ±igo Martinez -> IÃ±igo MartÃ­nez
+- IÃƒÂ±aki Williams -> IÃ±aki Williams
+- BeÃƒÂ±at Prados -> BeÃ±at Prados
+
+OK: no quedan patrones mojibake conocidos en seasons.ts.
+
+Ejecuta ahora:
+npm.cmd run build

@@ -1,0 +1,103 @@
+v0.14.0 - BALANCE JUGABLE FINAL HISTORICO
+Generado: 12/6/2026, 16:51:04
+Proyecto: D:\Proyectos\⚽ Futbol11
+
+RESUMEN BASE
+------------
+Temporadas analizadas: 95
+Temporadas con jugadores: 95
+Jugadores totales: 1552
+Temporadas legendarias: 9
+Temporadas fuertes: 33
+Temporadas medias: 53
+Temporadas bajas: 0
+
+TOP 15 TEMPORADAS MAS FUERTES
+-----------------------------
+1982/83 | tier=LEGENDARIA | top11=84.27 | media=82.80 | 90+=0 | 85+=6 | 80+=13 | jugadores=15
+1942/43 | tier=LEGENDARIA | top11=84.27 | media=82.33 | 90+=1 | 85+=5 | 80+=11 | jugadores=15
+2024/25 | tier=LEGENDARIA | top11=84.27 | media=83.00 | 90+=0 | 85+=5 | 80+=17 | jugadores=17
+1955/56 | tier=LEGENDARIA | top11=84.18 | media=82.27 | 90+=1 | 85+=5 | 80+=11 | jugadores=15
+2025/26 | tier=FUERTE | top11=83.91 | media=82.21 | 90+=0 | 85+=4 | 80+=17 | jugadores=19
+1984/85 | tier=FUERTE | top11=83.82 | media=82.47 | 90+=0 | 85+=4 | 80+=13 | jugadores=15
+1956/57 | tier=FUERTE | top11=83.55 | media=81.60 | 90+=0 | 85+=4 | 80+=11 | jugadores=15
+2022/23 | tier=FUERTE | top11=83.55 | media=82.47 | 90+=0 | 85+=2 | 80+=16 | jugadores=17
+1943/44 | tier=FUERTE | top11=83.27 | media=81.27 | 90+=0 | 85+=3 | 80+=9 | jugadores=15
+2016/17 | tier=FUERTE | top11=83.27 | media=82.27 | 90+=0 | 85+=2 | 80+=14 | jugadores=15
+2019/20 | tier=FUERTE | top11=83.18 | media=81.73 | 90+=0 | 85+=3 | 80+=10 | jugadores=15
+2021/22 | tier=FUERTE | top11=83.18 | media=81.71 | 90+=0 | 85+=2 | 80+=14 | jugadores=17
+2004/05 | tier=FUERTE | top11=83.09 | media=81.80 | 90+=0 | 85+=2 | 80+=12 | jugadores=15
+2018/19 | tier=FUERTE | top11=83.09 | media=81.93 | 90+=0 | 85+=2 | 80+=11 | jugadores=15
+2017/18 | tier=FUERTE | top11=83.00 | media=81.60 | 90+=0 | 85+=2 | 80+=11 | jugadores=15
+
+TOP 15 TEMPORADAS MAS BAJAS
+---------------------------
+1993/94 | tier=LEGENDARIA | top11=78.36 | media=76.17 | 85+=1 | 80+=2 | jugadores=18
+1928/29 | tier=MEDIA | top11=78.82 | media=75.95 | 85+=0 | 80+=6 | jugadores=21
+1962/63 | tier=MEDIA | top11=79.00 | media=78.20 | 85+=0 | 80+=4 | jugadores=15
+1965/66 | tier=MEDIA | top11=79.18 | media=78.07 | 85+=1 | 80+=3 | jugadores=15
+1964/65 | tier=MEDIA | top11=79.18 | media=78.40 | 85+=0 | 80+=4 | jugadores=15
+1997/98 | tier=LEGENDARIA | top11=79.27 | media=75.19 | 85+=1 | 80+=2 | jugadores=26
+1963/64 | tier=MEDIA | top11=79.27 | media=78.47 | 85+=0 | 80+=4 | jugadores=15
+1950/51 | tier=MEDIA | top11=79.45 | media=78.27 | 85+=1 | 80+=6 | jugadores=15
+1952/53 | tier=MEDIA | top11=79.45 | media=78.27 | 85+=0 | 80+=5 | jugadores=15
+1951/52 | tier=MEDIA | top11=79.45 | media=78.40 | 85+=0 | 80+=5 | jugadores=15
+1990/91 | tier=MEDIA | top11=79.64 | media=78.73 | 85+=0 | 80+=5 | jugadores=15
+1961/62 | tier=MEDIA | top11=79.73 | media=78.40 | 85+=0 | 80+=5 | jugadores=15
+1949/50 | tier=MEDIA | top11=79.82 | media=78.13 | 85+=1 | 80+=6 | jugadores=15
+1966/67 | tier=MEDIA | top11=79.82 | media=78.60 | 85+=1 | 80+=6 | jugadores=15
+1989/90 | tier=MEDIA | top11=79.82 | media=79.07 | 85+=0 | 80+=4 | jugadores=15
+
+DISTRIBUCION POR DECADA
+-----------------------
+1928-1930s | temporadas=9 | top11 medio=81.32 | LEG=0 | FUERTE=3 | MEDIA=6 | BAJA=0
+1940s | temporadas=10 | top11 medio=81.94 | LEG=1 | FUERTE=5 | MEDIA=4 | BAJA=0
+1950s | temporadas=10 | top11 medio=81.25 | LEG=1 | FUERTE=2 | MEDIA=7 | BAJA=0
+1970s | temporadas=10 | top11 medio=81.38 | LEG=2 | FUERTE=0 | MEDIA=8 | BAJA=0
+1970s-pre | temporadas=10 | top11 medio=80.10 | LEG=0 | FUERTE=1 | MEDIA=9 | BAJA=0
+1980s | temporadas=10 | top11 medio=81.56 | LEG=1 | FUERTE=3 | MEDIA=6 | BAJA=0
+1990s | temporadas=10 | top11 medio=80.33 | LEG=2 | FUERTE=0 | MEDIA=8 | BAJA=0
+2000s | temporadas=10 | top11 medio=81.56 | LEG=0 | FUERTE=5 | MEDIA=5 | BAJA=0
+2010s | temporadas=10 | top11 medio=82.64 | LEG=1 | FUERTE=9 | MEDIA=0 | BAJA=0
+2020s | temporadas=6 | top11 medio=83.00 | LEG=1 | FUERTE=5 | MEDIA=0 | BAJA=0
+
+SIMULACION DE 10 DRAFTS HISTORICOS
+----------------------------------
+Draft 1: top11 medio=81.89 | LEG=1 | FUERTE=5 | BAJA=0 | repetidas=NO
+  1.2009/10(MEDIA) | 2.1942/43(LEGENDARIA) | 3.2015/16(FUERTE) | 4.1960/61(MEDIA) | 5.1947/48(MEDIA) | 6.1930/31(MEDIA) | 7.2023/24(FUERTE) | 8.1964/65(MEDIA) | 9.1932/33(FUERTE) | 10.2019/20(FUERTE) | 11.2011/12(FUERTE)
+Draft 2: top11 medio=81.79 | LEG=2 | FUERTE=3 | BAJA=0 | repetidas=SI
+  1.1952/53(MEDIA) | 2.2019/20(FUERTE) | 3.1982/83(LEGENDARIA) | 4.1934/35(MEDIA) | 5.1962/63(MEDIA) | 6.1987/88(MEDIA) | 7.2012/13(FUERTE) | 8.1972/73(LEGENDARIA) | 9.1969/70(MEDIA) | 10.2019/20(FUERTE) | 11.1959/60(MEDIA)
+Draft 3: top11 medio=80.78 | LEG=0 | FUERTE=4 | BAJA=0 | repetidas=NO
+  1.1935/36(MEDIA) | 2.1960/61(MEDIA) | 3.1951/52(MEDIA) | 4.2006/07(MEDIA) | 5.1928/29(MEDIA) | 6.2023/24(FUERTE) | 7.1946/47(FUERTE) | 8.1992/93(MEDIA) | 9.1968/69(FUERTE) | 10.1986/87(FUERTE) | 11.1963/64(MEDIA)
+Draft 4: top11 medio=81.65 | LEG=0 | FUERTE=5 | BAJA=0 | repetidas=NO
+  1.1970/71(MEDIA) | 2.1953/54(MEDIA) | 3.1946/47(FUERTE) | 4.2025/26(FUERTE) | 5.1952/53(MEDIA) | 6.1974/75(MEDIA) | 7.2007/08(FUERTE) | 8.1978/79(MEDIA) | 9.1945/46(FUERTE) | 10.1940/41(MEDIA) | 11.2022/23(FUERTE)
+Draft 5: top11 medio=81.24 | LEG=2 | FUERTE=3 | BAJA=0 | repetidas=NO
+  1.1981/82(MEDIA) | 2.2003/04(FUERTE) | 3.2000/01(MEDIA) | 4.1965/66(MEDIA) | 5.1928/29(MEDIA) | 6.1933/34(FUERTE) | 7.1942/43(LEGENDARIA) | 8.1939/40(MEDIA) | 9.2013/14(LEGENDARIA) | 10.1953/54(MEDIA) | 11.1931/32(FUERTE)
+Draft 6: top11 medio=81.39 | LEG=1 | FUERTE=4 | BAJA=0 | repetidas=NO
+  1.1988/89(MEDIA) | 2.1954/55(MEDIA) | 3.1948/49(MEDIA) | 4.1952/53(MEDIA) | 5.2012/13(FUERTE) | 6.2017/18(FUERTE) | 7.1990/91(MEDIA) | 8.1984/85(FUERTE) | 9.1976/77(LEGENDARIA) | 10.1944/45(FUERTE) | 11.1930/31(MEDIA)
+Draft 7: top11 medio=82.11 | LEG=2 | FUERTE=4 | BAJA=0 | repetidas=NO
+  1.1970/71(MEDIA) | 2.1929/30(MEDIA) | 3.1973/74(MEDIA) | 4.2024/25(LEGENDARIA) | 5.2008/09(FUERTE) | 6.2007/08(FUERTE) | 7.1953/54(MEDIA) | 8.1942/43(LEGENDARIA) | 9.1948/49(MEDIA) | 10.1943/44(FUERTE) | 11.2025/26(FUERTE)
+Draft 8: top11 medio=80.65 | LEG=0 | FUERTE=2 | BAJA=0 | repetidas=NO
+  1.1967/68(MEDIA) | 2.1939/40(MEDIA) | 3.2006/07(MEDIA) | 4.1966/67(MEDIA) | 5.1975/76(MEDIA) | 6.1945/46(FUERTE) | 7.1964/65(MEDIA) | 8.1989/90(MEDIA) | 9.1986/87(FUERTE) | 10.1947/48(MEDIA) | 11.1994/95(MEDIA)
+Draft 9: top11 medio=81.11 | LEG=1 | FUERTE=1 | BAJA=0 | repetidas=NO
+  1.2009/10(MEDIA) | 2.1990/91(MEDIA) | 3.1998/99(MEDIA) | 4.1996/97(MEDIA) | 5.1948/49(MEDIA) | 6.1993/94(LEGENDARIA) | 7.2025/26(FUERTE) | 8.1958/59(MEDIA) | 9.1953/54(MEDIA) | 10.1977/78(MEDIA) | 11.1969/70(MEDIA)
+Draft 10: top11 medio=81.71 | LEG=2 | FUERTE=3 | BAJA=0 | repetidas=NO
+  1.1943/44(FUERTE) | 2.1974/75(MEDIA) | 3.1971/72(MEDIA) | 4.2021/22(FUERTE) | 5.1993/94(LEGENDARIA) | 6.1985/86(FUERTE) | 7.1942/43(LEGENDARIA) | 8.2009/10(MEDIA) | 9.1983/84(MEDIA) | 10.1962/63(MEDIA) | 11.1969/70(MEDIA)
+
+LECTURA DE BALANCE
+------------------
+Promedio LEG por draft: 1.10
+Promedio FUERTE por draft: 3.40
+Promedio BAJA por draft: 0.00
+Drafts con temporadas repetidas: 1/10
+Drafts potencialmente demasiado fuertes: 0/10
+Drafts potencialmente demasiado flojos: 0/10
+
+RECOMENDACION
+-------------
+RECOMENDACION: balance historico aceptable. No tocar ratings ni plantillas.
+Nota: hay repeticion exacta de temporadas dentro del mismo draft. Revisar selector si se considera problema.
+
+Siguiente paso sugerido:
+- Si el informe sale aceptable: congelar v0.14.0.
+- Si salen drafts demasiado fuertes/flojos: preparar v0.14.1 con ponderacion de aparicion por tier.

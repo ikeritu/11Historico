@@ -1,0 +1,15 @@
+v0.13.10 - CORRECCION FINA POSICIONES / RATING JUMPS
+Generado: 12/6/2026, 15:36:37
+
+POSICION_OK: "CAI" -> "LI" | ocurrencias=9
+POSICION_OK: "CAD" -> "LD" | ocurrencias=11
+RATING_OK: 1983/84 | Noriega | 70 -> 81
+RATING_OK: 1983/84 | Urkiaga | 75 -> 82
+RATING_OK: 1983/84 | Urtubi | 75 -> 82
+RATING_OK: 1983/84 | Gallego | 70 -> 79
+RATING_OK: 1993/94 | Andrinua | 76 -> 82
+RATING_OK: 2011/12 | Koikili | 70 -> 76
+RATING_OK: 2015/16 | Iturraspe | 75 -> 80
+RATING_OK: 2023/24 | Yeray | 76 -> 82
+NO_ENCONTRADO_JUGADOR: 2023/24 | Dani GarcÃ­a
+RATING_OK: 2023/24 | Jauregizar | 70 -> 76

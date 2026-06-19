@@ -1,0 +1,16 @@
+v0.14.4 - Fix mojibake en nombres y textos
+Generado: 2026-06-13T22:24:11.123Z
+
+Archivos escaneados: 48
+Archivos modificados: 0
+Reemplazos totales: 0
+
+No se modifico ningun archivo. No se encontraron patrones mojibake conocidos.
+
+OK: no quedan patrones sospechosos conocidos en src.
+
+Backup:
+D:\Proyectos\⚽ Futbol11\backup_before_v0_14_4_20260614_002410
+
+Ejecuta ahora:
+npm.cmd run build

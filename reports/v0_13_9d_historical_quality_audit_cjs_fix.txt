@@ -1,0 +1,90 @@
+v0.13.9d STANDALONE - AUDITORIA DE CALIDAD HISTORICA / CJS FIX
+Generado: 12/6/2026, 16:43:16
+Proyecto: D:\Proyectos\⚽ Futbol11
+
+RESUMEN
+-------
+Temporadas analizadas: 95
+Jugadores analizados: 1552
+
+TAMANOS DE PLANTILLA
+--------------------
+GRANDE: 1934/35 tiene 24 jugadores
+GRANDE: 1935/36 tiene 24 jugadores
+GRANDE: 1983/84 tiene 26 jugadores
+GRANDE: 1997/98 tiene 26 jugadores
+GRANDE: 2011/12 tiene 28 jugadores
+GRANDE: 2015/16 tiene 26 jugadores
+GRANDE: 2023/24 tiene 28 jugadores
+
+RATINGS EXTREMOS
+----------------
+OK: no hay jugadores por debajo de 60 ni por encima de 94.
+
+JUGADORES 90+
+-------------
+1942/43 | Zarra | 90
+1955/56 | Garay | 90
+1972/73 | Iribar | 90
+1976/77 | Iribar | 90
+1993/94 | Julen Guerrero | 90
+1997/98 | Guerrero | 90
+
+TEMPORADAS CON MUCHOS RATINGS ALTOS
+-----------------------------------
+1931/32 | media=79.76 | 85+=0 | 80+=11 | jugadores=17
+1932/33 | media=79.00 | 85+=0 | 80+=11 | jugadores=19
+1933/34 | media=79.56 | 85+=0 | 80+=11 | jugadores=18
+1942/43 | media=82.33 | 85+=5 | 80+=11 | jugadores=15
+1955/56 | media=82.27 | 85+=5 | 80+=11 | jugadores=15
+1956/57 | media=81.60 | 85+=4 | 80+=11 | jugadores=15
+1982/83 | media=82.80 | 85+=6 | 80+=13 | jugadores=15
+1984/85 | media=82.47 | 85+=4 | 80+=13 | jugadores=15
+1985/86 | media=81.73 | 85+=2 | 80+=13 | jugadores=15
+1986/87 | media=80.60 | 85+=0 | 80+=12 | jugadores=15
+2001/02 | media=80.27 | 85+=1 | 80+=11 | jugadores=15
+2003/04 | media=81.40 | 85+=1 | 80+=12 | jugadores=15
+2004/05 | media=81.80 | 85+=2 | 80+=12 | jugadores=15
+2007/08 | media=80.73 | 85+=0 | 80+=12 | jugadores=15
+2010/11 | media=81.13 | 85+=3 | 80+=12 | jugadores=15
+2012/13 | media=81.47 | 85+=0 | 80+=13 | jugadores=15
+2014/15 | media=81.40 | 85+=1 | 80+=12 | jugadores=15
+2016/17 | media=82.27 | 85+=2 | 80+=14 | jugadores=15
+2017/18 | media=81.60 | 85+=2 | 80+=11 | jugadores=15
+2018/19 | media=81.93 | 85+=2 | 80+=11 | jugadores=15
+2021/22 | media=81.71 | 85+=2 | 80+=14 | jugadores=17
+2022/23 | media=82.47 | 85+=2 | 80+=16 | jugadores=17
+2024/25 | media=83.00 | 85+=5 | 80+=17 | jugadores=17
+2025/26 | media=82.21 | 85+=4 | 80+=17 | jugadores=19
+
+TEMPORADAS POTENCIALMENTE SOBREVALORADAS
+----------------------------------------
+1995/96 | media=80.13 | jugadores=15
+1996/97 | media=80.13 | jugadores=15
+2005/06 | media=80.20 | jugadores=15
+2017/18 | media=81.60 | jugadores=15
+
+POSICIONES Y LABELS SOSPECHOSOS
+--------------------------------
+OK: no se detectan posiciones vacias o raras.
+
+NOMBRES DUPLICADOS DENTRO DE LA MISMA TEMPORADA
+-----------------------------------------------
+OK: no hay nombres duplicados dentro de una misma temporada.
+
+SALTOS GRANDES DE RATING POR JUGADOR
+------------------------------------
+OK: no se detectan saltos grandes consecutivos.
+
+RESUMEN POR DECADA
+------------------
+1928-1930s | temporadas=9 | jugadores=178 | media=78.17 | max=84 | 85+=0
+1940s | temporadas=10 | jugadores=150 | media=80.01 | max=90 | 85+=26
+1950s | temporadas=10 | jugadores=150 | media=79.82 | max=90 | 85+=15
+1960s | temporadas=10 | jugadores=150 | media=78.91 | max=89 | 85+=8
+1970s | temporadas=10 | jugadores=151 | media=79.89 | max=90 | 85+=17
+1980s | temporadas=10 | jugadores=161 | media=79.82 | max=88 | 85+=14
+1990s | temporadas=10 | jugadores=164 | media=78.54 | max=90 | 85+=7
+2000s | temporadas=10 | jugadores=153 | media=80.20 | max=86 | 85+=11
+2010s | temporadas=10 | jugadores=178 | media=79.58 | max=88 | 85+=25
+2020s | temporadas=6 | jugadores=117 | media=80.34 | max=88 | 85+=20

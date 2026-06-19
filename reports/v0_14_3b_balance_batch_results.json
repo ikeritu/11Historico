@@ -1,0 +1,432 @@
+﻿{
+  "generatedAt": "2026-06-13T21:41:46.946Z",
+  "runs": 10,
+  "teamRating": {
+    "attack": 93,
+    "defense": 93,
+    "control": 93,
+    "physical": 90,
+    "mentality": 90,
+    "goalkeeping": 95,
+    "overall": 90,
+    "profileLabel": "Audit batch rating"
+  },
+  "results": [
+    {
+      "run": 1,
+      "seed": 144009,
+      "leaguePosition": 2,
+      "points": 71,
+      "cupStatus": "eliminated",
+      "cupChampion": "Villarreal CF",
+      "cupRunnerUp": "FC Barcelona",
+      "relegated": [
+        {
+          "teamId": "deportivo_alaves",
+          "teamName": "Deportivo Alav├®s",
+          "points": 35,
+          "goalDifference": -13
+        },
+        {
+          "teamId": "girona_fc",
+          "teamName": "Girona FC",
+          "points": 32,
+          "goalDifference": -16
+        },
+        {
+          "teamId": "real_oviedo",
+          "teamName": "Real Oviedo",
+          "points": 19,
+          "goalDifference": -36
+        }
+      ],
+      "watchedPositions": {
+        "Villarreal": 12,
+        "Girona": 19,
+        "Sevilla": 11,
+        "Valencia": 9,
+        "Oviedo": 20,
+        "Alaves": 0,
+        "Osasuna": 13
+      }
+    },
+    {
+      "run": 2,
+      "seed": 145018,
+      "leaguePosition": 4,
+      "points": 71,
+      "cupStatus": "eliminated",
+      "cupChampion": "Club Deportivo Numancia de Soria",
+      "cupRunnerUp": "FC Barcelona",
+      "relegated": [
+        {
+          "teamId": "ca_osasuna",
+          "teamName": "CA Osasuna",
+          "points": 28,
+          "goalDifference": -21
+        },
+        {
+          "teamId": "rcd_espanyol",
+          "teamName": "RCD Espanyol",
+          "points": 27,
+          "goalDifference": -20
+        },
+        {
+          "teamId": "real_oviedo",
+          "teamName": "Real Oviedo",
+          "points": 20,
+          "goalDifference": -32
+        }
+      ],
+      "watchedPositions": {
+        "Villarreal": 12,
+        "Girona": 16,
+        "Sevilla": 7,
+        "Valencia": 10,
+        "Oviedo": 20,
+        "Alaves": 0,
+        "Osasuna": 18
+      }
+    },
+    {
+      "run": 3,
+      "seed": 146027,
+      "leaguePosition": 3,
+      "points": 72,
+      "cupStatus": "eliminated",
+      "cupChampion": "Deportivo Alav├®s",
+      "cupRunnerUp": "Athletic Club Hist├â┬│rico",
+      "relegated": [
+        {
+          "teamId": "ca_osasuna",
+          "teamName": "CA Osasuna",
+          "points": 30,
+          "goalDifference": -20
+        },
+        {
+          "teamId": "sevilla_fc",
+          "teamName": "Sevilla FC",
+          "points": 29,
+          "goalDifference": -18
+        },
+        {
+          "teamId": "real_oviedo",
+          "teamName": "Real Oviedo",
+          "points": 18,
+          "goalDifference": -33
+        }
+      ],
+      "watchedPositions": {
+        "Villarreal": 14,
+        "Girona": 16,
+        "Sevilla": 19,
+        "Valencia": 7,
+        "Oviedo": 20,
+        "Alaves": 0,
+        "Osasuna": 18
+      }
+    },
+    {
+      "run": 4,
+      "seed": 147036,
+      "leaguePosition": 1,
+      "points": 79,
+      "cupStatus": "won",
+      "cupChampion": "Athletic Club Hist├â┬│rico",
+      "cupRunnerUp": "RCD Mallorca",
+      "relegated": [
+        {
+          "teamId": "girona_fc",
+          "teamName": "Girona FC",
+          "points": 26,
+          "goalDifference": -24
+        },
+        {
+          "teamId": "deportivo_alaves",
+          "teamName": "Deportivo Alav├®s",
+          "points": 26,
+          "goalDifference": -26
+        },
+        {
+          "teamId": "ca_osasuna",
+          "teamName": "CA Osasuna",
+          "points": 20,
+          "goalDifference": -28
+        }
+      ],
+      "watchedPositions": {
+        "Villarreal": 13,
+        "Girona": 18,
+        "Sevilla": 17,
+        "Valencia": 8,
+        "Oviedo": 16,
+        "Alaves": 0,
+        "Osasuna": 20
+      }
+    },
+    {
+      "run": 5,
+      "seed": 148045,
+      "leaguePosition": 4,
+      "points": 71,
+      "cupStatus": "won",
+      "cupChampion": "Athletic Club Hist├â┬│rico",
+      "cupRunnerUp": "RCD Mallorca",
+      "relegated": [
+        {
+          "teamId": "rayo_vallecano",
+          "teamName": "Rayo Vallecano",
+          "points": 30,
+          "goalDifference": -14
+        },
+        {
+          "teamId": "ca_osasuna",
+          "teamName": "CA Osasuna",
+          "points": 30,
+          "goalDifference": -16
+        },
+        {
+          "teamId": "real_oviedo",
+          "teamName": "Real Oviedo",
+          "points": 19,
+          "goalDifference": -38
+        }
+      ],
+      "watchedPositions": {
+        "Villarreal": 15,
+        "Girona": 12,
+        "Sevilla": 8,
+        "Valencia": 10,
+        "Oviedo": 20,
+        "Alaves": 0,
+        "Osasuna": 19
+      }
+    },
+    {
+      "run": 6,
+      "seed": 149054,
+      "leaguePosition": 3,
+      "points": 73,
+      "cupStatus": "eliminated",
+      "cupChampion": "Real Sociedad",
+      "cupRunnerUp": "Real Madrid",
+      "relegated": [
+        {
+          "teamId": "deportivo_alaves",
+          "teamName": "Deportivo Alav├®s",
+          "points": 30,
+          "goalDifference": -18
+        },
+        {
+          "teamId": "real_oviedo",
+          "teamName": "Real Oviedo",
+          "points": 19,
+          "goalDifference": -30
+        },
+        {
+          "teamId": "ca_osasuna",
+          "teamName": "CA Osasuna",
+          "points": 19,
+          "goalDifference": -31
+        }
+      ],
+      "watchedPositions": {
+        "Villarreal": 13,
+        "Girona": 17,
+        "Sevilla": 15,
+        "Valencia": 8,
+        "Oviedo": 19,
+        "Alaves": 0,
+        "Osasuna": 20
+      }
+    },
+    {
+      "run": 7,
+      "seed": 150063,
+      "leaguePosition": 5,
+      "points": 68,
+      "cupStatus": "eliminated",
+      "cupChampion": "Real Betis",
+      "cupRunnerUp": "Real Madrid",
+      "relegated": [
+        {
+          "teamId": "real_oviedo",
+          "teamName": "Real Oviedo",
+          "points": 29,
+          "goalDifference": -20
+        },
+        {
+          "teamId": "sevilla_fc",
+          "teamName": "Sevilla FC",
+          "points": 26,
+          "goalDifference": -28
+        },
+        {
+          "teamId": "ca_osasuna",
+          "teamName": "CA Osasuna",
+          "points": 23,
+          "goalDifference": -27
+        }
+      ],
+      "watchedPositions": {
+        "Villarreal": 17,
+        "Girona": 9,
+        "Sevilla": 19,
+        "Valencia": 7,
+        "Oviedo": 18,
+        "Alaves": 0,
+        "Osasuna": 20
+      }
+    },
+    {
+      "run": 8,
+      "seed": 151072,
+      "leaguePosition": 1,
+      "points": 78,
+      "cupStatus": "eliminated",
+      "cupChampion": "RCD Espanyol",
+      "cupRunnerUp": "Athletic Club Hist├â┬│rico",
+      "relegated": [
+        {
+          "teamId": "getafe_cf",
+          "teamName": "Getafe CF",
+          "points": 31,
+          "goalDifference": -16
+        },
+        {
+          "teamId": "sevilla_fc",
+          "teamName": "Sevilla FC",
+          "points": 31,
+          "goalDifference": -17
+        },
+        {
+          "teamId": "real_oviedo",
+          "teamName": "Real Oviedo",
+          "points": 18,
+          "goalDifference": -36
+        }
+      ],
+      "watchedPositions": {
+        "Villarreal": 13,
+        "Girona": 7,
+        "Sevilla": 19,
+        "Valencia": 12,
+        "Oviedo": 20,
+        "Alaves": 0,
+        "Osasuna": 16
+      }
+    },
+    {
+      "run": 9,
+      "seed": 152081,
+      "leaguePosition": 3,
+      "points": 69,
+      "cupStatus": "eliminated",
+      "cupChampion": "Real Betis",
+      "cupRunnerUp": "RCD Mallorca",
+      "relegated": [
+        {
+          "teamId": "elche_cf",
+          "teamName": "Elche CF",
+          "points": 29,
+          "goalDifference": -19
+        },
+        {
+          "teamId": "levante_ud",
+          "teamName": "Levante UD",
+          "points": 27,
+          "goalDifference": -22
+        },
+        {
+          "teamId": "real_oviedo",
+          "teamName": "Real Oviedo",
+          "points": 22,
+          "goalDifference": -34
+        }
+      ],
+      "watchedPositions": {
+        "Villarreal": 8,
+        "Girona": 10,
+        "Sevilla": 15,
+        "Valencia": 12,
+        "Oviedo": 20,
+        "Alaves": 0,
+        "Osasuna": 16
+      }
+    },
+    {
+      "run": 10,
+      "seed": 153090,
+      "leaguePosition": 4,
+      "points": 70,
+      "cupStatus": "eliminated",
+      "cupChampion": "RCD Mallorca",
+      "cupRunnerUp": "Athletic Club Hist├â┬│rico",
+      "relegated": [
+        {
+          "teamId": "ca_osasuna",
+          "teamName": "CA Osasuna",
+          "points": 30,
+          "goalDifference": -19
+        },
+        {
+          "teamId": "villarreal_cf",
+          "teamName": "Villarreal CF",
+          "points": 28,
+          "goalDifference": -17
+        },
+        {
+          "teamId": "real_oviedo",
+          "teamName": "Real Oviedo",
+          "points": 15,
+          "goalDifference": -43
+        }
+      ],
+      "watchedPositions": {
+        "Villarreal": 19,
+        "Girona": 9,
+        "Sevilla": 16,
+        "Valencia": 6,
+        "Oviedo": 20,
+        "Alaves": 0,
+        "Osasuna": 18
+      }
+    }
+  ],
+  "summary": {
+    "relegationCounts": {
+      "Real Oviedo": 9,
+      "Deportivo Alav├â┬®s": 0,
+      "CA Osasuna": 7,
+      "Villarreal CF": 1,
+      "Girona FC": 2,
+      "Sevilla FC": 3,
+      "Valencia CF": 0
+    },
+    "cupChampionCounts": {
+      "Villarreal CF": 1,
+      "Club Deportivo Numancia de Soria": 1,
+      "Deportivo Alav├®s": 1,
+      "Athletic Club Hist├â┬│rico": 2,
+      "Real Sociedad": 1,
+      "Real Betis": 2,
+      "RCD Espanyol": 1,
+      "RCD Mallorca": 1
+    },
+    "cupRunnerUpCounts": {
+      "FC Barcelona": 2,
+      "Athletic Club Hist├â┬│rico": 3,
+      "RCD Mallorca": 3,
+      "Real Madrid": 2
+    },
+    "villarrealDanger": 2,
+    "villarrealRelegated": 1,
+    "gironaRelegated": 2,
+    "madridBarcaCupWins": 0,
+    "alerts": [
+      "AJUSTAR: Villarreal aparece demasiado abajo o desciende demasiadas veces.",
+      "OK: Girona baja 0-3 veces en 10; tolerable segun regla.",
+      "OK: Copa no esta monopolizada por Madrid/Barca."
+    ]
+  }
+}

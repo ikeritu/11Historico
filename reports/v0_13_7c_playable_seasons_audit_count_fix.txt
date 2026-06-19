@@ -1,0 +1,39 @@
+﻿v0.13.7c - AUDITORIA CORREGIDA DE TEMPORADAS JUGABLES
+Generado: 2026-06-12 01:13:34
+Proyecto: D:\Proyectos\⚽ Futbol11
+
+NOTA
+----
+Esta version corrige el falso positivo de duplicados de v0.13.7b.
+Ahora solo cuenta cabeceras de temporada, no el campo season de cada jugador.
+
+RESUMEN
+-------
+Temporadas catalogadas: 95
+Temporadas con status playable en catalogo: 95
+Temporadas con status planned en catalogo: 0
+Temporadas con plantilla en seasons.ts: 95
+Duplicados reales de temporada en seasons.ts: 0
+Catalogo playable sin plantilla: 0
+Plantilla en seasons.ts pero catalogo no playable: 0
+
+DUPLICADOS REALES EN seasons.ts
+-------------------------------
+OK: no se han detectado duplicados reales de temporada.
+
+TEMPORADAS ESPERADAS QUE AUN NO TIENEN PLANTILLA
+-----------------------------------------------
+OK: todas las temporadas esperadas tienen plantilla.
+
+REVISION BLOQUE 2020/21-2025/26
+--------------------------------
+2020/21 | seasons.ts=True | catalogo=playable
+2021/22 | seasons.ts=True | catalogo=playable
+2022/23 | seasons.ts=True | catalogo=playable
+2023/24 | seasons.ts=True | catalogo=playable
+2024/25 | seasons.ts=True | catalogo=playable
+2025/26 | seasons.ts=True | catalogo=playable
+
+RECOMENDACION
+-------------
+El bloque 2020s ya esta completo a nivel de plantillas.

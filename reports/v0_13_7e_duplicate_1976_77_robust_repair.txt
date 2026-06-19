@@ -1,0 +1,13 @@
+﻿v0.13.7e - REPARACION ROBUSTA DUPLICADO 1976/77
+Generado: 2026-06-12 00:56:13
+Proyecto: D:\Proyectos\⚽ Futbol11
+Backup: D:\Proyectos\⚽ Futbol11\backup_before_v0_13_7e_20260612_005612
+
+Bloques 1976/77 detectados: 2
+
+Bloque #1: linea=749, jugadores=16, coach=Koldo Aguirre, caracteres=3675
+Bloque #2: linea=2035, jugadores=15, coach=Koldo Aguirre, caracteres=3965
+
+Se conserva: linea=749, jugadores=16, coach=Koldo Aguirre, caracteres=3675
+Se eliminan:
+- linea=2035, jugadores=15, coach=Koldo Aguirre, caracteres=3965

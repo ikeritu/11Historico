@@ -1,0 +1,15 @@
+v0.14.4b - Normalizador defensivo de nombres en runtime
+Generado: 2026-06-13T22:52:25.315Z
+
+Util creado: src/utils/textEncoding.ts
+Candidatos makePlayer/makeCoach encontrados: src/data/athletic/seasons.ts
+Archivos modificados: 1
+- src/data/athletic/seasons.ts
+
+Si el build falla, restaura desde:
+D:\Proyectos\⚽ Futbol11\backup_before_v0_14_4b_20260614_005224
+
+Despues de aplicar:
+1. npm.cmd run build
+2. localStorage.clear() en el navegador
+3. partida nueva

@@ -1,0 +1,11 @@
+﻿v0.14.2g - Ko-fi visual fix
+Generado: 2026-06-13 02:22:32
+
+Backup creado en: D:\Proyectos\⚽ Futbol11\backup_before_v0_14_2g_20260613_022232
+OK: SupportButton.tsx actualizado.
+OK: SupportButton.css actualizado.
+OK: eliminado icono/emoji que salia como mojibake.
+OK: tarjeta Ko-fi limitada a max 720px y centrada.
+
+Ejecuta ahora:
+npm.cmd run build

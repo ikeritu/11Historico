@@ -1,0 +1,58 @@
+﻿v0.14.3b - Simulacion batch 10 temporadas + control de realismo
+Generado: 2026-06-13 23:41:47
+
+Runs: 10
+Rating auditado: Overall 90 | ATA 93 | DEF 93 | CTRL 93 | POR 95
+
+Regla de decision:
+- Si Oviedo / Alaves / Osasuna bajan mucho: normal.
+- Si Villarreal baja demasiadas veces: ajuste.
+- Si Girona baja 2-3 veces en 10: tolerable.
+- Si Madrid/Barca copan siempre la Copa: retocar.
+
+Resumen de alertas:
+- AJUSTAR: Villarreal aparece demasiado abajo o desciende demasiadas veces.
+- OK: Girona baja 0-3 veces en 10; tolerable segun regla.
+- OK: Copa no esta monopolizada por Madrid/Barca.
+
+Descensos por equipo vigilado:
+- Real Oviedo: 9/10
+- Deportivo Alav├â┬®s: 0/10
+- CA Osasuna: 7/10
+- Villarreal CF: 1/10
+- Girona FC: 2/10
+- Sevilla FC: 3/10
+- Valencia CF: 0/10
+
+Villarreal en zona peligrosa 17-20: 2/10
+Villarreal descensos: 1/10
+Girona descensos: 2/10
+Copas ganadas por Madrid/Barca: 0/10
+
+Campeones de Copa:
+- Villarreal CF: 1
+- Club Deportivo Numancia de Soria: 1
+- Deportivo Alav├®s: 1
+- Athletic Club Hist├â┬│rico: 2
+- Real Sociedad: 1
+- Real Betis: 2
+- RCD Espanyol: 1
+- RCD Mallorca: 1
+
+Subcampeones de Copa:
+- FC Barcelona: 2
+- Athletic Club Hist├â┬│rico: 3
+- RCD Mallorca: 3
+- Real Madrid: 2
+
+Detalle por simulacion:
+- Sim 1 | Liga Athletic: 2Âº (71 pts) | Copa: Villarreal CF vs FC Barcelona | Villarreal: 12Âº | Girona: 19Âº | Descenso: Deportivo Alav├®s, Girona FC, Real Oviedo
+- Sim 2 | Liga Athletic: 4Âº (71 pts) | Copa: Club Deportivo Numancia de Soria vs FC Barcelona | Villarreal: 12Âº | Girona: 16Âº | Descenso: CA Osasuna, RCD Espanyol, Real Oviedo
+- Sim 3 | Liga Athletic: 3Âº (72 pts) | Copa: Deportivo Alav├®s vs Athletic Club Hist├â┬│rico | Villarreal: 14Âº | Girona: 16Âº | Descenso: CA Osasuna, Sevilla FC, Real Oviedo
+- Sim 4 | Liga Athletic: 1Âº (79 pts) | Copa: Athletic Club Hist├â┬│rico vs RCD Mallorca | Villarreal: 13Âº | Girona: 18Âº | Descenso: Girona FC, Deportivo Alav├®s, CA Osasuna
+- Sim 5 | Liga Athletic: 4Âº (71 pts) | Copa: Athletic Club Hist├â┬│rico vs RCD Mallorca | Villarreal: 15Âº | Girona: 12Âº | Descenso: Rayo Vallecano, CA Osasuna, Real Oviedo
+- Sim 6 | Liga Athletic: 3Âº (73 pts) | Copa: Real Sociedad vs Real Madrid | Villarreal: 13Âº | Girona: 17Âº | Descenso: Deportivo Alav├®s, Real Oviedo, CA Osasuna
+- Sim 7 | Liga Athletic: 5Âº (68 pts) | Copa: Real Betis vs Real Madrid | Villarreal: 17Âº | Girona: 9Âº | Descenso: Real Oviedo, Sevilla FC, CA Osasuna
+- Sim 8 | Liga Athletic: 1Âº (78 pts) | Copa: RCD Espanyol vs Athletic Club Hist├â┬│rico | Villarreal: 13Âº | Girona: 7Âº | Descenso: Getafe CF, Sevilla FC, Real Oviedo
+- Sim 9 | Liga Athletic: 3Âº (69 pts) | Copa: Real Betis vs RCD Mallorca | Villarreal: 8Âº | Girona: 10Âº | Descenso: Elche CF, Levante UD, Real Oviedo
+- Sim 10 | Liga Athletic: 4Âº (70 pts) | Copa: RCD Mallorca vs Athletic Club Hist├â┬│rico | Villarreal: 19Âº | Girona: 9Âº | Descenso: CA Osasuna, Villarreal CF, Real Oviedo
