@@ -1,0 +1,250 @@
+/* src/components/FormationSelector.css */
+/* Puedes pegar estos estilos en tu CSS global si todavía no usas CSS por componente. */
+
+.formation-selector {
+  min-height: 100vh;
+  padding: 32px 20px;
+  background:
+    radial-gradient(circle at top left, rgba(220, 20, 40, 0.25), transparent 34%),
+    linear-gradient(135deg, #13070a 0%, #24090f 40%, #090909 100%);
+  color: #ffffff;
+}
+
+.formation-selector-header {
+  max-width: 980px;
+  margin: 0 auto 28px;
+  text-align: center;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: #ffccd3;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.formation-selector-header h1 {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 4rem);
+  line-height: 1;
+}
+
+.formation-selector-intro {
+  max-width: 760px;
+  margin: 16px auto 0;
+  color: #f4d7dc;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.formation-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.formation-card {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(14px);
+}
+
+.formation-card-selected {
+  border-color: rgba(255, 255, 255, 0.65);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.14), 0 18px 50px rgba(0, 0, 0, 0.35);
+}
+
+.formation-card-top {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.formation-card h2 {
+  margin: 0 0 8px;
+  font-size: 1.7rem;
+}
+
+.formation-card p {
+  margin: 0;
+  color: #f0cbd1;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.selected-badge {
+  flex: 0 0 auto;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #a5001a;
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+
+.formation-pitch {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 16px;
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(15, 96, 54, 0.9), rgba(7, 63, 36, 0.9));
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.formation-slot {
+  min-height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: #111111;
+  background: #ffffff;
+}
+
+.formation-slot-goalkeeper {
+  background: #ffe08a;
+}
+
+.formation-slot-defense {
+  background: #d9f1ff;
+}
+
+.formation-slot-midfield {
+  background: #ffffff;
+}
+
+.formation-slot-attack {
+  background: #ffd3d8;
+}
+
+.formation-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.formation-details h3 {
+  margin: 0 0 8px;
+  color: #ffffff;
+  font-size: 0.9rem;
+}
+
+.formation-details ul {
+  margin: 0;
+  padding-left: 18px;
+  color: #f3d9dd;
+  font-size: 0.85rem;
+  line-height: 1.35;
+}
+
+.formation-modifiers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.formation-modifier {
+  padding: 7px 9px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.formation-modifier-positive {
+  background: rgba(91, 220, 135, 0.18);
+  color: #aaffc4;
+}
+
+.formation-modifier-negative {
+  background: rgba(255, 115, 115, 0.18);
+  color: #ffb7b7;
+}
+
+.formation-modifier-neutral {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.formation-select-button {
+  margin-top: auto;
+  width: 100%;
+  border: 0;
+  border-radius: 16px;
+  padding: 13px 16px;
+  background: #ffffff;
+  color: #b00020;
+  font-weight: 950;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.formation-select-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22);
+}
+
+@media (max-width: 1050px) {
+  .formation-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .formation-selector {
+    padding: 24px 12px;
+  }
+
+  .formation-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .formation-details {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* v0.12.15 â€” Menu desplegable de alineaciones */
+.formation-quick-select {
+  max-width: 520px;
+  margin: -8px auto 24px;
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(14px);
+}
+
+.formation-quick-select label {
+  color: #ffccd3;
+  font-size: 0.78rem;
+  font-weight: 950;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.formation-quick-select select {
+  width: 100%;
+  border: 0;
+  border-radius: 16px;
+  padding: 13px 14px;
+  background: #ffffff;
+  color: #22070d;
+  font-size: 1rem;
+  font-weight: 950;
+  cursor: pointer;
+}

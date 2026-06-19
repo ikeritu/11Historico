@@ -1,0 +1,1063 @@
+/* src/components/FinalSummary.css */
+
+.final-summary {
+  min-height: 100vh;
+  padding: 118px 18px 32px;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.1), transparent 28%),
+    linear-gradient(135deg, #16070b 0%, #2b0710 44%, #080808 100%);
+  color: #ffffff;
+}
+
+.final-summary-header {
+  max-width: 1100px;
+  margin: 0 auto 24px;
+  text-align: center;
+}
+
+.final-summary-header h1 {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 4.2rem);
+}
+
+.final-summary-header p {
+  margin: 12px 0 0;
+  color: #f2d2d7;
+  font-size: 1.15rem;
+  font-weight: 850;
+}
+
+.final-summary-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 390px;
+  gap: 18px;
+  max-width: 1380px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+.final-main-panel,
+.final-side-panel {
+  display: grid;
+  gap: 14px;
+}
+
+.final-side-panel {
+  position: sticky;
+  top: 96px;
+}
+
+.final-hero-card,
+.final-stat-card,
+.final-card {
+  padding: 18px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(14px);
+}
+
+.final-hero-card {
+  text-align: center;
+  background: #ffffff;
+  color: #b00020;
+}
+
+.final-hero-card span {
+  display: block;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.final-hero-card strong {
+  display: block;
+  margin: 8px 0;
+  font-size: clamp(4rem, 10vw, 7rem);
+  line-height: 0.9;
+}
+
+.final-hero-card p {
+  margin: 0;
+  color: #6f0014;
+  font-weight: 850;
+}
+
+.final-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.final-stat-card span,
+.final-stat-card small {
+  display: block;
+  color: #f2d2d7;
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
+.final-stat-card strong {
+  display: block;
+  margin: 8px 0 4px;
+  font-size: 2rem;
+}
+
+.final-board-card {
+  min-width: 0;
+}
+
+.final-card h2 {
+  margin: 0 0 12px;
+  font-size: 1.15rem;
+}
+
+.final-coach-card,
+.final-player-highlight {
+  display: grid;
+  gap: 5px;
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.final-coach-card strong,
+.final-player-highlight strong {
+  font-size: 1.1rem;
+}
+
+.final-coach-card span,
+.final-player-highlight span,
+.final-coach-card small,
+.final-player-highlight small {
+  color: #f2d2d7;
+}
+
+.final-rating-circle {
+  display: grid;
+  place-items: center;
+  text-align: center;
+  width: 150px;
+  height: 150px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #b00020;
+}
+
+.final-rating-circle strong {
+  font-size: 3.2rem;
+  line-height: 0.9;
+}
+
+.final-rating-circle span {
+  max-width: 120px;
+  font-size: 0.75rem;
+  font-weight: 850;
+}
+
+.final-rating-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.final-rating-list span {
+  padding: 7px 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.share-preview {
+  max-height: 220px;
+  overflow: auto;
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(0, 0, 0, 0.25);
+  color: #ffeef1;
+  font-family: inherit;
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+
+.final-actions {
+  display: grid;
+  gap: 10px;
+}
+
+.final-actions button {
+  border: 0;
+  border-radius: 16px;
+  padding: 13px 15px;
+  background: #ffffff;
+  color: #b00020;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.final-actions .secondary-final-button {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+@media (max-width: 1080px) {
+  .final-summary-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .final-side-panel {
+    position: static;
+  }
+}
+
+@media (max-width: 760px) {
+  .final-summary {
+    padding: 24px 12px;
+  }
+
+  .final-stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 460px) {
+  .final-stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Tabla clasificatoria final */
+.final-league-table-card {
+  padding: 18px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(14px);
+}
+
+.final-league-table-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-end;
+  margin-bottom: 14px;
+}
+
+.final-league-table-header span {
+  display: block;
+  color: #ffccd3;
+  font-size: 0.76rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.final-league-table-header h2 {
+  margin: 4px 0 0;
+  font-size: 1.35rem;
+}
+
+.final-league-table-header small {
+  color: #f2d2d7;
+  font-weight: 850;
+}
+
+.final-league-table-wrap {
+  max-height: 520px;
+  overflow: auto;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.final-league-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 760px;
+}
+
+.final-league-table th,
+.final-league-table td {
+  padding: 11px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: right;
+  font-size: 0.86rem;
+}
+
+.final-league-table th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: rgba(43, 7, 16, 0.98);
+  color: #ffdce1;
+  font-size: 0.74rem;
+  font-weight: 950;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.final-league-table th:nth-child(2),
+.final-league-table td:nth-child(2) {
+  text-align: left;
+}
+
+.final-league-table th:first-child,
+.final-league-table td:first-child {
+  text-align: center;
+  font-weight: 950;
+}
+
+.final-league-team-cell {
+  display: grid;
+  gap: 2px;
+}
+
+.final-league-team-cell strong {
+  color: #ffffff;
+}
+
+.final-league-team-cell span {
+  width: fit-content;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  font-size: 0.68rem;
+  font-weight: 950;
+}
+
+.final-league-points-cell {
+  color: #ffffff;
+  font-weight: 1000;
+}
+
+.final-league-table-user-row {
+  background: linear-gradient(90deg, rgba(176, 0, 32, 0.72), rgba(255, 255, 255, 0.08));
+}
+
+.final-league-table-user-row td {
+  border-bottom-color: rgba(255, 255, 255, 0.18);
+}
+
+.final-league-table tr:last-child td {
+  border-bottom: 0;
+}
+
+@media (max-width: 760px) {
+  .final-league-table-card {
+    padding: 14px;
+  }
+
+  .final-league-table-header {
+    display: block;
+  }
+
+  .final-league-table-header small {
+    display: block;
+    margin-top: 6px;
+  }
+}
+
+
+/* Historial local de partidas */
+.final-history-card {
+  padding: 18px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(14px);
+}
+
+.final-history-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-end;
+  margin-bottom: 14px;
+}
+
+.final-history-header span {
+  display: block;
+  color: #ffccd3;
+  font-size: 0.76rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.final-history-header h2 {
+  margin: 4px 0 0;
+  font-size: 1.35rem;
+}
+
+.final-history-header small {
+  color: #f2d2d7;
+  font-weight: 850;
+}
+
+.final-history-empty {
+  margin: 0;
+  color: #f2d2d7;
+}
+
+.final-history-list {
+  display: grid;
+  gap: 10px;
+}
+
+.final-history-entry {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 150px;
+  gap: 12px;
+  align-items: center;
+  padding: 13px 14px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.final-history-entry-current {
+  background: linear-gradient(90deg, rgba(176, 0, 32, 0.58), rgba(255, 255, 255, 0.08));
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.final-history-entry-main,
+.final-history-entry-side {
+  display: grid;
+  gap: 3px;
+}
+
+.final-history-entry-main strong {
+  color: #ffffff;
+  font-size: 1rem;
+}
+
+.final-history-entry-main span,
+.final-history-entry-main small,
+.final-history-entry-side span,
+.final-history-entry-side small {
+  color: #f2d2d7;
+}
+
+.final-history-entry-main small,
+.final-history-entry-side small {
+  font-size: 0.78rem;
+}
+
+.final-history-entry-side {
+  text-align: right;
+}
+
+.final-history-entry-side span {
+  font-weight: 950;
+}
+
+@media (max-width: 760px) {
+  .final-history-entry {
+    grid-template-columns: 1fr;
+  }
+
+  .final-history-entry-side {
+    text-align: left;
+  }
+}
+
+
+/* Mejor partida */
+.final-best-game-card {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: center;
+  padding: 18px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.2), transparent 34%),
+    linear-gradient(135deg, rgba(176, 0, 32, 0.78), rgba(255, 255, 255, 0.09));
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 20px 56px rgba(0, 0, 0, 0.28);
+}
+
+.final-best-game-card span {
+  display: block;
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.final-best-game-card h2 {
+  margin: 6px 0;
+  font-size: 1.7rem;
+}
+
+.final-best-game-card p {
+  margin: 0;
+  color: #ffe1e6;
+  font-weight: 800;
+}
+
+.final-best-game-meta {
+  display: grid;
+  gap: 5px;
+  text-align: right;
+}
+
+.final-best-game-meta strong {
+  font-size: 1rem;
+}
+
+.final-best-game-meta small {
+  color: #ffe1e6;
+  font-weight: 800;
+}
+
+@media (max-width: 760px) {
+  .final-best-game-card {
+    display: grid;
+  }
+
+  .final-best-game-meta {
+    text-align: left;
+  }
+}
+
+
+/* Zonas de clasificación */
+.final-league-zone-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0 10px;
+}
+
+.zone-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 9px;
+  border-radius: 999px;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 950;
+}
+
+.zone-dot::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.zone-dot-champion {
+  background: rgba(255, 213, 79, 0.22);
+  color: #ffe08a;
+}
+
+.zone-dot-champions {
+  background: rgba(88, 214, 141, 0.22);
+  color: #9cffbf;
+}
+
+.zone-dot-europe {
+  background: rgba(74, 144, 226, 0.22);
+  color: #9fcbff;
+}
+
+.zone-dot-relegation {
+  background: rgba(255, 99, 99, 0.22);
+  color: #ffaaaa;
+}
+
+.final-league-table tbody tr.final-league-table-row {
+  position: relative;
+}
+
+.final-league-table tbody tr.final-league-table-row::before {
+  content: "";
+  width: 5px;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 999px;
+  opacity: 0.9;
+}
+
+.final-league-table tbody tr.final-zone-champion::before {
+  background: #ffd54f;
+}
+
+.final-league-table tbody tr.final-zone-champions::before {
+  background: #58d68d;
+}
+
+.final-league-table tbody tr.final-zone-europe::before {
+  background: #4a90e2;
+}
+
+.final-league-table tbody tr.final-zone-relegation::before {
+  background: #ff6363;
+}
+
+.final-league-table tbody tr.final-zone-champion {
+  background: linear-gradient(90deg, rgba(255, 213, 79, 0.17), rgba(255, 255, 255, 0.03));
+}
+
+.final-league-table tbody tr.final-zone-champions {
+  background: linear-gradient(90deg, rgba(88, 214, 141, 0.13), rgba(255, 255, 255, 0.03));
+}
+
+.final-league-table tbody tr.final-zone-europe {
+  background: linear-gradient(90deg, rgba(74, 144, 226, 0.12), rgba(255, 255, 255, 0.03));
+}
+
+.final-league-table tbody tr.final-zone-relegation {
+  background: linear-gradient(90deg, rgba(255, 99, 99, 0.14), rgba(255, 255, 255, 0.03));
+}
+
+/* Mejor partida más visible */
+.final-best-game-card {
+  border: 2px solid rgba(255, 224, 138, 0.72);
+  background:
+    radial-gradient(circle at top right, rgba(255, 224, 138, 0.28), transparent 34%),
+    linear-gradient(135deg, rgba(176, 0, 32, 0.92), rgba(255, 255, 255, 0.1));
+}
+
+.final-best-game-card h2 {
+  color: #ffffff;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+.final-best-game-card span {
+  color: #ffe08a;
+}
+
+.final-history-entry-current {
+  border-color: rgba(255, 224, 138, 0.55);
+}
+
+/* Resumen de Copa del Rey en pantalla final */
+.final-cup-card {
+  padding: 18px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
+}
+
+.final-cup-card-won {
+  border-color: rgba(255, 224, 138, 0.72);
+  background:
+    radial-gradient(circle at top right, rgba(255, 224, 138, 0.25), transparent 34%),
+    linear-gradient(135deg, rgba(176, 0, 32, 0.82), rgba(255, 255, 255, 0.09));
+}
+
+.final-cup-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.final-cup-header span {
+  display: block;
+  color: #ffccd3;
+  font-size: 0.76rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.final-cup-card-won .final-cup-header span {
+  color: #ffe08a;
+}
+
+.final-cup-header h2 {
+  margin: 4px 0 0;
+  font-size: 1.45rem;
+}
+
+.final-cup-header strong {
+  font-size: 2rem;
+}
+
+.final-cup-results {
+  display: grid;
+  gap: 8px;
+}
+
+.final-cup-results article {
+  display: grid;
+  gap: 3px;
+  padding: 11px 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.final-cup-results span,
+.final-cup-results small,
+.final-cup-empty {
+  color: #f2d2d7;
+}
+
+.final-cup-results span {
+  font-size: 0.78rem;
+  font-weight: 950;
+}
+
+.final-cup-results strong {
+  color: #ffffff;
+}
+
+.final-cup-empty {
+  margin: 0;
+}
+
+
+/* Mejora 2026-06: Mejor partida más arriba + Copa compacta */
+.final-main-panel > .final-best-game-card {
+  order: 2;
+}
+
+.final-cup-card {
+  padding: 16px;
+}
+
+.final-cup-header {
+  margin-bottom: 10px;
+}
+
+.final-cup-header h2 {
+  font-size: 1.28rem;
+}
+
+.final-cup-header strong {
+  font-size: 1.65rem;
+}
+
+.final-cup-results {
+  gap: 6px;
+}
+
+.final-cup-result {
+  display: grid !important;
+  grid-template-columns: 110px minmax(0, 1fr) 82px;
+  gap: 10px !important;
+  align-items: center;
+  padding: 9px 11px !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.075) !important;
+  border-left: 5px solid rgba(255, 255, 255, 0.22);
+}
+
+.final-cup-result span {
+  color: #ffccd3;
+  font-size: 0.74rem;
+  font-weight: 950;
+  letter-spacing: 0.02em;
+}
+
+.final-cup-result strong {
+  min-width: 0;
+  overflow: hidden;
+  color: #ffffff;
+  font-size: 0.88rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.final-cup-result small {
+  justify-self: end;
+  padding: 5px 8px;
+  border-radius: 999px;
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 950;
+}
+
+.final-cup-result-win {
+  border-left-color: #58d68d;
+}
+
+.final-cup-result-win small {
+  background: rgba(88, 214, 141, 0.22);
+  color: #aaffc4;
+}
+
+.final-cup-result-loss {
+  border-left-color: #ff6363;
+}
+
+.final-cup-result-loss small {
+  background: rgba(255, 99, 99, 0.2);
+  color: #ffb8b8;
+}
+
+.final-cup-result-draw {
+  border-left-color: #ffd54f;
+}
+
+.final-cup-result-draw small {
+  background: rgba(255, 213, 79, 0.2);
+  color: #ffe08a;
+}
+
+@media (max-width: 760px) {
+  .final-cup-result {
+    grid-template-columns: 1fr;
+  }
+
+  .final-cup-result strong {
+    white-space: normal;
+  }
+
+  .final-cup-result small {
+    justify-self: start;
+  }
+}
+
+
+/* Clasificación europea completa: Champions, Europa League y Conference */
+.zone-dot-conference {
+  background: rgba(163, 111, 255, 0.22);
+  color: #d8c4ff;
+}
+
+.final-league-table tbody tr.final-zone-conference::before {
+  background: #a36fff;
+}
+
+.final-league-table tbody tr.final-zone-conference {
+  background: linear-gradient(90deg, rgba(163, 111, 255, 0.12), rgba(255, 255, 255, 0.03));
+}
+
+.final-league-europe-note {
+  margin: 8px 0 12px;
+  color: #f2d2d7;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.final-league-team-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 3px;
+}
+
+.final-league-team-cell .final-league-qualification-tag,
+.final-league-team-cell .final-league-qualification-detail {
+  width: fit-content;
+  padding: 3px 7px;
+  border-radius: 999px;
+  color: #ffffff;
+  font-size: 0.66rem;
+  font-weight: 950;
+}
+
+.final-league-team-cell .final-league-qualification-champion {
+  background: rgba(255, 213, 79, 0.24);
+  color: #ffe08a;
+}
+
+.final-league-team-cell .final-league-qualification-champions {
+  background: rgba(88, 214, 141, 0.24);
+  color: #9cffbf;
+}
+
+.final-league-team-cell .final-league-qualification-europa {
+  background: rgba(74, 144, 226, 0.24);
+  color: #9fcbff;
+}
+
+.final-league-team-cell .final-league-qualification-conference {
+  background: rgba(163, 111, 255, 0.24);
+  color: #d8c4ff;
+}
+
+.final-league-team-cell .final-league-qualification-relegation {
+  background: rgba(255, 99, 99, 0.24);
+  color: #ffaaaa;
+}
+
+.final-league-team-cell .final-league-qualification-detail {
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+}
+
+
+/* Copa completa + ganador real */
+.final-cup-winner-box {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 10px 0 12px;
+}
+
+.final-cup-winner-box article {
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgba(255, 224, 138, 0.1);
+  border: 1px solid rgba(255, 224, 138, 0.18);
+}
+
+.final-cup-winner-box span {
+  display: block;
+  color: #ffe08a;
+  font-size: 0.72rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.final-cup-winner-box strong {
+  color: #ffffff;
+}
+
+.final-cup-rest-results {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.final-cup-rest-results h3 {
+  margin: 0 0 8px;
+  color: #ffe08a;
+  font-size: 0.92rem;
+}
+
+.final-cup-result-neutral {
+  border-left-color: rgba(255, 255, 255, 0.28) !important;
+}
+
+.final-cup-result-neutral small {
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+}
+
+@media (max-width: 700px) {
+  .final-cup-winner-box {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* v0.12.3 — Bloques plegables en pantalla final */
+.final-accordion {
+  border-radius: 26px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
+}
+
+.final-accordion-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  border: 0;
+  background:
+    radial-gradient(circle at top right, rgba(255, 224, 138, 0.12), transparent 30%),
+    rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  cursor: pointer;
+  text-align: left;
+}
+
+.final-accordion-header small {
+  display: block;
+  margin-bottom: 3px;
+  color: #ffccd3;
+  font-size: 0.72rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.final-accordion-header strong {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: 1000;
+}
+
+.final-accordion-header b {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffe08a;
+}
+
+.final-accordion-content {
+  padding: 14px;
+  animation: finalAccordionOpen 0.22s ease-out both;
+}
+
+.final-accordion-content > section {
+  margin: 0;
+}
+
+.final-card-flat {
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+@keyframes finalAccordionOpen {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* v0.12.27 â€” CTA final visible */
+.final-primary-cta-bar {
+  max-width: 1100px;
+  margin: 0 auto 22px;
+  display: grid;
+  place-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.final-primary-restart-button {
+  border: 0;
+  border-radius: 999px;
+  padding: 18px 34px;
+  background: #ffffff;
+  color: #b00020;
+  font-size: clamp(1rem, 2.5vw, 1.28rem);
+  font-weight: 1000;
+  cursor: pointer;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+  min-width: min(100%, 360px);
+}
+
+.final-primary-restart-button:hover {
+  transform: translateY(-1px);
+}
+
+.final-primary-cta-bar span {
+  color: #f2d2d7;
+  font-weight: 850;
+}

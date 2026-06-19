@@ -1,0 +1,678 @@
+// src/simulation/matchEngine.ts
+
+import type {
+  GoalEvent,
+  MatchResult,
+  RivalTeam,
+  TeamRating,
+  UserPlayerSeasonStats,
+  SelectedPlayer,
+} from "../types/game";
+
+export type MatchVenue = "home" | "away";
+
+export interface SimulateMatchParams {
+  fixtureId: string;
+  matchday: number;
+
+  userTeamName?: string;
+  rival: RivalTeam;
+  venue: MatchVenue;
+
+  teamRating: TeamRating;
+  selectedPlayers: SelectedPlayer[];
+
+  /**
+   * Semilla opcional para hacer resultados reproducibles en tests.
+   * Si no se pasa, usa Math.random().
+   */
+  seed?: number;
+}
+
+interface RandomGenerator {
+  next(): number;
+}
+
+/**
+ * Generador pseudoaleatorio simple para tests reproducibles.
+ */
+class SeededRandom implements RandomGenerator {
+  private seed: number;
+
+  constructor(seed: number) {
+    this.seed = seed;
+  }
+
+  next(): number {
+    this.seed = (this.seed * 9301 + 49297) % 233280;
+    return this.seed / 233280;
+  }
+}
+
+class NativeRandom implements RandomGenerator {
+  next(): number {
+    return Math.random();
+  }
+}
+
+function createRandom(seed?: number): RandomGenerator {
+  return typeof seed === "number" ? new SeededRandom(seed) : new NativeRandom();
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, value));
+}
+
+function roundToOne(value: number): number {
+  return Math.round(value * 10) / 10;
+}
+
+/**
+ * Convierte una ventaja de rating a goles esperados.
+ *
+ * La idea es:
+ * - Equipo muy superior: xG claramente mayor.
+ * - Equipo inferior: aún puede marcar.
+ * - Mantener marcadores realistas tipo 0-0, 1-0, 2-1, 3-1.
+ */
+function calculateExpectedGoals(params: {
+  attack: number;
+  control: number;
+  mentality: number;
+  opponentDefense: number;
+  opponentGoalkeeping: number;
+  opponentMentality: number;
+  isHome: boolean;
+  riskModifier?: number;
+}): number {
+  const {
+    attack,
+    control,
+    mentality,
+    opponentDefense,
+    opponentGoalkeeping,
+    opponentMentality,
+    isHome,
+    riskModifier = 0,
+  } = params;
+
+  /**
+   * Balance v2:
+   * - Se reduce la sensibilidad de la diferencia de rating.
+   * - El visitante tiene una penalización algo más realista.
+   * - Los partidos tienden más a 0-0, 1-0, 1-1, 2-1 y menos a goleada.
+   */
+  const attackingPower =
+    attack * 0.52 +
+    control * 0.2 +
+    mentality * 0.12 +
+    riskModifier * 0.05;
+
+  const defensiveResistance =
+    opponentDefense * 0.5 +
+    opponentGoalkeeping * 0.3 +
+    opponentMentality * 0.2;
+
+  const ratingDiff = attackingPower - defensiveResistance;
+  const homeBonus = isHome ? 0.14 : -0.18;
+
+  const expectedGoals = 1.08 + ratingDiff / 34 + homeBonus;
+
+  return roundToOne(clamp(expectedGoals, 0.28, 3.05));
+}
+
+function getAverageUserRating(teamRating: TeamRating): number {
+  return (
+    teamRating.attack * 0.22 +
+    teamRating.defense * 0.22 +
+    teamRating.control * 0.18 +
+    teamRating.physical * 0.1 +
+    teamRating.mentality * 0.13 +
+    teamRating.goalkeeping * 0.15
+  );
+}
+
+function getAverageRivalRating(rival: RivalTeam): number {
+  return (
+    rival.ratings.attack * 0.22 +
+    rival.ratings.defense * 0.22 +
+    rival.ratings.midfield * 0.2 +
+    rival.ratings.mentality * 0.16 +
+    rival.ratings.goalkeeping * 0.2
+  );
+}
+
+function getFixtureDifficultyModifier(params: {
+  teamRating: TeamRating;
+  rival: RivalTeam;
+  userIsHome: boolean;
+}): {
+  userAttackPenalty: number;
+  userDefensePenalty: number;
+  rivalAttackBonus: number;
+} {
+  const { teamRating, rival, userIsHome } = params;
+
+  const userAverage = getAverageUserRating(teamRating);
+  const rivalAverage = getAverageRivalRating(rival);
+  const rivalIsStrong = rivalAverage >= 84;
+  const rivalIsVeryStrong = rivalAverage >= 88;
+  const userIsHugeFavorite = userAverage - rivalAverage >= 10;
+
+  let userAttackPenalty = 0;
+  let userDefensePenalty = 0;
+  let rivalAttackBonus = 0;
+
+  if (!userIsHome) {
+    userAttackPenalty += 2.2;
+    userDefensePenalty += 1.4;
+    rivalAttackBonus += 0.7;
+  }
+
+  if (rivalIsStrong) {
+    userAttackPenalty += 1.2;
+    userDefensePenalty += 0.8;
+    rivalAttackBonus += 0.9;
+  }
+
+  if (rivalIsVeryStrong) {
+    userAttackPenalty += 1.2;
+    userDefensePenalty += 1.0;
+    rivalAttackBonus += 0.8;
+  }
+
+  // Evita que un once legendario aplaste siempre a rivales medios.
+  if (userIsHugeFavorite) {
+    userAttackPenalty += 0.9;
+    rivalAttackBonus += 0.5;
+  }
+
+  return {
+    userAttackPenalty,
+    userDefensePenalty,
+    rivalAttackBonus,
+  };
+}
+
+/**
+ * Muestra algo de varianza sin que el partido sea puro azar.
+ */
+function sampleGoalsFromExpectedGoals(expectedGoals: number, random: RandomGenerator): number {
+  const roll = random.next();
+
+  const lowBlock = Math.max(0, expectedGoals - 1.05);
+  const normal = expectedGoals;
+  const high = expectedGoals + 0.7;
+  const veryHigh = expectedGoals + 1.25;
+
+  let rawGoals: number;
+
+  if (roll < 0.18) {
+    rawGoals = lowBlock;
+  } else if (roll < 0.78) {
+    rawGoals = normal + (random.next() - 0.5) * 0.75;
+  } else if (roll < 0.94) {
+    rawGoals = high + random.next() * 0.45;
+  } else {
+    rawGoals = veryHigh + random.next() * 0.65;
+  }
+
+  return clamp(Math.round(rawGoals), 0, 5);
+}
+
+function applyUnderdogAndDrawVariance(params: {
+  userGoals: number;
+  rivalGoals: number;
+  teamRating: TeamRating;
+  rival: RivalTeam;
+  userIsHome: boolean;
+  random: RandomGenerator;
+}): {
+  userGoals: number;
+  rivalGoals: number;
+} {
+  let { userGoals, rivalGoals } = params;
+  const { teamRating, rival, userIsHome, random } = params;
+
+  const userAverage = getAverageUserRating(teamRating);
+  const rivalAverage = getAverageRivalRating(rival);
+  const diff = userAverage - rivalAverage;
+  const rivalIsStrong = rivalAverage >= 84;
+
+  /**
+   * Más empates realistas:
+   * - Fuera de casa cuesta cerrar partidos.
+   * - Contra rivales fuertes hay más riesgo de empate.
+   */
+  if (userGoals > rivalGoals) {
+    const lead = userGoals - rivalGoals;
+
+    let drawChance = 0.04;
+
+    if (!userIsHome) drawChance += 0.07;
+    if (rivalIsStrong) drawChance += 0.06;
+    if (diff < 8) drawChance += 0.05;
+    if (lead >= 2) drawChance *= 0.45;
+
+    if (random.next() < drawChance) {
+      rivalGoals += 1;
+    }
+  }
+
+  /**
+   * Alguna sorpresa: un rival fuerte o un desplazamiento complicado
+   * puede convertir un empate en derrota.
+   */
+  if (userGoals === rivalGoals) {
+    let upsetChance = 0.035;
+
+    if (!userIsHome) upsetChance += 0.04;
+    if (rivalIsStrong) upsetChance += 0.04;
+    if (diff <= 4) upsetChance += 0.035;
+
+    if (random.next() < upsetChance) {
+      rivalGoals += 1;
+    }
+  }
+
+  return {
+    userGoals,
+    rivalGoals,
+  };
+}
+
+/**
+ * Ajusta partidos muy extremos para que sean menos frecuentes.
+ */
+function normalizeScore(homeGoals: number, awayGoals: number, random: RandomGenerator): {
+  homeGoals: number;
+  awayGoals: number;
+} {
+  let normalizedHome = homeGoals;
+  let normalizedAway = awayGoals;
+
+  const totalGoals = normalizedHome + normalizedAway;
+
+  if (totalGoals >= 7 && random.next() < 0.7) {
+    if (normalizedHome > normalizedAway) {
+      normalizedHome -= 1;
+    } else if (normalizedAway > normalizedHome) {
+      normalizedAway -= 1;
+    } else {
+      normalizedHome -= 1;
+    }
+  }
+
+  if (normalizedHome >= 5 && random.next() < 0.45) {
+    normalizedHome -= 1;
+  }
+
+  if (normalizedAway >= 5 && random.next() < 0.45) {
+    normalizedAway -= 1;
+  }
+
+  return {
+    homeGoals: clamp(normalizedHome, 0, 6),
+    awayGoals: clamp(normalizedAway, 0, 6),
+  };
+}
+
+/**
+ * Devuelve jugadores candidatos a marcar en el Athletic histórico.
+ */
+function getScorerCandidates(selectedPlayers: SelectedPlayer[]): Array<{
+  playerName: string;
+  playerId: string;
+  weight: number;
+}> {
+  return selectedPlayers.map((selected) => {
+    const player = selected.playerSeason;
+    const position = selected.position;
+
+    let positionWeight = 1;
+
+    if (position === "DC") positionWeight = 5;
+    else if (position === "SD" || position === "EI" || position === "ED") positionWeight = 3.5;
+    else if (position === "MP") positionWeight = 2.8;
+    else if (position === "MC" || position === "MI" || position === "MD") positionWeight = 1.7;
+    else if (position === "MCD") positionWeight = 1.1;
+    else if (position === "LD" || position === "LI" || position === "CAD" || position === "CAI") positionWeight = 0.7;
+    else if (position === "DFC") positionWeight = 0.45;
+    else if (position === "POR") positionWeight = 0.02;
+
+    const weight =
+      positionWeight *
+      (player.skills.shooting * 0.45 +
+        player.skills.mentality * 0.2 +
+        player.skills.physical * 0.15 +
+        player.skills.dribbling * 0.12 +
+        player.overall * 0.08);
+
+    return {
+      playerName: player.name,
+      playerId: player.playerId,
+      weight,
+    };
+  });
+}
+
+/**
+ * Devuelve jugadores candidatos a asistir en el Athletic histórico.
+ */
+function getAssistCandidates(selectedPlayers: SelectedPlayer[]): Array<{
+  playerName: string;
+  playerId: string;
+  weight: number;
+}> {
+  return selectedPlayers.map((selected) => {
+    const player = selected.playerSeason;
+    const position = selected.position;
+
+    let positionWeight = 1;
+
+    if (position === "MP") positionWeight = 4.5;
+    else if (position === "MC") positionWeight = 3.2;
+    else if (position === "EI" || position === "ED" || position === "MI" || position === "MD") positionWeight = 3.0;
+    else if (position === "MCD") positionWeight = 2.0;
+    else if (position === "LD" || position === "LI" || position === "CAD" || position === "CAI") positionWeight = 1.9;
+    else if (position === "SD") positionWeight = 2.5;
+    else if (position === "DC") positionWeight = 1.3;
+    else if (position === "DFC") positionWeight = 0.8;
+    else if (position === "POR") positionWeight = 0.05;
+
+    const weight =
+      positionWeight *
+      (player.skills.passing * 0.5 +
+        player.skills.dribbling * 0.2 +
+        player.skills.mentality * 0.15 +
+        player.overall * 0.15);
+
+    return {
+      playerName: player.name,
+      playerId: player.playerId,
+      weight,
+    };
+  });
+}
+
+function pickWeighted<T extends { weight: number }>(items: T[], random: RandomGenerator): T | undefined {
+  const totalWeight = items.reduce((sum, item) => sum + Math.max(0, item.weight), 0);
+
+  if (totalWeight <= 0) return undefined;
+
+  let target = random.next() * totalWeight;
+
+  for (const item of items) {
+    target -= Math.max(0, item.weight);
+
+    if (target <= 0) {
+      return item;
+    }
+  }
+
+  return items[items.length - 1];
+}
+
+function randomMinute(random: RandomGenerator): number {
+  return clamp(Math.round(1 + random.next() * 93), 1, 95);
+}
+
+function generateUserGoalEvents(params: {
+  goals: number;
+  teamName: string;
+  selectedPlayers: SelectedPlayer[];
+  random: RandomGenerator;
+}): GoalEvent[] {
+  const { goals, teamName, selectedPlayers, random } = params;
+
+  const scorerCandidates = getScorerCandidates(selectedPlayers);
+  const assistCandidates = getAssistCandidates(selectedPlayers);
+
+  const events: GoalEvent[] = [];
+
+  for (let i = 0; i < goals; i += 1) {
+    const scorer = pickWeighted(scorerCandidates, random);
+
+    const possibleAssisters = assistCandidates.filter(
+      (candidate) => candidate.playerId !== scorer?.playerId
+    );
+
+    const hasAssist = random.next() < 0.72;
+    const assistant = hasAssist ? pickWeighted(possibleAssisters, random) : undefined;
+
+    events.push({
+      minute: randomMinute(random),
+      teamName,
+      scorerName: scorer?.playerName,
+      assistName: assistant?.playerName,
+    });
+  }
+
+  return events.sort((a, b) => a.minute - b.minute);
+}
+
+function generateRivalGoalEvents(params: {
+  goals: number;
+  teamName: string;
+  random: RandomGenerator;
+}): GoalEvent[] {
+  const { goals, teamName, random } = params;
+
+  const events: GoalEvent[] = [];
+
+  for (let i = 0; i < goals; i += 1) {
+    events.push({
+      minute: randomMinute(random),
+      teamName,
+    });
+  }
+
+  return events.sort((a, b) => a.minute - b.minute);
+}
+
+/**
+ * Simula un partido individual del Athletic histórico contra un rival 25/26.
+ */
+export function simulateMatch(params: SimulateMatchParams): MatchResult {
+  const {
+    fixtureId,
+    matchday,
+    userTeamName = "Once histórico Zurigorri",
+    rival,
+    venue,
+    teamRating,
+    selectedPlayers,
+    seed,
+  } = params;
+
+  const random = createRandom(seed);
+
+  const userIsHome = venue === "home";
+  const difficulty = getFixtureDifficultyModifier({
+    teamRating,
+    rival,
+    userIsHome,
+  });
+
+  const userExpectedGoals = calculateExpectedGoals({
+    attack: teamRating.attack - difficulty.userAttackPenalty,
+    control: teamRating.control - difficulty.userAttackPenalty * 0.35,
+    mentality: teamRating.mentality,
+    opponentDefense: rival.ratings.defense,
+    opponentGoalkeeping: rival.ratings.goalkeeping,
+    opponentMentality: rival.ratings.mentality,
+    isHome: userIsHome,
+    riskModifier: (teamRating.attack - teamRating.defense) * 0.65,
+  });
+
+  const rivalExpectedGoals = calculateExpectedGoals({
+    attack: rival.ratings.attack + difficulty.rivalAttackBonus,
+    control: rival.ratings.midfield + difficulty.rivalAttackBonus * 0.5,
+    mentality: rival.ratings.mentality,
+    opponentDefense: teamRating.defense - difficulty.userDefensePenalty,
+    opponentGoalkeeping: teamRating.goalkeeping,
+    opponentMentality: teamRating.mentality,
+    isHome: !userIsHome,
+    riskModifier: (rival.ratings.attack - rival.ratings.defense) * 0.65,
+  });
+
+  let userGoals = sampleGoalsFromExpectedGoals(userExpectedGoals, random);
+  let rivalGoals = sampleGoalsFromExpectedGoals(rivalExpectedGoals, random);
+
+  const varianceAdjusted = applyUnderdogAndDrawVariance({
+    userGoals,
+    rivalGoals,
+    teamRating,
+    rival,
+    userIsHome,
+    random,
+  });
+
+  userGoals = varianceAdjusted.userGoals;
+  rivalGoals = varianceAdjusted.rivalGoals;
+
+  /**
+   * Mentalidad en partidos igualados:
+   * si el partido está empatado y hay diferencia de mentalidad notable,
+   * existe una pequeña probabilidad de gol decisivo.
+   */
+  const mentalityDiff = teamRating.mentality - rival.ratings.mentality;
+
+  if (userGoals === rivalGoals && Math.abs(mentalityDiff) >= 8 && random.next() < 0.18) {
+    if (mentalityDiff > 0) {
+      userGoals += 1;
+    } else {
+      rivalGoals += 1;
+    }
+  }
+
+  const normalized =
+    userIsHome
+      ? normalizeScore(userGoals, rivalGoals, random)
+      : normalizeScore(rivalGoals, userGoals, random);
+
+  const homeGoals = normalized.homeGoals;
+  const awayGoals = normalized.awayGoals;
+
+  userGoals = userIsHome ? homeGoals : awayGoals;
+  rivalGoals = userIsHome ? awayGoals : homeGoals;
+
+  const userGoalEvents = generateUserGoalEvents({
+    goals: userGoals,
+    teamName: userTeamName,
+    selectedPlayers,
+    random,
+  });
+
+  const rivalGoalEvents = generateRivalGoalEvents({
+    goals: rivalGoals,
+    teamName: rival.name,
+    random,
+  });
+
+  const goalEvents = [...userGoalEvents, ...rivalGoalEvents].sort(
+    (a, b) => a.minute - b.minute
+  );
+
+  const userTeamWon = userGoals > rivalGoals;
+  const userTeamDrew = userGoals === rivalGoals;
+  const userTeamLost = userGoals < rivalGoals;
+
+  return {
+    fixtureId,
+    matchday,
+    homeTeamName: userIsHome ? userTeamName : rival.name,
+    awayTeamName: userIsHome ? rival.name : userTeamName,
+    homeGoals,
+    awayGoals,
+    goalEvents,
+    userTeamPlayed: true,
+    userTeamWon,
+    userTeamDrew,
+    userTeamLost,
+    cleanSheetForUserTeam: rivalGoals === 0,
+  };
+}
+
+/**
+ * Actualiza estadísticas individuales del Athletic histórico tras un partido.
+ */
+export function updateUserPlayerStatsFromMatch(params: {
+  currentStats: UserPlayerSeasonStats[];
+  matchResult: MatchResult;
+  selectedPlayers: SelectedPlayer[];
+  userTeamName?: string;
+}): UserPlayerSeasonStats[] {
+  const {
+    currentStats,
+    matchResult,
+    selectedPlayers,
+    userTeamName = "Once histórico Zurigorri",
+  } = params;
+
+  const statsByPlayerId = new Map<string, UserPlayerSeasonStats>();
+
+  for (const stat of currentStats) {
+    statsByPlayerId.set(stat.playerId, { ...stat });
+  }
+
+  for (const selected of selectedPlayers) {
+    const player = selected.playerSeason;
+
+    if (!statsByPlayerId.has(player.playerId)) {
+      statsByPlayerId.set(player.playerId, {
+        playerId: player.playerId,
+        playerName: player.name,
+        goals: 0,
+        assists: 0,
+        cleanSheets: 0,
+      });
+    }
+  }
+
+  for (const event of matchResult.goalEvents) {
+    if (event.teamName !== userTeamName) continue;
+
+    if (event.scorerName) {
+      const scorer = selectedPlayers.find(
+        (selected) => selected.playerSeason.name === event.scorerName
+      );
+
+      if (scorer) {
+        const stat = statsByPlayerId.get(scorer.playerSeason.playerId);
+
+        if (stat) {
+          stat.goals += 1;
+        }
+      }
+    }
+
+    if (event.assistName) {
+      const assistant = selectedPlayers.find(
+        (selected) => selected.playerSeason.name === event.assistName
+      );
+
+      if (assistant) {
+        const stat = statsByPlayerId.get(assistant.playerSeason.playerId);
+
+        if (stat) {
+          stat.assists += 1;
+        }
+      }
+    }
+  }
+
+  if (matchResult.cleanSheetForUserTeam) {
+    for (const selected of selectedPlayers) {
+      if (selected.position !== "POR") continue;
+
+      const stat = statsByPlayerId.get(selected.playerSeason.playerId);
+
+      if (stat) {
+        stat.cleanSheets += 1;
+      }
+    }
+  }
+
+  return Array.from(statsByPlayerId.values());
+}

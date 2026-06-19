@@ -1,0 +1,396 @@
+/* src/components/TacticalPitch.css */
+
+/* Campo táctico reutilizable: compacto en panel lateral,
+   más equilibrado en resumen/final para que los nombres se lean bien. */
+
+.tactical-pitch {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 0.72;
+  min-height: 260px;
+  overflow: hidden;
+  border-radius: 22px;
+  border: 2px solid rgba(255, 255, 255, 0.72);
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    repeating-linear-gradient(
+      90deg,
+      rgba(42, 132, 55, 0.98) 0,
+      rgba(42, 132, 55, 0.98) 12.5%,
+      rgba(33, 112, 48, 0.98) 12.5%,
+      rgba(33, 112, 48, 0.98) 25%
+    );
+  box-shadow: inset 0 0 55px rgba(0, 0, 0, 0.22);
+}
+
+.pitch-lines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.pitch-half-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.pitch-center-circle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 34%;
+  aspect-ratio: 1;
+  border: 2px solid rgba(255, 255, 255, 0.72);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.pitch-box,
+.pitch-small-box {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 2px solid rgba(255, 255, 255, 0.72);
+}
+
+.pitch-box {
+  width: 58%;
+  height: 17%;
+}
+
+.pitch-small-box {
+  width: 30%;
+  height: 8%;
+}
+
+.pitch-box-top,
+.pitch-small-box-top {
+  top: -2px;
+}
+
+.pitch-box-bottom,
+.pitch-small-box-bottom {
+  bottom: -2px;
+}
+
+.tactical-marker {
+  position: absolute;
+  z-index: 2;
+  transform: translate(-50%, -50%);
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+.tactical-shirt {
+  min-width: 44px;
+  min-height: 34px;
+  padding: 8px 9px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px 12px 16px 16px;
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 950;
+  line-height: 1;
+  box-shadow:
+    0 8px 16px rgba(0, 0, 0, 0.22),
+    inset 0 -8px 0 rgba(0, 0, 0, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.88);
+}
+
+.tactical-marker-goalkeeper .tactical-shirt {
+  background: #f4d35e;
+  color: #5b3f00;
+}
+
+.tactical-marker-defense .tactical-shirt {
+  background: #1778bf;
+}
+
+.tactical-marker-midfield .tactical-shirt {
+  background: #ffffff;
+  color: #b00020;
+}
+
+.tactical-marker-attack .tactical-shirt {
+  background: #d20a2e;
+}
+
+.tactical-marker-filled .tactical-shirt {
+  outline: 3px solid rgba(255, 255, 255, 0.28);
+}
+
+.tactical-player-name {
+  max-width: 132px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.68);
+  color: #ffffff;
+  font-size: 0.76rem;
+  font-weight: 950;
+  line-height: 1.12;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.24);
+}
+
+/* Modo compacto: panel lateral durante el draft.
+   Oculta puestos libres, mantiene nombres de elegidos visibles. */
+.tactical-pitch-compact {
+  min-height: 210px;
+}
+
+.tactical-pitch-compact .tactical-shirt {
+  min-width: 36px;
+  min-height: 30px;
+  padding: 7px 8px;
+  font-size: 0.7rem;
+}
+
+.tactical-pitch-compact .tactical-marker:not(.tactical-marker-filled) .tactical-player-name {
+  display: none;
+}
+
+.tactical-pitch-compact .tactical-marker-filled .tactical-player-name {
+  display: block;
+  max-width: 92px;
+  padding: 4px 7px;
+  font-size: 0.64rem;
+}
+
+/* Resumen y final: campo más bajo + jugadores bastante más grandes.
+   Esto evita el efecto “campo enorme, jugadores diminutos”. */
+.team-summary .selected-team-board .tactical-pitch,
+.final-summary .selected-team-board .tactical-pitch,
+.final-board-card .tactical-pitch,
+.team-summary-board .tactical-pitch {
+  max-width: 620px;
+  min-height: 500px;
+  margin: 0 auto;
+}
+
+.team-summary .selected-team-board .tactical-shirt,
+.final-summary .selected-team-board .tactical-shirt,
+.final-board-card .tactical-shirt,
+.team-summary-board .tactical-shirt {
+  min-width: 68px;
+  min-height: 48px;
+  padding: 11px 13px;
+  border-radius: 17px 17px 20px 20px;
+  font-size: 1rem;
+}
+
+.team-summary .selected-team-board .tactical-marker-filled .tactical-player-name,
+.final-summary .selected-team-board .tactical-marker-filled .tactical-player-name,
+.final-board-card .tactical-marker-filled .tactical-player-name,
+.team-summary-board .tactical-marker-filled .tactical-player-name {
+  display: block;
+  max-width: 170px;
+  padding: 8px 12px;
+  border-radius: 13px;
+  font-size: 1.05rem;
+  line-height: 1.08;
+}
+
+/* Panel lateral: tamaño contenido para no invadir el draft. */
+.floating-team-board .tactical-pitch,
+.league-side-panel .tactical-pitch {
+  min-height: 330px;
+}
+
+.floating-team-board .tactical-shirt,
+.league-side-panel .tactical-shirt {
+  min-width: 42px;
+  min-height: 32px;
+  padding: 7px 9px;
+  font-size: 0.72rem;
+}
+
+.floating-team-board .tactical-marker-filled .tactical-player-name,
+.league-side-panel .tactical-marker-filled .tactical-player-name {
+  max-width: 88px;
+  padding: 4px 7px;
+  font-size: 0.62rem;
+}
+
+@media (max-width: 900px) {
+  .team-summary .selected-team-board .tactical-pitch,
+  .final-summary .selected-team-board .tactical-pitch,
+  .final-board-card .tactical-pitch,
+  .team-summary-board .tactical-pitch {
+    max-width: 560px;
+    min-height: 470px;
+  }
+
+  .team-summary .selected-team-board .tactical-shirt,
+  .final-summary .selected-team-board .tactical-shirt,
+  .final-board-card .tactical-shirt,
+  .team-summary-board .tactical-shirt {
+    min-width: 58px;
+    min-height: 42px;
+    font-size: 0.9rem;
+  }
+
+  .team-summary .selected-team-board .tactical-marker-filled .tactical-player-name,
+  .final-summary .selected-team-board .tactical-marker-filled .tactical-player-name,
+  .final-board-card .tactical-marker-filled .tactical-player-name,
+  .team-summary-board .tactical-marker-filled .tactical-player-name {
+    max-width: 130px;
+    font-size: 0.82rem;
+  }
+}
+
+@media (max-width: 620px) {
+  .tactical-pitch {
+    min-height: 340px;
+  }
+
+  .team-summary .selected-team-board .tactical-pitch,
+  .final-summary .selected-team-board .tactical-pitch,
+  .final-board-card .tactical-pitch,
+  .team-summary-board .tactical-pitch {
+    min-height: 430px;
+  }
+
+  .team-summary .selected-team-board .tactical-shirt,
+  .final-summary .selected-team-board .tactical-shirt,
+  .final-board-card .tactical-shirt,
+  .team-summary-board .tactical-shirt {
+    min-width: 48px;
+    min-height: 36px;
+    font-size: 0.76rem;
+  }
+
+  .team-summary .selected-team-board .tactical-marker-filled .tactical-player-name,
+  .final-summary .selected-team-board .tactical-marker-filled .tactical-player-name,
+  .final-board-card .tactical-marker-filled .tactical-player-name,
+  .team-summary-board .tactical-marker-filled .tactical-player-name {
+    max-width: 100px;
+    padding: 5px 7px;
+    font-size: 0.66rem;
+  }
+}
+
+
+/* Estados interactivos del draft */
+.tactical-pitch-selecting .tactical-marker:not(.tactical-marker-filled):not(.tactical-marker-highlighted) {
+  opacity: 0.28;
+}
+
+.tactical-marker-clickable {
+  cursor: pointer;
+  opacity: 1 !important;
+}
+
+.tactical-marker:disabled {
+  cursor: default;
+}
+
+.tactical-marker-highlighted .tactical-shirt {
+  animation: tacticalPulse 1.15s ease-in-out infinite;
+  outline: 4px solid rgba(255, 224, 138, 0.8);
+  box-shadow:
+    0 0 0 6px rgba(255, 224, 138, 0.22),
+    0 12px 22px rgba(0, 0, 0, 0.3),
+    inset 0 -8px 0 rgba(0, 0, 0, 0.08);
+}
+
+.tactical-marker-highlighted .tactical-player-name {
+  display: block;
+  background: rgba(255, 224, 138, 0.96);
+  color: #5d3b00;
+}
+
+.tactical-marker-clickable:hover .tactical-shirt,
+.tactical-marker-clickable:focus-visible .tactical-shirt {
+  transform: translateY(-2px) scale(1.07);
+}
+
+@keyframes tacticalPulse {
+  0%, 100% {
+    box-shadow:
+      0 0 0 4px rgba(255, 224, 138, 0.18),
+      0 12px 22px rgba(0, 0, 0, 0.28),
+      inset 0 -8px 0 rgba(0, 0, 0, 0.08);
+  }
+
+  50% {
+    box-shadow:
+      0 0 0 10px rgba(255, 224, 138, 0.3),
+      0 16px 26px rgba(0, 0, 0, 0.32),
+      inset 0 -8px 0 rgba(0, 0, 0, 0.08);
+  }
+}
+
+
+/* Pulido visual del campo interactivo */
+.tactical-pitch-selecting .tactical-marker:not(.tactical-marker-filled):not(.tactical-marker-highlighted) {
+  opacity: 0.34;
+  filter: grayscale(0.5);
+}
+
+.tactical-marker-highlighted {
+  opacity: 1 !important;
+  transform: translate(-50%, -50%) scale(1.12) !important;
+  z-index: 20 !important;
+  box-shadow:
+    0 0 0 4px rgba(110, 231, 155, 0.28),
+    0 0 26px rgba(110, 231, 155, 0.75),
+    0 16px 34px rgba(0, 0, 0, 0.35) !important;
+  animation: tacticalSlotPulse 1.15s ease-in-out infinite;
+}
+
+.tactical-marker-highlighted .tactical-shirt {
+  background: #6ee79b !important;
+  color: #073d1b !important;
+}
+
+.tactical-marker-clickable {
+  cursor: pointer !important;
+}
+
+.tactical-marker-clickable:hover {
+  transform: translate(-50%, -50%) scale(1.22) !important;
+}
+
+.tactical-marker-clickable:hover .tactical-shirt {
+  background: #ffffff !important;
+  color: #b00020 !important;
+}
+
+.tactical-marker-filled {
+  z-index: 12;
+}
+
+@keyframes tacticalSlotPulse {
+  0% {
+    box-shadow:
+      0 0 0 3px rgba(110, 231, 155, 0.2),
+      0 0 18px rgba(110, 231, 155, 0.52),
+      0 16px 34px rgba(0, 0, 0, 0.35);
+  }
+
+  50% {
+    box-shadow:
+      0 0 0 7px rgba(110, 231, 155, 0.1),
+      0 0 32px rgba(110, 231, 155, 0.95),
+      0 18px 42px rgba(0, 0, 0, 0.42);
+  }
+
+  100% {
+    box-shadow:
+      0 0 0 3px rgba(110, 231, 155, 0.2),
+      0 0 18px rgba(110, 231, 155, 0.52),
+      0 16px 34px rgba(0, 0, 0, 0.35);
+  }
+}

@@ -1,0 +1,328 @@
+/* src/components/TeamSummary.css */
+
+/* Pantalla de resumen del equipo.
+   Versión limpia y estable:
+   - Layout centrado en dos columnas.
+   - Botón "Empezar Liga 25/26" arriba con protagonismo.
+   - Sin scroll interno raro en el panel derecho.
+   - No pegar como parche: sustituir el archivo completo.
+*/
+
+.team-summary {
+  min-height: 100vh;
+  padding: 88px 18px 36px;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.08), transparent 30%),
+    linear-gradient(135deg, #17070b 0%, #2b0710 46%, #080808 100%);
+  color: #ffffff;
+}
+
+.team-summary-header {
+  max-width: 1180px;
+  margin: 0 auto 28px;
+}
+
+.team-summary-header .eyebrow {
+  margin: 0 0 10px;
+  color: #ffccd3;
+  font-size: 0.78rem;
+  font-weight: 950;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.team-summary-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 32px;
+}
+
+.team-summary-header h1 {
+  margin: 0;
+  font-size: clamp(2.4rem, 5vw, 4.4rem);
+  line-height: 1;
+}
+
+.team-summary-header p {
+  max-width: 760px;
+  margin: 14px 0 0;
+  color: #f2d2d7;
+  line-height: 1.5;
+}
+
+.team-summary-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) 360px;
+  gap: 20px;
+  max-width: 1180px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+.team-summary-main {
+  min-width: 0;
+}
+
+.team-summary-side {
+  display: grid;
+  gap: 12px;
+  position: sticky;
+  top: 88px;
+  align-self: start;
+}
+
+.team-summary-overall-card,
+.team-summary-coach-card,
+.team-summary-ratings-card,
+.team-summary-list-card {
+  padding: 18px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.085);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.22);
+}
+
+.team-summary-overall-card {
+  text-align: center;
+  background: #ffffff;
+  color: #b00020;
+}
+
+.team-summary-overall-card span,
+.team-summary-overall-card small {
+  display: block;
+  font-weight: 950;
+}
+
+.team-summary-overall-card span {
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.team-summary-overall-card strong {
+  display: block;
+  margin: 8px 0;
+  font-size: 4rem;
+  line-height: 0.9;
+}
+
+.team-summary-overall-card small {
+  max-width: 230px;
+  margin: 0 auto;
+  color: #7d0017;
+  line-height: 1.2;
+}
+
+.team-summary-coach-card {
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.12), transparent 34%),
+    rgba(255, 255, 255, 0.09);
+}
+
+.team-summary-coach-card span:first-child {
+  display: block;
+  margin-bottom: 8px;
+  color: #ffccd3;
+  font-size: 0.78rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.team-summary-coach-card h2 {
+  margin: 0 0 4px;
+  font-size: 1.45rem;
+}
+
+.team-summary-coach-card p {
+  margin: 0 0 8px;
+  color: #f2d2d7;
+}
+
+.team-summary-coach-card strong {
+  color: #ffffff;
+}
+
+.team-summary-coach-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 12px;
+}
+
+.team-summary-coach-chips span {
+  padding: 7px 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-size: 0.76rem;
+  font-weight: 900;
+}
+
+.team-summary-ratings-card h2,
+.team-summary-list-card h2 {
+  margin: 0 0 14px;
+  font-size: 1.15rem;
+}
+
+.summary-rating-row {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 11px;
+}
+
+.summary-rating-row:last-child {
+  margin-bottom: 0;
+}
+
+.summary-rating-row-top {
+  display: flex;
+  justify-content: space-between;
+  color: #f2d2d7;
+  font-size: 0.84rem;
+  font-weight: 850;
+}
+
+.summary-rating-row-top strong {
+  color: #ffffff;
+}
+
+.summary-rating-track {
+  height: 9px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.summary-rating-bar {
+  height: 100%;
+  border-radius: 999px;
+  background: #6ee79b;
+}
+
+.team-summary-list-card ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.team-summary-list-card li {
+  margin-bottom: 7px;
+  color: #f2d2d7;
+  line-height: 1.35;
+}
+
+/* CTA principal */
+.start-league-button {
+  border: 3px solid rgba(255, 255, 255, 0.92);
+  border-radius: 32px;
+  padding: 24px 38px;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 1), transparent 34%),
+    linear-gradient(135deg, #ffffff 0%, #ffe2e9 38%, #ffb3c2 100%);
+  color: #9b001b;
+  font-size: 1.28rem;
+  line-height: 1.1;
+  font-weight: 1000;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow:
+    0 28px 80px rgba(0, 0, 0, 0.46),
+    0 0 0 1px rgba(255, 255, 255, 0.7) inset,
+    0 0 56px rgba(255, 190, 205, 0.42);
+}
+
+.start-league-button-header {
+  min-width: 360px;
+  min-height: 92px;
+  flex-shrink: 0;
+}
+
+.start-league-button-header::before {
+  content: "🏆";
+  display: inline-block;
+  margin-right: 12px;
+  font-size: 1.45rem;
+  transform: translateY(2px);
+}
+
+.start-league-button-header::after {
+  content: "Simular temporada";
+  display: block;
+  margin-top: 7px;
+  color: #6f0014;
+  font-size: 0.72rem;
+  font-weight: 950;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+
+.start-league-button:hover {
+  transform: translateY(-4px) scale(1.025);
+  box-shadow:
+    0 34px 92px rgba(0, 0, 0, 0.52),
+    0 0 0 1px rgba(255, 255, 255, 0.85) inset,
+    0 0 72px rgba(255, 190, 205, 0.56);
+}
+
+.start-league-button:active {
+  transform: translateY(-1px) scale(0.995);
+}
+
+/* Tarjetas inferiores bajo el campo, si SelectedTeamBoard las genera */
+.team-summary-main .team-board-insights,
+.team-summary-main .selected-team-insights,
+.team-summary-main .team-insights {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.team-summary-main .team-board-insights > *,
+.team-summary-main .selected-team-insights > *,
+.team-summary-main .team-insights > * {
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+@media (max-width: 980px) {
+  .team-summary-header-row {
+    display: grid;
+  }
+
+  .start-league-button-header {
+    width: 100%;
+    min-width: 0;
+    min-height: 78px;
+    font-size: 1.1rem;
+  }
+
+  .team-summary-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .team-summary-side {
+    position: static;
+  }
+}
+
+@media (max-width: 620px) {
+  .team-summary {
+    padding: 74px 12px 24px;
+  }
+
+  .team-summary-overall-card strong {
+    font-size: 3.2rem;
+  }
+
+  .team-summary-main .team-board-insights,
+  .team-summary-main .selected-team-insights,
+  .team-summary-main .team-insights {
+    grid-template-columns: 1fr;
+  }
+}

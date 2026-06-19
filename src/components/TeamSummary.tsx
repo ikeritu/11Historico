@@ -1,0 +1,263 @@
+// src/components/TeamSummary.tsx
+
+import { useMemo } from "react";
+
+import type {
+  Formation,
+  SelectedCoach,
+  SelectedPlayer,
+  TeamRating,
+} from "../types/game";
+
+import { calculateTeamRating } from "../simulation/teamRating";
+import SelectedTeamBoard from "./SelectedTeamBoard";
+
+import "./TeamSummary.css";
+
+interface TeamSummaryProps {
+  formation: Formation;
+  selectedPlayers: SelectedPlayer[];
+  selectedCoach: SelectedCoach;
+  onStartLeagueSimulation: (teamRating: TeamRating) => void;
+
+  // Se mantiene opcional para compatibilidad con App.tsx, pero no se muestra botón de cambio.
+  onBackToCoach?: () => void;
+}
+
+type SafeTeamRating = TeamRating & {
+  overall?: number;
+  attack?: number;
+  defense?: number;
+  control?: number;
+  physical?: number;
+  mentality?: number;
+  goalkeeping?: number;
+  strengths?: string[];
+  risks?: string[];
+};
+
+function clampRating(value: number): number {
+  if (Number.isNaN(value)) return 80;
+  return Math.max(40, Math.min(99, Math.round(value)));
+}
+
+function average(values: number[]): number {
+  if (values.length === 0) return 80;
+  return clampRating(values.reduce((sum, value) => sum + value, 0) / values.length);
+}
+
+function buildFallbackTeamRating(
+  selectedPlayers: SelectedPlayer[],
+  selectedCoach: SelectedCoach
+): SafeTeamRating {
+  const players = selectedPlayers.map((selected) => selected.playerSeason);
+  const coach = selectedCoach.coachSeason;
+
+  const attack = average([
+    average(players.map((player) => player.skills.shooting ?? player.overall)),
+    average(players.map((player) => player.skills.pace ?? player.overall)),
+    coach.skills.attack,
+  ]);
+
+  const defense = average([
+    average(players.map((player) => player.skills.defending ?? player.overall)),
+    coach.skills.defense,
+  ]);
+
+  const control = average([
+    average(players.map((player) => player.skills.passing ?? player.overall)),
+    average(players.map((player) => player.skills.dribbling ?? player.overall)),
+    coach.skills.management,
+  ]);
+
+  const physical = average(players.map((player) => player.skills.physical ?? player.overall));
+
+  const mentality = average([
+    average(players.map((player) => player.skills.mentality ?? player.overall)),
+    coach.skills.mentality,
+  ]);
+
+  const goalkeepingPlayers = players.filter((player) => player.positions.includes("POR"));
+  const goalkeeping = average(
+    goalkeepingPlayers.length > 0
+      ? goalkeepingPlayers.map((player) => player.skills.goalkeeping ?? player.overall)
+      : players.map((player) => player.skills.goalkeeping ?? player.overall)
+  );
+
+  const overall = average([attack, defense, control, physical, mentality, goalkeeping]);
+
+  return {
+    overall,
+    attack,
+    defense,
+    control,
+    physical,
+    mentality,
+    goalkeeping,
+    strengths: [
+      overall >= 90 ? "Once de nivel campeón" : "Once competitivo",
+      attack >= 85 ? "Ataque de mucho nivel" : "Ataque equilibrado",
+      defense >= 85 ? "Bloque defensivo fiable" : "Defensa correcta",
+    ],
+    risks: overall >= 88 ? ["No presenta debilidades graves en el papel"] : ["Puede sufrir ante rivales top"],
+  } as SafeTeamRating;
+}
+
+function getSafeTeamRating(
+  formation: Formation,
+  selectedPlayers: SelectedPlayer[],
+  selectedCoach: SelectedCoach
+): SafeTeamRating {
+  try {
+    const rating = calculateTeamRating({
+      formation,
+      selectedPlayers,
+      selectedCoach,
+    }) as SafeTeamRating;
+
+    const fallback = buildFallbackTeamRating(selectedPlayers, selectedCoach);
+
+    return {
+      ...fallback,
+      ...rating,
+      strengths: Array.isArray(rating.strengths) ? rating.strengths : fallback.strengths,
+      risks: Array.isArray(rating.risks) ? rating.risks : fallback.risks,
+    };
+  } catch (error) {
+    console.error("Error calculando el rating del equipo:", error);
+    return buildFallbackTeamRating(selectedPlayers, selectedCoach);
+  }
+}
+
+function RatingBar({ label, value }: { label: string; value: number }) {
+  const safeValue = clampRating(value);
+
+  return (
+    <div className="summary-rating-row">
+      <div className="summary-rating-row-top">
+        <span>{label}</span>
+        <strong>{safeValue}</strong>
+      </div>
+      <div className="summary-rating-track">
+        <div className="summary-rating-bar" style={{ width: `${safeValue}%` }} />
+      </div>
+    </div>
+  );
+}
+
+export function TeamSummary({
+  formation,
+  selectedPlayers,
+  selectedCoach,
+  onStartLeagueSimulation,
+}: TeamSummaryProps) {
+  const teamRating = useMemo(
+    () => getSafeTeamRating(formation, selectedPlayers, selectedCoach),
+    [formation, selectedPlayers, selectedCoach]
+  );
+
+  const coach = selectedCoach.coachSeason;
+
+  const strengths = Array.isArray(teamRating.strengths) && teamRating.strengths.length > 0
+    ? teamRating.strengths
+    : ["Once competitivo"];
+
+  const risks = Array.isArray(teamRating.risks) && teamRating.risks.length > 0
+    ? teamRating.risks
+    : ["No presenta debilidades graves en el papel"];
+
+  function handleStartLeague() {
+    onStartLeagueSimulation(teamRating as TeamRating);
+  }
+
+  return (
+    <section className="team-summary">
+      <header className="team-summary-header">
+        <p className="eyebrow">Resumen del equipo</p>
+
+        <div className="team-summary-header-row">
+          <div>
+            <h1>Athletic Club Histórico</h1>
+            <p>
+              Revisa tu once, entrenador y perfil colectivo antes de empezar la Liga 25/26.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            className="start-league-button start-league-button-header"
+            onClick={handleStartLeague}
+          >
+            Empezar Liga 25/26
+          </button>
+        </div>
+      </header>
+
+      <div className="team-summary-layout">
+        <div className="team-summary-main">
+          <SelectedTeamBoard
+            formation={formation}
+            selectedPlayers={selectedPlayers}
+            title="Once titular"
+          />
+        </div>
+
+        <aside className="team-summary-side">
+          <article className="team-summary-overall-card">
+            <span>Valoración general</span>
+            <strong>{teamRating.overall ?? 0}</strong>
+            <small>
+              {(teamRating.overall ?? 0) >= 90
+                ? "Athletic Club Histórico de nivel campeón"
+                : "Athletic Club Histórico competitivo"}
+            </small>
+          </article>
+
+          <article className="team-summary-coach-card">
+            <span>Entrenador elegido</span>
+            <h2>{coach.name}</h2>
+            <p>Temporada {coach.season}</p>
+            <strong>Media {coach.overall}</strong>
+
+            <div className="team-summary-coach-chips">
+              <span>Ataque {coach.skills.attack}</span>
+              <span>Defensa {coach.skills.defense}</span>
+              <span>Gestión {coach.skills.management}</span>
+              <span>Mentalidad {coach.skills.mentality}</span>
+            </div>
+          </article>
+
+          <article className="team-summary-ratings-card">
+            <h2>Ratings del equipo</h2>
+            <RatingBar label="Ataque" value={teamRating.attack ?? 0} />
+            <RatingBar label="Defensa" value={teamRating.defense ?? 0} />
+            <RatingBar label="Control" value={teamRating.control ?? 0} />
+            <RatingBar label="Físico" value={teamRating.physical ?? 0} />
+            <RatingBar label="Mentalidad" value={teamRating.mentality ?? 0} />
+            <RatingBar label="Portería" value={teamRating.goalkeeping ?? 0} />
+          </article>
+
+          <article className="team-summary-list-card">
+            <h2>Puntos fuertes</h2>
+            <ul>
+              {strengths.map((strength) => (
+                <li key={strength}>{strength}</li>
+              ))}
+            </ul>
+          </article>
+
+          <article className="team-summary-list-card">
+            <h2>Riesgos</h2>
+            <ul>
+              {risks.map((risk) => (
+                <li key={risk}>{risk}</li>
+              ))}
+            </ul>
+          </article>
+        </aside>
+      </div>
+    </section>
+  );
+}
+
+export default TeamSummary;

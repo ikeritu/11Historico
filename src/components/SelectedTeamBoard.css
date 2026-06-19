@@ -1,0 +1,123 @@
+/* src/components/SelectedTeamBoard.css */
+
+.selected-team-board {
+  padding: 22px;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.12), transparent 30%),
+    linear-gradient(135deg, rgba(120, 0, 20, 0.92), rgba(16, 16, 16, 0.94));
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 18px 52px rgba(0, 0, 0, 0.25);
+}
+
+.selected-team-board-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 18px;
+  margin-bottom: 14px;
+}
+
+.selected-team-board-header h2 {
+  margin: 0;
+  font-size: clamp(1.45rem, 3vw, 2.25rem);
+  line-height: 1.05;
+}
+
+.selected-team-board-header p {
+  margin: 8px 0 0;
+  color: #f4d7dc;
+}
+
+.team-board-summary {
+  min-width: 110px;
+  padding: 13px;
+  border-radius: 20px;
+  background: #ffffff;
+  color: #b00020;
+  text-align: center;
+}
+
+.team-board-summary span,
+.team-board-summary small {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 850;
+}
+
+.team-board-summary strong {
+  display: block;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.team-board-footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.team-board-footer div {
+  padding: 13px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.team-board-footer strong,
+.team-board-footer span {
+  display: block;
+}
+
+.team-board-footer strong {
+  margin-bottom: 4px;
+}
+
+.team-board-footer span {
+  color: #f4d7dc;
+  font-size: 0.82rem;
+}
+
+.selected-team-board-compact {
+  padding: 16px;
+}
+
+.selected-team-board-compact .selected-team-board-header {
+  align-items: flex-start;
+}
+
+.selected-team-board-compact .selected-team-board-header h2 {
+  font-size: 1.55rem;
+}
+
+.selected-team-board-compact .team-board-summary {
+  min-width: 88px;
+  padding: 10px;
+}
+
+.selected-team-board-compact .team-board-summary strong {
+  font-size: 1.55rem;
+}
+
+.selected-team-board-compact .team-board-footer {
+  display: none;
+}
+
+@media (max-width: 820px) {
+  .selected-team-board {
+    padding: 16px;
+  }
+
+  .selected-team-board-header {
+    display: block;
+  }
+
+  .team-board-summary {
+    margin-top: 14px;
+  }
+
+  .team-board-footer {
+    grid-template-columns: 1fr;
+  }
+}

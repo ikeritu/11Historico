@@ -1,0 +1,1018 @@
+/* src/components/PlayerRound.css */
+
+/* Draft de jugadores
+   Estado limpio:
+   - No hay botón para sortear otra temporada.
+   - Confirmar elección está a la izquierda.
+   - La columna izquierda queda sticky completa.
+   - El panel derecho queda libre para ver el equipo.
+*/
+
+.player-round {
+  min-height: 100vh;
+  padding: 28px 18px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.08), transparent 28%),
+    linear-gradient(135deg, #17070b 0%, #2a0810 45%, #080808 100%);
+  color: #ffffff;
+}
+
+.player-round-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  max-width: 1480px;
+  margin: 0 auto 22px;
+  align-items: flex-end;
+}
+
+.player-round-header h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+}
+
+.player-round-header p {
+  max-width: 760px;
+  color: #f1d4d9;
+  line-height: 1.5;
+}
+
+.round-status-card {
+  min-width: 190px;
+  padding: 16px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  text-align: right;
+}
+
+.round-status-card span,
+.round-status-card small {
+  display: block;
+  color: #f5cbd2;
+}
+
+.round-status-card strong {
+  display: block;
+  margin: 4px 0;
+  font-size: 1.6rem;
+}
+
+.last-selection-banner {
+  max-width: 1480px;
+  margin: -6px auto 18px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.94);
+  color: #b00020;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22);
+}
+
+.last-selection-banner span {
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: #b00020;
+  color: #ffffff;
+  font-size: 0.74rem;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.last-selection-banner strong {
+  font-size: 0.98rem;
+}
+
+.last-selection-banner small {
+  color: #6f0014;
+  font-weight: 800;
+}
+
+.player-round-layout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr) 360px;
+  gap: 18px;
+  max-width: 1480px;
+  margin: 0 auto;
+}
+
+.draft-left-column {
+  display: grid;
+  gap: 14px;
+  align-self: start;
+  position: sticky;
+  top: 86px;
+  z-index: 25;
+  max-height: calc(100vh - 104px);
+  overflow: auto;
+  padding-right: 2px;
+}
+
+.open-slots-panel,
+.players-panel,
+.selection-panel {
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(14px);
+}
+
+.open-slots-panel,
+.selection-panel {
+  padding: 18px;
+  align-self: start;
+}
+
+.selection-panel-left {
+  position: static;
+}
+
+.open-slots-panel h2,
+.selection-panel h2 {
+  margin: 0 0 12px;
+  font-size: 1.1rem;
+}
+
+.open-slots-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
+.open-slot {
+  padding: 8px 10px;
+  border-radius: 999px;
+  color: #111111;
+  font-size: 0.78rem;
+  font-weight: 950;
+  background: #ffffff;
+}
+
+.open-slot-goalkeeper {
+  background: #ffe08a;
+}
+
+.open-slot-defense {
+  background: #d9f1ff;
+}
+
+.open-slot-midfield {
+  background: #ffffff;
+}
+
+.open-slot-attack {
+  background: #ffd3d8;
+}
+
+.slot-advice-card {
+  display: grid;
+  gap: 5px;
+  margin: -8px 0 22px;
+  padding: 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.slot-advice-card strong {
+  font-size: 0.82rem;
+}
+
+.slot-advice-card span {
+  color: #ffffff;
+  font-weight: 900;
+}
+
+.slot-advice-card small {
+  color: #f0cbd1;
+  line-height: 1.35;
+}
+
+.selected-mini-list {
+  display: grid;
+  gap: 8px;
+}
+
+.selected-mini-card {
+  display: grid;
+  grid-template-columns: 45px 1fr;
+  gap: 4px 8px;
+  padding: 10px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.selected-mini-card strong {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #b00020;
+  font-size: 0.75rem;
+}
+
+.selected-mini-card span {
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.selected-mini-card small {
+  color: #f0cbd1;
+}
+
+.players-panel {
+  padding: 16px;
+}
+
+.players-toolbar {
+  display: grid;
+  grid-template-columns: minmax(160px, 1fr) 160px 190px;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.players-toolbar input,
+.players-toolbar select {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 14px;
+  padding: 12px 13px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #171717;
+  font-weight: 700;
+}
+
+.players-count {
+  margin-bottom: 14px;
+  color: #f4cbd2;
+  font-size: 0.9rem;
+}
+
+.players-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.player-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.105);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.player-card-active {
+  border-color: rgba(255, 255, 255, 0.72);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+}
+
+.player-card-disabled {
+  opacity: 0.55;
+}
+
+.player-card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.player-card h2 {
+  margin: 0 0 4px;
+  font-size: 1.15rem;
+}
+
+.player-card p {
+  margin: 0;
+  color: #f0cbd1;
+}
+
+.overall-badge {
+  min-width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  background: #ffffff;
+  color: #b00020;
+}
+
+.overall-badge span {
+  font-size: 0.65rem;
+  font-weight: 900;
+}
+
+.overall-badge strong {
+  font-size: 1.45rem;
+  line-height: 1;
+}
+
+.compatible-slots-chip {
+  width: fit-content;
+  padding: 7px 9px;
+  border-radius: 999px;
+  background: rgba(91, 220, 135, 0.2);
+  color: #aaffc4;
+  font-size: 0.78rem;
+  font-weight: 950;
+}
+
+.player-skills,
+.player-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.player-skills span {
+  padding: 6px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 850;
+}
+
+.player-meta span {
+  padding: 5px 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffdce1;
+  font-size: 0.72rem;
+}
+
+.player-warning {
+  color: #ffc0c0 !important;
+  font-weight: 800;
+  font-size: 0.85rem;
+}
+
+.player-card button,
+.confirm-player-button,
+.secondary-button,
+.slot-choice-list button {
+  border: 0;
+  border-radius: 14px;
+  padding: 11px 13px;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.player-card button,
+.confirm-player-button {
+  background: #ffffff;
+  color: #b00020;
+}
+
+.player-card button:disabled,
+.confirm-player-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.selected-player-summary {
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.1);
+  margin-bottom: 14px;
+}
+
+.selected-player-summary h3 {
+  margin: 0 0 4px;
+}
+
+.selected-player-summary p {
+  margin: 0 0 8px;
+  color: #f0cbd1;
+}
+
+.selected-player-summary strong {
+  color: #ffffff;
+}
+
+.slot-choice-list {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.slot-choice-list button {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  text-align: left;
+}
+
+.slot-choice-list button small {
+  color: #f0cbd1;
+}
+
+.slot-choice-list .slot-choice-active {
+  background: #ffffff;
+  color: #b00020;
+}
+
+.slot-choice-list .slot-choice-active small {
+  color: #6d0013;
+}
+
+.secondary-button {
+  width: 100%;
+  margin-top: 10px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.empty-message {
+  margin: 0 0 16px;
+  color: #f0cbd1;
+  line-height: 1.45;
+}
+
+@media (max-width: 1180px) {
+  .player-round-header,
+  .last-selection-banner,
+  .player-round-layout {
+    max-width: calc(100vw - 36px);
+  }
+
+  .player-round-layout {
+    grid-template-columns: 290px minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .player-round-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .draft-left-column {
+    position: static;
+    max-height: none;
+    overflow: visible;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+@media (max-width: 780px) {
+  .player-round {
+    padding: 22px 12px;
+  }
+
+  .player-round-header {
+    display: block;
+  }
+
+  .round-status-card {
+    margin-top: 16px;
+    text-align: left;
+  }
+
+  .last-selection-banner {
+    display: grid;
+  }
+
+  .draft-left-column {
+    grid-template-columns: 1fr;
+  }
+
+  .players-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .players-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* Draft interactivo sobre el campo */
+.player-round-layout-interactive {
+  grid-template-columns: 280px minmax(0, 1fr) 370px;
+  max-width: 1480px;
+}
+
+.interactive-draft-column {
+  align-self: start;
+  position: sticky;
+  top: 86px;
+  z-index: 20;
+}
+
+.interactive-draft-board {
+  padding: 16px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.1), transparent 34%),
+    rgba(255, 255, 255, 0.085);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.26);
+  backdrop-filter: blur(14px);
+}
+
+.interactive-draft-board header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.interactive-draft-board .eyebrow {
+  margin: 0 0 4px;
+  color: #ffccd3;
+  font-size: 0.72rem;
+  font-weight: 950;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.interactive-draft-board h2 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.interactive-draft-board header small {
+  padding: 7px 9px;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #b00020;
+  font-weight: 950;
+}
+
+.interactive-draft-board .tactical-pitch {
+  min-height: 430px;
+}
+
+.interactive-draft-help {
+  display: grid;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 13px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.interactive-draft-help strong {
+  color: #ffffff;
+  font-size: 1rem;
+}
+
+.interactive-draft-help span {
+  color: #f2d2d7;
+  line-height: 1.35;
+}
+
+.interactive-draft-help button {
+  width: fit-content;
+  margin-top: 5px;
+  border: 0;
+  border-radius: 12px;
+  padding: 9px 12px;
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.player-card-active {
+  border-color: rgba(255, 224, 138, 0.88);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 224, 138, 0.28),
+    0 0 0 3px rgba(255, 224, 138, 0.12);
+}
+
+.player-card-active button {
+  background: #ffe08a;
+  color: #5d3b00;
+}
+
+@media (max-width: 1280px) {
+  .player-round-layout-interactive {
+    grid-template-columns: 260px minmax(0, 1fr) 330px;
+  }
+
+  .interactive-draft-board .tactical-pitch {
+    min-height: 390px;
+  }
+}
+
+@media (max-width: 1060px) {
+  .player-round-layout-interactive {
+    grid-template-columns: 1fr;
+  }
+
+  .draft-left-column,
+  .interactive-draft-column {
+    position: static;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .interactive-draft-column {
+    order: -1;
+  }
+
+  .interactive-draft-board .tactical-pitch {
+    max-width: 520px;
+    margin: 0 auto;
+  }
+}
+
+
+/* Pulido del draft interactivo */
+.draft-placement-helper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+  padding: 15px 16px;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.12), transparent 34%),
+    rgba(255, 255, 255, 0.085);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
+}
+
+.draft-placement-helper span {
+  display: block;
+  margin-bottom: 4px;
+  color: #ffccd3;
+  font-size: 0.74rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.draft-placement-helper strong {
+  display: block;
+  color: #ffffff;
+  font-size: 1.08rem;
+}
+
+.draft-placement-helper small {
+  display: block;
+  margin-top: 4px;
+  color: #f2d2d7;
+  line-height: 1.35;
+}
+
+.draft-placement-helper button {
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: 14px;
+  padding: 11px 13px;
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.draft-placement-helper-active {
+  border-color: rgba(110, 231, 155, 0.55);
+  background:
+    radial-gradient(circle at top right, rgba(110, 231, 155, 0.18), transparent 34%),
+    rgba(255, 255, 255, 0.1);
+}
+
+.draft-placement-helper-active strong {
+  color: #aaffc4;
+}
+
+.draft-placement-helper-warning {
+  border-color: rgba(255, 190, 120, 0.6);
+  background:
+    radial-gradient(circle at top right, rgba(255, 190, 120, 0.18), transparent 34%),
+    rgba(255, 255, 255, 0.1);
+}
+
+.draft-placement-helper-warning strong {
+  color: #ffe08a;
+}
+
+.player-card-active {
+  transform: translateY(-2px);
+  border-color: rgba(110, 231, 155, 0.76) !important;
+  box-shadow:
+    0 18px 42px rgba(0, 0, 0, 0.26),
+    0 0 0 2px rgba(110, 231, 155, 0.22) inset !important;
+}
+
+.player-card-active::before {
+  content: "Seleccionado";
+  width: fit-content;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgba(110, 231, 155, 0.22);
+  color: #aaffc4;
+  font-size: 0.72rem;
+  font-weight: 950;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.players-panel:has(.draft-placement-helper-active) .player-card:not(.player-card-active) {
+  opacity: 0.72;
+}
+
+@media (max-width: 780px) {
+  .draft-placement-helper {
+    display: grid;
+  }
+
+  .draft-placement-helper button {
+    width: 100%;
+  }
+}
+
+/* v0.12.6 â€” Dashboard de habilidades en draft */
+.skills-dashboard-panel {
+  padding: 18px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 224, 138, 0.14), transparent 34%),
+    rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(14px);
+}
+
+.skills-dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.skills-dashboard-header .eyebrow {
+  margin: 0 0 4px;
+  color: #ffccd3;
+  font-size: 0.72rem;
+  font-weight: 950;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.skills-dashboard-header h2 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.skills-dashboard-header > strong {
+  min-width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  background: #ffffff;
+  color: #b00020;
+  font-size: 1.35rem;
+  font-weight: 1000;
+}
+
+.skills-dashboard-subtitle {
+  margin: 0 0 14px;
+  color: #f2d2d7;
+  font-size: 0.9rem;
+  line-height: 1.35;
+  font-weight: 800;
+}
+
+.skills-radar-card {
+  position: relative;
+  padding: 10px;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at center, rgba(255, 255, 255, 0.08), transparent 58%),
+    rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.skills-radar {
+  width: 100%;
+  aspect-ratio: 1;
+  display: block;
+}
+
+.skills-radar-grid {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.18);
+  stroke-width: 0.7;
+}
+
+.skills-radar-axis {
+  stroke: rgba(255, 255, 255, 0.12);
+  stroke-width: 0.7;
+}
+
+.skills-radar-area {
+  fill: rgba(255, 224, 138, 0.28);
+  stroke: #ffe08a;
+  stroke-width: 1.8;
+  filter: drop-shadow(0 0 8px rgba(255, 224, 138, 0.24));
+}
+
+.skills-radar-dot {
+  fill: #ffffff;
+  stroke: #b00020;
+  stroke-width: 0.8;
+}
+
+.skills-radar-labels {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.skills-radar-labels span {
+  padding: 6px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 950;
+  text-align: center;
+}
+
+.skills-dashboard-bars {
+  display: grid;
+  gap: 9px;
+  margin-top: 14px;
+}
+
+.skill-dashboard-row {
+  display: grid;
+  gap: 5px;
+}
+
+.skill-dashboard-row div {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: #ffffff;
+  font-size: 0.84rem;
+  font-weight: 900;
+}
+
+.skill-dashboard-row div strong {
+  color: #ffe08a;
+}
+
+.skill-dashboard-row i {
+  height: 8px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.13);
+}
+
+.skill-dashboard-row i b {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #b00020, #ffe08a);
+}
+
+.skills-dashboard-mini-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.skills-dashboard-mini-grid article {
+  padding: 10px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.skills-dashboard-mini-grid span {
+  display: block;
+  color: #f2d2d7;
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.skills-dashboard-mini-grid strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 1.35rem;
+  color: #ffffff;
+}
+
+.skills-dashboard-summary {
+  display: grid;
+  gap: 4px;
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.skills-dashboard-summary strong {
+  color: #ffffff;
+}
+
+.skills-dashboard-summary span {
+  color: #f2d2d7;
+  line-height: 1.35;
+  font-weight: 800;
+}
+
+/* v0.12.10 â€” Resorteo de temporada para evitar bloqueo de posiciones */
+.emergency-draft-banner {
+  display: grid;
+  gap: 5px;
+  margin-bottom: 12px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(255, 224, 138, 0.16);
+  border: 1px solid rgba(255, 224, 138, 0.34);
+  color: #ffffff;
+}
+
+.emergency-draft-banner strong {
+  color: #ffe08a;
+  font-size: 0.9rem;
+}
+
+.emergency-draft-banner span {
+  color: #f2d2d7;
+  line-height: 1.35;
+  font-weight: 800;
+}
+
+/* v0.12.12 â€” Boton rapido para colocar jugador en puesto compatible */
+.quick-slot-buttons {
+  display: grid;
+  gap: 8px;
+  margin-top: -4px;
+}
+
+.quick-slot-button {
+  width: 100%;
+  border: 0;
+  border-radius: 14px;
+  padding: 11px 13px;
+  background: #5bdc87 !important;
+  color: #06240f !important;
+  font-weight: 1000;
+  cursor: pointer;
+  box-shadow: 0 10px 22px rgba(91, 220, 135, 0.18);
+}
+
+.quick-slot-button:hover {
+  filter: brightness(1.06);
+}
+
+/* v0.12.17 â€” Botones de colocacion en panel Tu once */
+.placement-slot-buttons {
+  display: grid;
+  gap: 8px;
+  margin: 10px 0 4px;
+}
+
+.placement-slot-button {
+  width: 100%;
+  border: 0;
+  border-radius: 14px;
+  padding: 11px 13px;
+  background: #5bdc87 !important;
+  color: #06240f !important;
+  font-weight: 1000;
+  cursor: pointer;
+  box-shadow: 0 10px 22px rgba(91, 220, 135, 0.18);
+}
+
+.placement-slot-button:hover {
+  filter: brightness(1.06);
+}
+
+/* v0.12.23 â€” UX limpieza de draft */
+.player-card button:disabled,
+.player-option button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  filter: grayscale(0.35);
+}
+
+.player-card:has(button:disabled),
+.player-option:has(button:disabled) {
+  opacity: 0.72;
+}
+
+.player-warning {
+  font-weight: 900;
+}

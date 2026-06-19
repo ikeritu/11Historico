@@ -1,0 +1,4 @@
+/* v0.12.4 — Limpieza final de pantalla de entrenadores */
+.coach-visual-reveal-status {
+  display: none !important;
+}
