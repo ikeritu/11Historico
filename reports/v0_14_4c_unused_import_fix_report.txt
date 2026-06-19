@@ -1,0 +1,11 @@
+v0.14.4c - Fix build: import decodeMojibakeText no usado
+Generado: 2026-06-13T22:59:02.730Z
+
+Archivos escaneados: 32
+Archivos modificados: 0
+
+Backup:
+D:\Proyectos\⚽ Futbol11\backup_before_v0_14_4c_20260614_005902
+
+Ejecuta ahora:
+npm.cmd run build

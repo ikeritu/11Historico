@@ -1,0 +1,5 @@
+Generado: 12/6/2026, 22:26:48
+v0.14.1 - No repetir temporada dentro del draft
+OK: pickRandomSeason ahora acepta excludedSeasons.
+OK: createRandomPlayerRoundSeasons genera 11 temporadas sin repetir.
+OK: handleSkipRound excluye las temporadas ya presentes en el draft.

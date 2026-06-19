@@ -1,0 +1,211 @@
+/* src/components/PalmaresTrophyCase.css */
+
+.palmares-case-card {
+  padding: 18px;
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at top, rgba(255, 224, 138, 0.12), transparent 34%),
+    linear-gradient(135deg, rgba(62, 25, 12, 0.96), rgba(35, 9, 15, 0.96));
+  border: 1px solid rgba(255, 224, 138, 0.24);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+}
+
+.palmares-case-card-premium {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 224, 138, 0.18), transparent 28%),
+    linear-gradient(135deg, #4a1f0d, #21070b 46%, #0a0304);
+}
+
+.palmares-case-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.palmares-case-header span {
+  display: block;
+  color: #ffe08a;
+  font-size: 0.76rem;
+  font-weight: 1000;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.palmares-case-header h2 {
+  margin: 4px 0 5px;
+  color: #ffffff;
+  font-size: 1.45rem;
+}
+
+.palmares-case-header p {
+  max-width: 650px;
+  margin: 0;
+  color: #f2d2d7;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.palmares-case-header > strong {
+  flex: 0 0 auto;
+  padding: 10px 13px;
+  border-radius: 16px;
+  background: rgba(255, 224, 138, 0.16);
+  border: 1px solid rgba(255, 224, 138, 0.28);
+  color: #ffe08a;
+  font-size: 1rem;
+}
+
+.palmares-museum-cabinet {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  padding: 18px;
+  border-radius: 26px;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05), transparent 18%, rgba(255, 255, 255, 0.03)),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.025) 0 2px, transparent 2px 14px),
+    linear-gradient(180deg, #4a220e, #180706);
+  border: 1px solid rgba(255, 224, 138, 0.18);
+  box-shadow:
+    inset 0 0 54px rgba(0, 0, 0, 0.55),
+    inset 0 12px 0 rgba(255, 255, 255, 0.04);
+}
+
+.palmares-museum-cell {
+  min-height: 275px;
+  position: relative;
+  display: grid;
+  align-content: end;
+  justify-items: center;
+  gap: 8px;
+  padding: 58px 14px 18px;
+  background:
+    radial-gradient(circle at 50% 12%, rgba(255, 194, 110, 0.18), transparent 30%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(0, 0, 0, 0.18));
+  border: 1px solid rgba(255, 224, 138, 0.14);
+  box-shadow: inset 0 -12px 26px rgba(0, 0, 0, 0.22);
+  overflow: hidden;
+}
+
+.palmares-museum-cell::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 60px;
+  height: 12px;
+  background:
+    linear-gradient(90deg, #160804, #9c5d28 20%, #3e1809 50%, #9c5d28 80%, #160804);
+  box-shadow:
+    0 -8px 22px rgba(255, 178, 92, 0.2),
+    0 8px 20px rgba(0, 0, 0, 0.42);
+}
+
+.palmares-museum-cell:not(.palmares-museum-cell-won) {
+  opacity: 0.55;
+  filter: grayscale(0.62);
+}
+
+.palmares-cell-plate {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  top: 13px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  gap: 2px;
+  padding: 8px 10px;
+  border-radius: 14px;
+  background:
+    linear-gradient(90deg, transparent, rgba(255, 224, 138, 0.15), transparent),
+    rgba(23, 7, 5, 0.68);
+  border: 1px solid rgba(255, 224, 138, 0.16);
+  text-align: center;
+}
+
+.palmares-cell-plate span {
+  color: #ffe08a;
+  font-size: 0.74rem;
+  font-weight: 1000;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.palmares-cell-plate strong {
+  color: #ffffff;
+  font-size: 0.95rem;
+}
+
+.palmares-spotlight {
+  position: absolute;
+  left: 50%;
+  top: 42px;
+  width: 140px;
+  height: 150px;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at top, rgba(255, 221, 154, 0.4), transparent 70%);
+}
+
+.palmares-svg-wrap {
+  position: relative;
+  z-index: 2;
+  height: 146px;
+  display: grid;
+  place-items: end center;
+}
+
+.palmares-svg-trophy {
+  width: 128px;
+  height: 154px;
+  overflow: visible;
+}
+
+.palmares-svg-trophy-large {
+  width: 138px;
+  height: 162px;
+}
+
+.palmares-museum-cell small {
+  position: relative;
+  z-index: 3;
+  display: block;
+  color: #f2d2d7;
+  text-align: center;
+  font-weight: 850;
+}
+
+.palmares-case-footer {
+  margin-top: 12px;
+  display: grid;
+  place-items: center;
+}
+
+.palmares-case-footer span {
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.24);
+  color: #ffe08a;
+  font-size: 0.78rem;
+  font-weight: 950;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 900px) {
+  .palmares-museum-cabinet {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .palmares-case-header {
+    display: grid;
+  }
+}
+
+@media (max-width: 560px) {
+  .palmares-museum-cabinet {
+    grid-template-columns: 1fr;
+  }
+}

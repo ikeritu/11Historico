@@ -1,0 +1,28 @@
+# dependencies
+node_modules/
+
+# production
+dist/
+build/
+
+# local env
+.env
+.env.local
+.env.*.local
+
+# generated exports / chat patches
+_export*/
+*.zip
+*.rar
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

@@ -1,0 +1,10 @@
+﻿v0.14.2f - Fix directo de leagueSimulator.ts + mantener Ko-fi
+Generado: 2026-06-13 02:07:46
+
+Backup creado en: D:\Proyectos\⚽ Futbol11\backup_before_v0_14_2f_20260613_020746
+OK: src\simulation\leagueSimulator.ts reemplazado por versiÃ³n reparada.
+OK: eliminado bloque suelto de getCupRivalFromFixture.
+OK: no se han tocado componentes ni Ko-fi.
+
+Ejecuta ahora:
+npm.cmd run build

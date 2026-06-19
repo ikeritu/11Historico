@@ -1,0 +1,120 @@
+/* src/components/SupportButton.css */
+
+.support-card {
+  box-sizing: border-box;
+  width: min(680px, calc(100% - 32px));
+  max-width: 680px;
+  margin: 18px auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 221, 190, 0.2);
+  background:
+    radial-gradient(circle at top left, rgba(255, 228, 187, 0.1), transparent 34%),
+    rgba(122, 47, 60, 0.26);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
+}
+
+.support-card--home {
+  margin-top: 18px;
+  margin-bottom: 18px;
+}
+
+.support-card--final {
+  margin-top: 16px;
+  margin-bottom: 0;
+  width: min(560px, 100%);
+}
+
+.support-card-text {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.support-card-text strong {
+  color: #fff3df;
+  font-size: 0.94rem;
+  font-weight: 950;
+  line-height: 1.15;
+}
+
+.support-card-text span {
+  color: rgba(255, 239, 224, 0.78);
+  font-size: 0.81rem;
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+.support-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.support-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 38px;
+  padding: 9px 14px;
+  border-radius: 999px;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 950;
+  white-space: nowrap;
+  box-shadow:
+    0 12px 26px rgba(0, 0, 0, 0.26),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  transition:
+    transform 140ms ease,
+    filter 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.support-button--kofi {
+  border: 1px solid rgba(255, 214, 170, 0.34);
+  background: linear-gradient(135deg, #7a2f3c 0%, #a14351 100%);
+}
+
+.support-button--paypal {
+  border: 1px solid rgba(255, 228, 190, 0.28);
+  background:
+    linear-gradient(135deg, rgba(95, 39, 51, 0.96) 0%, rgba(132, 57, 69, 0.96) 100%);
+}
+
+.support-button:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+  box-shadow:
+    0 16px 34px rgba(0, 0, 0, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.support-button:focus-visible {
+  outline: 3px solid rgba(255, 217, 158, 0.78);
+  outline-offset: 3px;
+}
+
+@media (max-width: 720px) {
+  .support-card {
+    width: calc(100% - 24px);
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .support-actions {
+    justify-content: center;
+  }
+
+  .support-button {
+    flex: 1 1 130px;
+  }
+}

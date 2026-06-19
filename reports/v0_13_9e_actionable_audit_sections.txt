@@ -1,0 +1,48 @@
+﻿v0.13.9e - SECCIONES ACCIONABLES DE AUDITORIA
+Generado: 2026-06-12 15:31:47
+Fuente: D:\Proyectos\⚽ Futbol11\reports\v0_13_9d_historical_quality_audit_cjs_fix.txt
+
+POSICIONES Y LABELS SOSPECHOSOS
+--------------------------------
+POSICION_RARA: 1928/29 | Larrakoetxea | CAI
+POSICION_RARA: 1929/30 | Larrakoetxea | CAI
+POSICION_RARA: 1993/94 | Tabuenka | CAD
+POSICION_RARA: 1997/98 | Tabuenka | CAD
+POSICION_RARA: 2008/09 | Iraola | CAD
+POSICION_RARA: 2011/12 | Iraola | CAD
+POSICION_RARA: 2013/14 | Iraola | CAD
+POSICION_RARA: 2020/21 | Capa | CAD
+POSICION_RARA: 2020/21 | Yuri | CAI
+POSICION_RARA: 2023/24 | Yuri | CAI
+POSICION_RARA: 2023/24 | De Marcos | CAD
+
+SALTOS GRANDES DE RATING POR JUGADOR
+------------------------------------
+Noriega: 1982/83 81 -> 1983/84 70 | salto 11
+Noriega: 1983/84 70 -> 1984/85 81 | salto 11
+Urkiaga: 1982/83 83 -> 1983/84 75 | salto 8
+Urtubi: 1982/83 83 -> 1983/84 75 | salto 8
+Gallego: 1982/83 79 -> 1983/84 70 | salto 9
+Gallego: 1983/84 70 -> 1984/85 79 | salto 9
+Andrinua: 1992/93 84 -> 1993/94 76 | salto 8
+Koikili: 2009/10 78 -> 2011/12 70 | salto 8
+Iturraspe: 2014/15 83 -> 2015/16 75 | salto 8
+Yeray: 2022/23 84 -> 2023/24 76 | salto 8
+Dani García: 2022/23 82 -> 2023/24 73 | salto 9
+Jauregizar: 2023/24 70 -> 2024/25 80 | salto 10
+
+JUGADORES 90+
+-------------
+1942/43 | Zarra | 90
+1955/56 | Garay | 90
+1972/73 | Iribar | 90
+1976/77 | Iribar | 90
+1993/94 | Julen Guerrero | 90
+1997/98 | Guerrero | 90
+
+TEMPORADAS POTENCIALMENTE SOBREVALORADAS
+----------------------------------------
+1995/96 | media=80.13 | jugadores=15
+1996/97 | media=80.13 | jugadores=15
+2005/06 | media=80.20 | jugadores=15
+2017/18 | media=81.60 | jugadores=15

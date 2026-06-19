@@ -1,0 +1,11 @@
+﻿v0.14.2d - Copa segura + Ko-fi integrado STANDALONE
+Generado: 2026-06-13 01:25:00
+
+OK: leagueSimulator.ts no parece roto. No se hace rollback preventivo.
+OK: helpers de Copa insertados antes de getCupRivalFromFixture.
+OK: getCupRivalFromFixture aplica local├â┬¡a y fatiga copera.
+OK: SupportButton.tsx y SupportButton.css creados/actualizados.
+OK: SupportButton insertado en GameHome.tsx.
+OK: SupportButton insertado en FinalSummary.tsx.
+
+Backup creado en: D:\Proyectos\⚽ Futbol11\backup_before_v0_14_2d_20260613_012500

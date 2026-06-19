@@ -1,0 +1,6 @@
+﻿v0.13.7d - REPARACION DUPLICADO 1976/77
+Generado: 2026-06-12 00:48:11
+Proyecto: D:\Proyectos\⚽ Futbol11
+Backup: D:\Proyectos\⚽ Futbol11\backup_before_v0_13_7d_20260612_004811
+
+OK: 1976/77 no esta duplicada. No se ha modificado seasons.ts.

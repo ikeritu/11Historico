@@ -1,0 +1,1025 @@
+/* src/components/LeagueSimulatorView.css */
+
+/* Recuperación completa de la pantalla Liga + Copa.
+   IMPORTANTE:
+   - Sustituir TODO el archivo LeagueSimulatorView.css por este contenido.
+   - No pegar al final.
+   - Incluye layout completo + camisetas visibles.
+*/
+
+.league-simulator-view {
+  min-height: 100vh;
+  padding: 84px 18px 36px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.08), transparent 30%),
+    linear-gradient(135deg, #17070b 0%, #2b0710 46%, #080808 100%);
+  color: #ffffff;
+}
+
+.league-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 170px;
+  gap: 22px;
+  align-items: end;
+  max-width: 1180px;
+  margin: 0 auto 22px;
+}
+
+.league-header .eyebrow {
+  margin: 0 0 10px;
+  color: #ffccd3;
+  font-size: 0.78rem;
+  font-weight: 950;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.league-header h1 {
+  margin: 0;
+  font-size: clamp(2.2rem, 4.4vw, 3.8rem);
+  line-height: 1;
+}
+
+.league-header p {
+  max-width: 850px;
+  margin: 12px 0 0;
+  color: #f2d2d7;
+  line-height: 1.5;
+}
+
+.league-main-card {
+  padding: 16px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  text-align: center;
+}
+
+.league-main-card span,
+.league-main-card small,
+.league-main-card em {
+  display: block;
+  color: #f2d2d7;
+  font-size: 0.76rem;
+  font-style: normal;
+  font-weight: 850;
+}
+
+.league-main-card strong {
+  display: block;
+  margin: 4px 0;
+  font-size: 2rem;
+}
+
+.league-main-card em {
+  display: inline-flex;
+  margin-top: 8px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+}
+
+.league-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 20px;
+  max-width: 1180px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+.league-main-panel {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
+.league-side-panel {
+  display: grid;
+  gap: 16px;
+  position: sticky;
+  top: 84px;
+  align-self: start;
+}
+
+/* Próximo paso */
+.league-actions-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  align-items: center;
+  gap: 22px;
+  padding: 20px;
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.085);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.22);
+}
+
+.league-actions-card h2 {
+  margin: 0 0 8px;
+  font-size: 1.55rem;
+}
+
+.league-actions-card p {
+  margin: 0;
+  color: #f2d2d7;
+  line-height: 1.45;
+}
+
+.league-actions-card-running {
+  border-color: rgba(255, 224, 138, 0.42);
+  box-shadow: 0 18px 48px rgba(255, 224, 138, 0.12), 0 16px 44px rgba(0, 0, 0, 0.22);
+}
+
+.league-buttons {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  justify-self: end;
+  width: 360px;
+}
+
+.league-buttons button {
+  min-height: 54px;
+  border: 0;
+  border-radius: 18px;
+  padding: 13px 16px;
+  background: #ffffff;
+  color: #b00020;
+  font-weight: 950;
+  cursor: pointer;
+  text-align: center;
+}
+
+.league-buttons .secondary-league-button,
+.secondary-league-button {
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+}
+
+.league-buttons .stop-league-button,
+.stop-league-button {
+  background: #ffe08a;
+  color: #451600;
+}
+
+.league-buttons .tertiary-league-button,
+.tertiary-league-button {
+  min-height: 44px;
+  background: transparent;
+  color: #ffccd3;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.league-buttons button:hover {
+  transform: translateY(-2px);
+}
+
+.league-buttons button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+  transform: none;
+}
+
+/* Copa */
+.cup-event-card {
+  padding: 18px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 224, 138, 0.16), transparent 34%),
+    rgba(255, 255, 255, 0.085);
+  border: 1px solid rgba(255, 224, 138, 0.28);
+}
+
+.cup-event-card span {
+  display: block;
+  color: #ffe08a;
+  font-size: 0.76rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.cup-event-card h2 {
+  margin: 6px 0;
+  font-size: 1.45rem;
+}
+
+.cup-event-card p {
+  margin: 0;
+  color: #f2d2d7;
+}
+
+/* Tarjetas */
+.last-result-card,
+.season-stats-card,
+.scorers-card,
+.table-card,
+.recent-results-card {
+  padding: 18px;
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.085);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.22);
+}
+
+.last-result-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.result-badge {
+  display: inline-flex;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 950;
+}
+
+.result-badge-win {
+  background: rgba(88, 214, 141, 0.2);
+  color: #9cffbf;
+}
+
+.result-badge-draw {
+  background: rgba(255, 224, 138, 0.2);
+  color: #ffe08a;
+}
+
+.result-badge-loss {
+  background: rgba(255, 99, 99, 0.2);
+  color: #ffaaaa;
+}
+
+/* Marcador principal con camisetas */
+.last-result-scoreboard {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  margin: 0 0 12px;
+  padding: 16px 18px;
+  border-radius: 20px;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.07));
+}
+
+.score-team {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+  font-size: 1.18rem;
+  font-weight: 1000;
+}
+
+.score-team:last-child {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.score-team > span:not(.team-kit-icon):not(.team-kit-sleeve):not(.team-kit-body) {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.score-team strong {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  min-height: 40px;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #b00020;
+  font-size: 1.45rem;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28);
+}
+
+.score-separator {
+  color: #f2d2d7;
+  font-weight: 950;
+}
+
+/* Camisetas */
+.team-with-kit,
+.recent-result-scoreline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.team-with-kit > span:last-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.team-kit-icon {
+  --kit-main: #ffffff;
+  --kit-alt: #b00020;
+  --kit-border: rgba(255, 255, 255, 0.95);
+
+  position: relative;
+  display: inline-block;
+  width: 34px;
+  height: 31px;
+  flex: 0 0 auto;
+  filter:
+    drop-shadow(0 4px 7px rgba(0, 0, 0, 0.55))
+    drop-shadow(0 0 3px rgba(255, 255, 255, 0.28));
+}
+
+.team-kit-icon-compact {
+  width: 28px;
+  height: 25px;
+}
+
+.team-kit-body {
+  position: absolute;
+  left: 7px;
+  top: 5px;
+  width: 20px;
+  height: 22px;
+  border-radius: 6px 6px 7px 7px;
+  border: 2px solid var(--kit-border);
+  background:
+    linear-gradient(
+      90deg,
+      var(--kit-alt) 0 18%,
+      var(--kit-main) 18% 36%,
+      var(--kit-alt) 36% 54%,
+      var(--kit-main) 54% 72%,
+      var(--kit-alt) 72% 100%
+    );
+}
+
+.team-kit-sleeve {
+  position: absolute;
+  top: 7px;
+  width: 10px;
+  height: 11px;
+  border-radius: 4px;
+  border: 2px solid var(--kit-border);
+  background: var(--kit-main);
+}
+
+.team-kit-sleeve-left {
+  left: 0;
+  transform: rotate(-22deg);
+}
+
+.team-kit-sleeve-right {
+  right: 0;
+  transform: rotate(22deg);
+}
+
+.team-kit-athletic {
+  --kit-main: #ffffff;
+  --kit-alt: #d4002a;
+  --kit-border: rgba(255, 255, 255, 0.95);
+}
+
+.team-kit-athletic .team-kit-sleeve {
+  background: #d4002a;
+}
+
+.team-kit-sevilla {
+  --kit-main: #ffffff;
+  --kit-alt: #ffffff;
+  --kit-border: rgba(255, 255, 255, 0.95);
+}
+
+.team-kit-sevilla .team-kit-body {
+  background:
+    linear-gradient(90deg, #ffffff 0 42%, #d4002a 42% 58%, #ffffff 58% 100%);
+  box-shadow:
+    inset 0 -5px 0 #d4002a,
+    0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+.team-kit-sevilla .team-kit-sleeve {
+  background: #ffffff;
+  box-shadow: inset 0 -4px 0 #d4002a;
+}
+
+.team-kit-real-madrid .team-kit-body {
+  background: #ffffff;
+  box-shadow: inset 0 -3px 0 #d8b45f;
+}
+
+.team-kit-barcelona {
+  --kit-main: #004d98;
+  --kit-alt: #a50044;
+}
+
+.team-kit-atletico {
+  --kit-main: #ffffff;
+  --kit-alt: #d71920;
+}
+
+.team-kit-valencia .team-kit-body {
+  background: #ffffff;
+  box-shadow: inset 0 -4px 0 #ff7a00;
+}
+
+.team-kit-betis {
+  --kit-main: #ffffff;
+  --kit-alt: #00954c;
+}
+
+.team-kit-sociedad {
+  --kit-main: #ffffff;
+  --kit-alt: #0067b1;
+}
+
+.team-kit-default {
+  --kit-main: #d7e3ff;
+  --kit-alt: #7f8ea3;
+}
+
+/* Eventos de gol */
+.goal-events-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.goal-events-list li {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.goal-events-list .team-kit-icon {
+  width: 27px;
+  height: 25px;
+}
+
+.goal-events-list .team-kit-body {
+  left: 6px;
+  top: 5px;
+  width: 16px;
+  height: 18px;
+}
+
+.goal-events-list .team-kit-sleeve {
+  top: 6px;
+  width: 8px;
+  height: 9px;
+}
+
+.goal-events-list small {
+  grid-column: 2 / -1;
+  color: #f2d2d7;
+}
+
+/* Stats */
+.season-stats-card h2,
+.scorers-card h2,
+.table-card h2,
+.recent-results-card h2 {
+  margin: 0 0 12px;
+  font-size: 1.25rem;
+}
+
+.season-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.season-stats-grid > div {
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.season-stats-grid span {
+  display: block;
+  color: #f2d2d7;
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.season-stats-grid strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 2rem;
+}
+
+.scorers-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.scorers-card ol {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.scorers-card li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.scorers-card span,
+.recent-results-card span,
+.empty-league-message {
+  color: #f2d2d7;
+}
+
+/* Tabla lateral */
+.league-table {
+  display: grid;
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.league-table-head,
+.league-table-row {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) 44px 44px;
+  gap: 8px;
+  align-items: center;
+  padding: 9px 10px;
+}
+
+.league-table-head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #2b1117;
+  color: #ffccd3;
+  font-size: 0.72rem;
+  font-weight: 950;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.league-table-row {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: #f2d2d7;
+  font-size: 0.84rem;
+}
+
+.league-table-row span:nth-child(2) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.league-table-row strong {
+  color: #ffffff;
+  text-align: right;
+}
+
+.league-table-row span:nth-child(1),
+.league-table-row span:nth-child(3),
+.league-table-row span:nth-child(4) {
+  text-align: right;
+}
+
+.league-table-row-user {
+  background: linear-gradient(90deg, rgba(176, 0, 32, 0.75), rgba(255, 255, 255, 0.08));
+  color: #ffffff;
+}
+
+/* Resultados laterales */
+.cup-status-text {
+  margin: 0 0 12px;
+  color: #ffe08a;
+  font-weight: 900;
+}
+
+.recent-results-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.recent-results-heading h2 {
+  margin: 0;
+}
+
+.recent-results-heading span {
+  display: inline-flex;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffccd3;
+  font-size: 0.78rem;
+  font-weight: 950;
+}
+
+.recent-results-list {
+  display: grid;
+  gap: 8px;
+}
+
+.recent-results-list article {
+  display: grid;
+  gap: 5px;
+  padding: 11px 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.recent-results-list strong {
+  color: #ffffff;
+  line-height: 1.25;
+}
+
+.recent-results-list small {
+  width: fit-content;
+}
+
+.recent-result-scoreline {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+  font-size: 0.82rem;
+}
+
+.recent-result-scoreline .team-kit-icon {
+  width: 24px;
+  height: 22px;
+}
+
+.recent-result-scoreline .team-kit-body {
+  left: 5px;
+  top: 4px;
+  width: 14px;
+  height: 16px;
+}
+
+.recent-result-scoreline .team-kit-sleeve {
+  top: 5px;
+  width: 7px;
+  height: 8px;
+}
+
+.recent-result-scoreline > span:nth-child(2) {
+  color: #ffffff;
+  font-weight: 950;
+}
+
+.recent-result-scoreline .team-with-kit:last-child {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+@media (max-width: 1100px) {
+  .league-header,
+  .league-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .league-side-panel {
+    position: static;
+  }
+
+  .league-actions-card {
+    grid-template-columns: 1fr;
+  }
+
+  .league-buttons {
+    width: 100%;
+    justify-self: stretch;
+  }
+}
+
+@media (max-width: 720px) {
+  .league-simulator-view {
+    padding: 72px 12px 24px;
+  }
+
+  .season-stats-grid,
+  .scorers-card {
+    grid-template-columns: 1fr;
+  }
+
+  .last-result-scoreboard {
+    grid-template-columns: 1fr;
+  }
+
+  .score-team:last-child {
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  .score-separator {
+    display: none;
+  }
+
+  .goal-events-list li {
+    grid-template-columns: 42px 1fr;
+  }
+
+  .goal-events-list em {
+    grid-column: 2;
+  }
+
+  .recent-result-scoreline {
+    grid-template-columns: 1fr;
+  }
+
+  .recent-result-scoreline .team-with-kit:last-child {
+    justify-content: flex-start;
+    text-align: left;
+  }
+}
+
+
+/* Camisetas adicionales de LaLiga 25/26 */
+
+/* Osasuna: rojo */
+.team-kit-osasuna {
+  --kit-main: #c8102e;
+  --kit-alt: #c8102e;
+  --kit-border: rgba(255, 255, 255, 0.9);
+}
+
+.team-kit-osasuna .team-kit-body {
+  background: #c8102e;
+  box-shadow: inset 0 -5px 0 #071d49;
+}
+
+.team-kit-osasuna .team-kit-sleeve {
+  background: #c8102e;
+}
+
+/* Celta: celeste */
+.team-kit-celta {
+  --kit-main: #a7d8ff;
+  --kit-alt: #a7d8ff;
+  --kit-border: rgba(255, 255, 255, 0.9);
+}
+
+.team-kit-celta .team-kit-body,
+.team-kit-celta .team-kit-sleeve {
+  background: #a7d8ff;
+}
+
+/* Alavés: azul y blanco */
+.team-kit-alaves {
+  --kit-main: #ffffff;
+  --kit-alt: #0057b8;
+}
+
+/* Elche: blanco con franja verde */
+.team-kit-elche {
+  --kit-main: #ffffff;
+  --kit-alt: #ffffff;
+}
+
+.team-kit-elche .team-kit-body {
+  background: #ffffff;
+  box-shadow: inset 0 -7px 0 #007a3d;
+}
+
+.team-kit-elche .team-kit-sleeve {
+  background: #ffffff;
+}
+
+/* Getafe: azul */
+.team-kit-getafe {
+  --kit-main: #005bbb;
+  --kit-alt: #005bbb;
+}
+
+.team-kit-getafe .team-kit-body,
+.team-kit-getafe .team-kit-sleeve {
+  background: #005bbb;
+}
+
+/* Girona: rojiblanco vertical */
+.team-kit-girona {
+  --kit-main: #ffffff;
+  --kit-alt: #d71920;
+}
+
+/* Levante: granate y azul */
+.team-kit-levante {
+  --kit-main: #a50044;
+  --kit-alt: #004d98;
+}
+
+/* Rayo Vallecano: blanco con banda roja diagonal simulada */
+.team-kit-rayo {
+  --kit-main: #ffffff;
+  --kit-alt: #ffffff;
+}
+
+.team-kit-rayo .team-kit-body {
+  background:
+    linear-gradient(135deg, transparent 0 38%, #d4002a 38% 58%, transparent 58% 100%),
+    #ffffff;
+}
+
+.team-kit-rayo .team-kit-sleeve {
+  background: #ffffff;
+}
+
+/* Espanyol: azul y blanco */
+.team-kit-espanyol {
+  --kit-main: #ffffff;
+  --kit-alt: #0067b1;
+}
+
+/* Mallorca: rojo */
+.team-kit-mallorca {
+  --kit-main: #d71920;
+  --kit-alt: #d71920;
+}
+
+.team-kit-mallorca .team-kit-body,
+.team-kit-mallorca .team-kit-sleeve {
+  background: #d71920;
+}
+
+/* Real Oviedo: azul */
+.team-kit-oviedo {
+  --kit-main: #0057b8;
+  --kit-alt: #0057b8;
+}
+
+.team-kit-oviedo .team-kit-body,
+.team-kit-oviedo .team-kit-sleeve {
+  background: #0057b8;
+}
+
+/* Villarreal: amarillo */
+.team-kit-villarreal {
+  --kit-main: #ffe500;
+  --kit-alt: #ffe500;
+  --kit-border: rgba(255, 255, 255, 0.9);
+}
+
+.team-kit-villarreal .team-kit-body,
+.team-kit-villarreal .team-kit-sleeve {
+  background: #ffe500;
+}
+
+/* Mejor contraste para camisetas claras */
+.team-kit-celta .team-kit-body,
+.team-kit-celta .team-kit-sleeve,
+.team-kit-elche .team-kit-body,
+.team-kit-elche .team-kit-sleeve,
+.team-kit-rayo .team-kit-body,
+.team-kit-rayo .team-kit-sleeve,
+.team-kit-villarreal .team-kit-body,
+.team-kit-villarreal .team-kit-sleeve,
+.team-kit-real-madrid .team-kit-body,
+.team-kit-real-madrid .team-kit-sleeve {
+  border-color: rgba(255, 255, 255, 0.98);
+}
+
+
+/* Camisetas de equipos extra de Copa del Rey */
+.team-kit-mirandes,
+.team-kit-numancia,
+.team-kit-granada {
+  --kit-main: #d71920;
+  --kit-alt: #d71920;
+}
+
+.team-kit-mirandes .team-kit-body,
+.team-kit-mirandes .team-kit-sleeve,
+.team-kit-numancia .team-kit-body,
+.team-kit-numancia .team-kit-sleeve,
+.team-kit-granada .team-kit-body,
+.team-kit-granada .team-kit-sleeve {
+  background: #d71920;
+}
+
+.team-kit-zaragoza,
+.team-kit-tenerife,
+.team-kit-albacete,
+.team-kit-cultural,
+.team-kit-burgos {
+  --kit-main: #ffffff;
+  --kit-alt: #ffffff;
+}
+
+.team-kit-zaragoza .team-kit-body {
+  background: #ffffff;
+  box-shadow: inset 0 -5px 0 #0057b8;
+}
+
+.team-kit-tenerife .team-kit-body,
+.team-kit-albacete .team-kit-body,
+.team-kit-cultural .team-kit-body,
+.team-kit-burgos .team-kit-body {
+  background: #ffffff;
+  box-shadow: inset 0 -4px 0 #1d1d1d;
+}
+
+.team-kit-sporting,
+.team-kit-almeria {
+  --kit-main: #ffffff;
+  --kit-alt: #d71920;
+}
+
+.team-kit-racing,
+.team-kit-cordoba {
+  --kit-main: #ffffff;
+  --kit-alt: #00954c;
+}
+
+.team-kit-deportivo,
+.team-kit-alcoyano,
+.team-kit-malaga {
+  --kit-main: #ffffff;
+  --kit-alt: #0067b1;
+}
+
+.team-kit-cadiz,
+.team-kit-alcorcon {
+  --kit-main: #ffe500;
+  --kit-alt: #ffe500;
+}
+
+.team-kit-cadiz .team-kit-body,
+.team-kit-cadiz .team-kit-sleeve,
+.team-kit-alcorcon .team-kit-body,
+.team-kit-alcorcon .team-kit-sleeve {
+  background: #ffe500;
+  box-shadow: inset 0 -4px 0 #0057b8;
+}
+
+.team-kit-badajoz,
+.team-kit-castellon {
+  --kit-main: #ffffff;
+  --kit-alt: #111111;
+}
+
+.team-kit-eibar,
+.team-kit-huesca {
+  --kit-main: #0057b8;
+  --kit-alt: #d71920;
+}
+
+.team-kit-las-palmas {
+  --kit-main: #ffe500;
+  --kit-alt: #ffe500;
+}
+
+.team-kit-las-palmas .team-kit-body,
+.team-kit-las-palmas .team-kit-sleeve {
+  background: #ffe500;
+  box-shadow: inset 0 -4px 0 #0057b8;
+}
+
+.team-kit-barakaldo,
+.team-kit-portugalete {
+  --kit-main: #ffe500;
+  --kit-alt: #111111;
+}
+
+.team-kit-sestao {
+  --kit-main: #00954c;
+  --kit-alt: #111111;
+}
+
+/* Contraste extra para camisetas claras de Copa */
+.team-kit-zaragoza .team-kit-body,
+.team-kit-zaragoza .team-kit-sleeve,
+.team-kit-tenerife .team-kit-body,
+.team-kit-tenerife .team-kit-sleeve,
+.team-kit-albacete .team-kit-body,
+.team-kit-albacete .team-kit-sleeve,
+.team-kit-cultural .team-kit-body,
+.team-kit-cultural .team-kit-sleeve,
+.team-kit-burgos .team-kit-body,
+.team-kit-burgos .team-kit-sleeve {
+  border-color: rgba(255, 255, 255, 0.98);
+}

@@ -1,0 +1,24 @@
+﻿v0.14.3 - Simulacion batch 10 temporadas + control de realismo
+Generado: 2026-06-13 23:25:20
+
+Runs: 
+Rating auditado: Overall  | ATA  | DEF  | CTRL  | POR 
+
+Regla de decision:
+- Si Oviedo / Alaves / Osasuna bajan mucho: normal.
+- Si Villarreal baja demasiadas veces: ajuste.
+- Si Girona baja 2-3 veces en 10: tolerable.
+- Si Madrid/Barca copan siempre la Copa: retocar.
+
+Resumen de alertas:
+
+Descensos por equipo vigilado:
+
+Villarreal en zona peligrosa 17-20: /
+Villarreal descensos: /
+Girona descensos: /
+Copas ganadas por Madrid/Barca: /
+
+Campeones de Copa:
+
+Detalle por simulacion:

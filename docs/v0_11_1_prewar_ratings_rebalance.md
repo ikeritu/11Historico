@@ -1,0 +1,163 @@
+# v0.11.1 — Rebalance ratings pre-Guerra Civil
+
+## Motivo
+
+Las plantillas 1928/29 - 1935/36 estaban demasiado infladas para gameplay: había demasiados jugadores en 85-90.
+
+## Nueva regla de calibración
+
+- Jugadores normales / rotación: 70-76.
+- Buenos titulares: 77-80.
+- Leyendas puntuales: 81-85.
+- Nadie del bloque pre-Guerra Civil supera 85 en esta fase.
+
+## Leyendas que mantienen rango alto
+
+- Bata: hasta 85.
+- Blasco: hasta 84.
+- Gorostiza: hasta 84.
+- Iraragorri: hasta 83.
+- Cilaurren: hasta 83.
+- Muguerza, Roberto, Zubieta, Lafuente, Unamuno: hasta 82.
+- Urkizu y Chirri II: hasta 81.
+
+## Cambios aplicados
+
+- 1928/29 — Ispizua: 76 → 75
+- 1928/29 — Careaga: 74 → 73
+- 1928/29 — Castellanos: 75 → 73
+- 1928/29 — Juanín: 74 → 73
+- 1928/29 — Alberdi: 74 → 73
+- 1928/29 — Castaños: 76 → 75
+- 1928/29 — Garizurieta: 78 → 76
+- 1928/29 — Legarreta: 75 → 73
+- 1928/29 — Juanito: 74 → 73
+- 1928/29 — Lafuente: 84 → 82
+- 1928/29 — Mandaluniz: 76 → 75
+- 1928/29 — Unamuno: 83 → 82
+- 1929/30 — Blasco: 87 → 84
+- 1929/30 — Ispizua: 77 → 75
+- 1929/30 — Careaga: 76 → 75
+- 1929/30 — Castellanos: 78 → 76
+- 1929/30 — Juanín: 77 → 75
+- 1929/30 — Larrakoetxea: 74 → 73
+- 1929/30 — Muguerza: 85 → 82
+- 1929/30 — Rousse: 78 → 76
+- 1929/30 — Urkizu: 84 → 81
+- 1929/30 — Alberdi: 75 → 73
+- 1929/30 — Castaños: 77 → 75
+- 1929/30 — Garizurieta: 79 → 76
+- 1929/30 — Roberto: 86 → 82
+- 1929/30 — Bata: 90 → 85
+- 1929/30 — Chirri II: 87 → 81
+- 1929/30 — Gorostiza: 89 → 84
+- 1929/30 — Iraragorri: 88 → 83
+- 1929/30 — Lafuente: 88 → 82
+- 1929/30 — Mandaluniz: 77 → 75
+- 1929/30 — Unamuno: 85 → 82
+- 1929/30 — Uribe: 76 → 75
+- 1930/31 — Blasco: 88 → 84
+- 1930/31 — Ispizua: 77 → 75
+- 1930/31 — Careaga: 77 → 75
+- 1930/31 — Castellanos: 79 → 76
+- 1930/31 — Juanín: 77 → 75
+- 1930/31 — Muguerza: 86 → 82
+- 1930/31 — Rousse: 79 → 76
+- 1930/31 — Urkizu: 85 → 81
+- 1930/31 — Castaños: 78 → 76
+- 1930/31 — Felipés: 76 → 75
+- 1930/31 — Garizurieta: 79 → 76
+- 1930/31 — Roberto: 87 → 82
+- 1930/31 — Bata: 92 → 85
+- 1930/31 — Chirri II: 88 → 81
+- 1930/31 — Gorostiza: 90 → 84
+- 1930/31 — Iraragorri: 90 → 83
+- 1930/31 — Lafuente: 88 → 82
+- 1930/31 — Unamuno: 85 → 82
+- 1930/31 — Uribe: 76 → 75
+- 1931/32 — Blasco: 87 → 84
+- 1931/32 — Ispizua: 76 → 75
+- 1931/32 — Castellanos: 78 → 76
+- 1931/32 — Muguerza: 85 → 82
+- 1931/32 — Urkizu: 83 → 81
+- 1931/32 — Zabala: 77 → 75
+- 1931/32 — Garizurieta: 78 → 76
+- 1931/32 — Roberto: 86 → 82
+- 1931/32 — Felipés: 76 → 75
+- 1931/32 — Bata: 90 → 85
+- 1931/32 — Chirri II: 87 → 81
+- 1931/32 — Gorostiza: 89 → 84
+- 1931/32 — Iraragorri: 89 → 83
+- 1931/32 — Lafuente: 86 → 82
+- 1931/32 — Unamuno: 83 → 82
+- 1931/32 — Uribe: 75 → 73
+- 1932/33 — Blasco: 87 → 84
+- 1932/33 — Ispizua: 76 → 75
+- 1932/33 — Aguirre: 74 → 73
+- 1932/33 — Castellanos: 77 → 75
+- 1932/33 — Cilaurren: 84 → 83
+- 1932/33 — Muguerza: 85 → 82
+- 1932/33 — Urkizu: 82 → 81
+- 1932/33 — Zabala: 77 → 75
+- 1932/33 — Careaga: 74 → 73
+- 1932/33 — Garizurieta: 77 → 75
+- 1932/33 — Gerardo: 76 → 75
+- 1932/33 — Roberto: 86 → 82
+- 1932/33 — Bata: 89 → 85
+- 1932/33 — Chirri II: 86 → 81
+- 1932/33 — Gorostiza: 88 → 84
+- 1932/33 — Iraragorri: 88 → 83
+- 1932/33 — Lafuente: 85 → 82
+- 1932/33 — Uribe: 75 → 73
+- 1933/34 — Blasco: 87 → 84
+- 1933/34 — Ispizua: 75 → 73
+- 1933/34 — Calvo: 76 → 75
+- 1933/34 — Cilaurren: 85 → 83
+- 1933/34 — Muguerza: 85 → 82
+- 1933/34 — Zabala: 78 → 76
+- 1933/34 — Careaga: 75 → 73
+- 1933/34 — Felipés: 76 → 75
+- 1933/34 — Gerardo: 77 → 75
+- 1933/34 — Roberto: 85 → 82
+- 1933/34 — Bata: 88 → 85
+- 1933/34 — Chirri II: 84 → 81
+- 1933/34 — Gorostiza: 87 → 84
+- 1933/34 — Iraragorri: 88 → 83
+- 1933/34 — Lafuente: 84 → 82
+- 1934/35 — Blasco: 86 → 84
+- 1934/35 — Ispizua: 74 → 73
+- 1934/35 — Calvo: 76 → 75
+- 1934/35 — Cilaurren: 85 → 83
+- 1934/35 — Muguerza: 84 → 82
+- 1934/35 — Tamayo: 74 → 73
+- 1934/35 — Urbano: 74 → 73
+- 1934/35 — Zabala: 78 → 76
+- 1934/35 — Careaga: 75 → 73
+- 1934/35 — Felipés: 76 → 75
+- 1934/35 — Gerardo: 77 → 75
+- 1934/35 — Roberto: 84 → 82
+- 1934/35 — Bata: 86 → 85
+- 1934/35 — Chirri II: 82 → 81
+- 1934/35 — Doro: 75 → 73
+- 1934/35 — Gorostiza: 86 → 84
+- 1934/35 — Iraragorri: 86 → 83
+- 1934/35 — Mandaluniz: 74 → 73
+- 1935/36 — Blasco: 88 → 84
+- 1935/36 — Ispizua: 74 → 73
+- 1935/36 — Calvo: 77 → 75
+- 1935/36 — Cilaurren: 86 → 83
+- 1935/36 — Luis: 74 → 73
+- 1935/36 — Mieza: 74 → 73
+- 1935/36 — Moronati: 75 → 73
+- 1935/36 — Muguerza: 85 → 82
+- 1935/36 — Oceja: 82 → 80
+- 1935/36 — Urbano: 76 → 75
+- 1935/36 — Zabala: 80 → 77
+- 1935/36 — Careaga: 75 → 73
+- 1935/36 — Emilio: 74 → 73
+- 1935/36 — Gerardo: 76 → 75
+- 1935/36 — Roberto: 84 → 82
+- 1935/36 — Urra: 75 → 73
+- 1935/36 — Yurrebaso: 74 → 73
+- 1935/36 — Bata: 87 → 85
+- 1935/36 — Doro: 77 → 75

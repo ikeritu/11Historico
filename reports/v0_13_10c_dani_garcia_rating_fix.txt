@@ -1,0 +1,4 @@
+v0.13.10c - DANI GARCIA RATING FIX
+Generado: 12/6/2026, 16:35:24
+
+RATING_OK: 2023/24 | Dani García | 73 -> 79

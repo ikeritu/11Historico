@@ -1,0 +1,237 @@
+﻿v0.13.7b - AUDITORIA DE TEMPORADAS JUGABLES
+Generado: 2026-06-12 00:24:13
+Proyecto: D:\Proyectos\⚽ Futbol11
+
+RESUMEN
+-------
+Temporadas catalogadas: 95
+Temporadas con status playable en catalogo: 91
+Temporadas con status planned en catalogo: 4
+Temporadas con plantilla en seasons.ts: 91
+Duplicados en seasons.ts: 91
+Catalogo playable sin plantilla: 0
+Plantilla en seasons.ts pero catalogo no playable: 0
+
+TEMPORADAS CON PLANTILLA EN seasons.ts
+--------------------------------------
+1928/29 | catalogo=playable DUPLICADO x23
+1929/30 | catalogo=playable DUPLICADO x23
+1930/31 | catalogo=playable DUPLICADO x21
+1931/32 | catalogo=playable DUPLICADO x19
+1932/33 | catalogo=playable DUPLICADO x21
+1933/34 | catalogo=playable DUPLICADO x20
+1934/35 | catalogo=playable DUPLICADO x26
+1935/36 | catalogo=playable DUPLICADO x26
+1939/40 | catalogo=playable DUPLICADO x17
+1940/41 | catalogo=playable DUPLICADO x17
+1941/42 | catalogo=playable DUPLICADO x17
+1942/43 | catalogo=playable DUPLICADO x17
+1943/44 | catalogo=playable DUPLICADO x17
+1944/45 | catalogo=playable DUPLICADO x17
+1945/46 | catalogo=playable DUPLICADO x17
+1946/47 | catalogo=playable DUPLICADO x17
+1947/48 | catalogo=playable DUPLICADO x17
+1948/49 | catalogo=playable DUPLICADO x17
+1949/50 | catalogo=playable DUPLICADO x17
+1950/51 | catalogo=playable DUPLICADO x17
+1951/52 | catalogo=playable DUPLICADO x17
+1952/53 | catalogo=playable DUPLICADO x17
+1953/54 | catalogo=playable DUPLICADO x17
+1954/55 | catalogo=playable DUPLICADO x17
+1955/56 | catalogo=playable DUPLICADO x17
+1956/57 | catalogo=playable DUPLICADO x17
+1957/58 | catalogo=playable DUPLICADO x17
+1958/59 | catalogo=playable DUPLICADO x17
+1959/60 | catalogo=playable DUPLICADO x17
+1960/61 | catalogo=playable DUPLICADO x17
+1961/62 | catalogo=playable DUPLICADO x17
+1962/63 | catalogo=playable DUPLICADO x17
+1963/64 | catalogo=playable DUPLICADO x17
+1964/65 | catalogo=playable DUPLICADO x17
+1965/66 | catalogo=playable DUPLICADO x17
+1966/67 | catalogo=playable DUPLICADO x17
+1967/68 | catalogo=playable DUPLICADO x17
+1968/69 | catalogo=playable DUPLICADO x17
+1969/70 | catalogo=playable DUPLICADO x17
+1970/71 | catalogo=playable DUPLICADO x17
+1971/72 | catalogo=playable DUPLICADO x17
+1972/73 | catalogo=playable DUPLICADO x17
+1973/74 | catalogo=playable DUPLICADO x17
+1974/75 | catalogo=playable DUPLICADO x17
+1975/76 | catalogo=playable DUPLICADO x17
+1976/77 | catalogo=playable DUPLICADO x35
+1977/78 | catalogo=playable DUPLICADO x17
+1978/79 | catalogo=playable DUPLICADO x17
+1979/80 | catalogo=playable DUPLICADO x17
+1980/81 | catalogo=playable DUPLICADO x17
+1981/82 | catalogo=playable DUPLICADO x17
+1982/83 | catalogo=playable DUPLICADO x17
+1983/84 | catalogo=playable DUPLICADO x28
+1984/85 | catalogo=playable DUPLICADO x17
+1985/86 | catalogo=playable DUPLICADO x17
+1986/87 | catalogo=playable DUPLICADO x17
+1987/88 | catalogo=playable DUPLICADO x17
+1988/89 | catalogo=playable DUPLICADO x17
+1989/90 | catalogo=playable DUPLICADO x17
+1990/91 | catalogo=playable DUPLICADO x17
+1991/92 | catalogo=playable DUPLICADO x17
+1992/93 | catalogo=playable DUPLICADO x17
+1993/94 | catalogo=playable DUPLICADO x20
+1994/95 | catalogo=playable DUPLICADO x17
+1995/96 | catalogo=playable DUPLICADO x17
+1996/97 | catalogo=playable DUPLICADO x17
+1997/98 | catalogo=playable DUPLICADO x28
+1998/99 | catalogo=playable DUPLICADO x17
+1999/00 | catalogo=playable DUPLICADO x17
+2000/01 | catalogo=playable DUPLICADO x17
+2001/02 | catalogo=playable DUPLICADO x17
+2002/03 | catalogo=playable DUPLICADO x17
+2003/04 | catalogo=playable DUPLICADO x17
+2004/05 | catalogo=playable DUPLICADO x17
+2005/06 | catalogo=playable DUPLICADO x17
+2006/07 | catalogo=playable DUPLICADO x17
+2007/08 | catalogo=playable DUPLICADO x17
+2008/09 | catalogo=playable DUPLICADO x20
+2009/10 | catalogo=playable DUPLICADO x17
+2010/11 | catalogo=playable DUPLICADO x17
+2011/12 | catalogo=playable DUPLICADO x30
+2012/13 | catalogo=playable DUPLICADO x17
+2013/14 | catalogo=playable DUPLICADO x21
+2014/15 | catalogo=playable DUPLICADO x17
+2015/16 | catalogo=playable DUPLICADO x28
+2016/17 | catalogo=playable DUPLICADO x17
+2017/18 | catalogo=playable DUPLICADO x17
+2018/19 | catalogo=playable DUPLICADO x17
+2019/20 | catalogo=playable DUPLICADO x17
+2020/21 | catalogo=playable DUPLICADO x21
+2023/24 | catalogo=playable DUPLICADO x30
+
+DUPLICADOS EN seasons.ts
+------------------------
+1928/29 aparece 23 veces
+1929/30 aparece 23 veces
+1930/31 aparece 21 veces
+1931/32 aparece 19 veces
+1932/33 aparece 21 veces
+1933/34 aparece 20 veces
+1934/35 aparece 26 veces
+1935/36 aparece 26 veces
+1939/40 aparece 17 veces
+1940/41 aparece 17 veces
+1941/42 aparece 17 veces
+1942/43 aparece 17 veces
+1943/44 aparece 17 veces
+1944/45 aparece 17 veces
+1945/46 aparece 17 veces
+1946/47 aparece 17 veces
+1947/48 aparece 17 veces
+1948/49 aparece 17 veces
+1949/50 aparece 17 veces
+1950/51 aparece 17 veces
+1951/52 aparece 17 veces
+1952/53 aparece 17 veces
+1953/54 aparece 17 veces
+1954/55 aparece 17 veces
+1955/56 aparece 17 veces
+1956/57 aparece 17 veces
+1957/58 aparece 17 veces
+1958/59 aparece 17 veces
+1959/60 aparece 17 veces
+1960/61 aparece 17 veces
+1961/62 aparece 17 veces
+1962/63 aparece 17 veces
+1963/64 aparece 17 veces
+1964/65 aparece 17 veces
+1965/66 aparece 17 veces
+1966/67 aparece 17 veces
+1967/68 aparece 17 veces
+1968/69 aparece 17 veces
+1969/70 aparece 17 veces
+1970/71 aparece 17 veces
+1971/72 aparece 17 veces
+1972/73 aparece 17 veces
+1973/74 aparece 17 veces
+1974/75 aparece 17 veces
+1975/76 aparece 17 veces
+1976/77 aparece 35 veces
+1977/78 aparece 17 veces
+1978/79 aparece 17 veces
+1979/80 aparece 17 veces
+1980/81 aparece 17 veces
+1981/82 aparece 17 veces
+1982/83 aparece 17 veces
+1983/84 aparece 28 veces
+1984/85 aparece 17 veces
+1985/86 aparece 17 veces
+1986/87 aparece 17 veces
+1987/88 aparece 17 veces
+1988/89 aparece 17 veces
+1989/90 aparece 17 veces
+1990/91 aparece 17 veces
+1991/92 aparece 17 veces
+1992/93 aparece 17 veces
+1993/94 aparece 20 veces
+1994/95 aparece 17 veces
+1995/96 aparece 17 veces
+1996/97 aparece 17 veces
+1997/98 aparece 28 veces
+1998/99 aparece 17 veces
+1999/00 aparece 17 veces
+2000/01 aparece 17 veces
+2001/02 aparece 17 veces
+2002/03 aparece 17 veces
+2003/04 aparece 17 veces
+2004/05 aparece 17 veces
+2005/06 aparece 17 veces
+2006/07 aparece 17 veces
+2007/08 aparece 17 veces
+2008/09 aparece 20 veces
+2009/10 aparece 17 veces
+2010/11 aparece 17 veces
+2011/12 aparece 30 veces
+2012/13 aparece 17 veces
+2013/14 aparece 21 veces
+2014/15 aparece 17 veces
+2015/16 aparece 28 veces
+2016/17 aparece 17 veces
+2017/18 aparece 17 veces
+2018/19 aparece 17 veces
+2019/20 aparece 17 veces
+2020/21 aparece 21 veces
+2023/24 aparece 30 veces
+
+CATALOGO playable PERO SIN PLANTILLA
+------------------------------------
+OK: todo lo marcado playable tiene plantilla.
+
+PLANTILLA EXISTE PERO CATALOGO NO ESTA playable
+-----------------------------------------------
+OK: toda plantilla real esta marcada como playable.
+
+TEMPORADAS ESPERADAS QUE FALTAN EN CATALOGO
+-------------------------------------------
+OK: no faltan temporadas esperadas en catalogo.
+
+TEMPORADAS ESPERADAS QUE AUN NO TIENEN PLANTILLA
+-----------------------------------------------
+2021/22
+2022/23
+2024/25
+2025/26
+
+REVISION BLOQUE 2020/21-2025/26
+--------------------------------
+2020/21 | seasons.ts=True | catalogo=playable
+2021/22 | seasons.ts=False | catalogo=planned
+2022/23 | seasons.ts=False | catalogo=planned
+2023/24 | seasons.ts=True | catalogo=playable
+2024/25 | seasons.ts=False | catalogo=planned
+2025/26 | seasons.ts=False | catalogo=planned
+
+RECOMENDACION
+-------------
+Para v0.13.8 se recomienda aÃ±adir solo estas temporadas:
+- 2021/22
+- 2022/23
+- 2024/25
+- 2025/26

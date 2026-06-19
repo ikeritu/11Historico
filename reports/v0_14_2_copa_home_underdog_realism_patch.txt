@@ -1,0 +1,4 @@
+Generado: 13/6/2026, 0:38:01
+v0.14.2 - Copa home underdog realism
+OK: helpers de realismo copero insertados.
+OK: simulateNextCupMatch ahora aplica localÃ­a del pequeÃ±o y fatiga de cenicienta.
