@@ -1,0 +1,338 @@
+/* src/components/SeasonReveal.css */
+
+.season-reveal {
+  min-height: calc(100vh - 70px);
+  display: grid;
+  place-items: center;
+  padding: 64px 18px 36px;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.1), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(176, 0, 32, 0.22), transparent 36%),
+    linear-gradient(135deg, #16070b 0%, #2b0710 48%, #080808 100%);
+  color: #ffffff;
+}
+
+.season-reveal-card {
+  width: min(820px, 100%);
+  padding: clamp(22px, 4vw, 44px);
+  border-radius: 34px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.07)),
+    rgba(43, 7, 16, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow:
+    0 34px 110px rgba(0, 0, 0, 0.5),
+    0 0 90px rgba(176, 0, 32, 0.18);
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.season-reveal-card::before {
+  content: "";
+  position: absolute;
+  inset: -60px;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(255, 255, 255, 0.15), transparent 18%),
+    radial-gradient(circle at 85% 25%, rgba(255, 204, 211, 0.12), transparent 18%);
+}
+
+.season-reveal-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.season-reveal-topline {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #b00020;
+  font-size: 0.76rem;
+  font-weight: 950;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.season-reveal-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #d9c9ff;
+}
+
+.season-reveal-dot-red {
+  background: #e6002d;
+}
+
+.season-reveal-number {
+  margin: 28px auto 14px;
+  width: min(540px, 100%);
+  padding: 28px 18px;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.28), transparent 42%),
+    #ffffff;
+  color: #b00020;
+  font-size: clamp(4rem, 12vw, 8rem);
+  font-weight: 1000;
+  line-height: 0.9;
+  letter-spacing: -0.07em;
+  box-shadow:
+    inset 0 -10px 0 rgba(176, 0, 32, 0.06),
+    0 20px 56px rgba(0, 0, 0, 0.28);
+  transform: scale(0.98);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.season-reveal-number-final {
+  transform: scale(1.04);
+  box-shadow:
+    inset 0 -10px 0 rgba(176, 0, 32, 0.06),
+    0 24px 70px rgba(0, 0, 0, 0.34),
+    0 0 64px rgba(255, 224, 138, 0.22);
+}
+
+.season-reveal-assigned-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 18px;
+  padding: 9px 18px;
+  min-width: 200px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #fffce6 0%, #fff3c4 100%);
+  color: #9f1026;
+  font-size: 0.92rem;
+  font-weight: 1000;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
+}
+
+.season-reveal-window {
+  width: min(650px, 100%);
+  margin: 0 auto 24px;
+  padding: 10px 16px;
+  border-radius: 24px;
+  background: rgba(24, 7, 13, 0.7);
+  overflow: hidden;
+  position: relative;
+}
+
+.season-reveal-window::before,
+.season-reveal-window::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 52px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.season-reveal-window::before {
+  left: 0;
+  background: linear-gradient(90deg, rgba(24, 7, 13, 0.96) 0%, rgba(24, 7, 13, 0) 100%);
+}
+
+.season-reveal-window::after {
+  right: 0;
+  background: linear-gradient(270deg, rgba(24, 7, 13, 0.96) 0%, rgba(24, 7, 13, 0) 100%);
+}
+
+.season-reveal-strip {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  align-items: center;
+  gap: 8px;
+}
+
+.season-reveal-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 0.82rem;
+  font-weight: 950;
+  transform: scale(0.9);
+  opacity: 0.62;
+  transition:
+    transform 0.16s ease,
+    opacity 0.16s ease,
+    background-color 0.16s ease,
+    color 0.16s ease,
+    box-shadow 0.16s ease;
+}
+
+.season-reveal-chip.distance-0 {
+  transform: scale(1.08);
+  opacity: 1;
+}
+
+.season-reveal-chip.distance-1 {
+  transform: scale(0.98);
+  opacity: 0.88;
+}
+
+.season-reveal-chip.distance-2 {
+  transform: scale(0.93);
+  opacity: 0.74;
+}
+
+.season-reveal-chip.distance-3 {
+  transform: scale(0.88);
+  opacity: 0.58;
+}
+
+.season-reveal-chip.active {
+  background: #ffffff;
+  color: #b00020;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
+}
+
+.season-reveal-result span {
+  display: block;
+  color: #ffccd3;
+  font-size: 0.8rem;
+  font-weight: 950;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.season-reveal-result h1 {
+  margin: 8px 0 10px;
+  display: grid;
+  gap: 4px;
+  font-size: clamp(2.1rem, 5vw, 4rem);
+  line-height: 0.95;
+}
+
+.season-reveal-result h1 strong {
+  color: #ffccd3;
+  font-size: 0.68em;
+}
+
+.season-reveal-result p {
+  max-width: 620px;
+  margin: 0 auto;
+  color: #f2d2d7;
+  line-height: 1.5;
+}
+
+.season-reveal-meta {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin: 24px 0;
+}
+
+.season-reveal-meta article {
+  padding: 13px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.season-reveal-meta span,
+.season-reveal-meta strong {
+  display: block;
+}
+
+.season-reveal-meta span {
+  color: #ffccd3;
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.season-reveal-meta strong {
+  margin-top: 5px;
+  color: #ffffff;
+  font-size: 0.95rem;
+}
+
+.season-reveal-button {
+  width: min(360px, 100%);
+  min-height: 62px;
+  border: 0;
+  border-radius: 20px;
+  padding: 15px 22px;
+  background:
+    linear-gradient(135deg, #ffffff 0%, #ffe2e9 42%, #ffb3c2 100%);
+  color: #b00020;
+  font-size: 1.05rem;
+  font-weight: 1000;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow:
+    0 20px 54px rgba(0, 0, 0, 0.34),
+    0 0 42px rgba(255, 190, 205, 0.24);
+}
+
+.season-reveal-button:disabled {
+  cursor: wait;
+  opacity: 0.58;
+  box-shadow: none;
+}
+
+.season-reveal-rule {
+  display: block;
+  margin-top: 12px;
+  color: #f2d2d7;
+  font-weight: 800;
+}
+
+@media (max-width: 760px) {
+  .season-reveal {
+    padding: 40px 12px 24px;
+  }
+
+  .season-reveal-meta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .season-reveal-window {
+    padding: 10px 10px;
+  }
+
+  .season-reveal-strip {
+    gap: 6px;
+  }
+
+  .season-reveal-chip {
+    min-height: 38px;
+    font-size: 0.74rem;
+    padding: 7px 6px;
+  }
+}
+
+@media (max-width: 540px) {
+  .season-reveal-window {
+    width: min(100%, 420px);
+  }
+
+  .season-reveal-strip {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .season-reveal-chip.distance-3 {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .season-reveal-meta {
+    grid-template-columns: 1fr;
+  }
+}
