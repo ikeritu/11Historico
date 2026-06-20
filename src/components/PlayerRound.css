@@ -1016,3 +1016,288 @@
 .player-warning {
   font-weight: 900;
 }
+
+/* v0.18.1 — Mobile draft layout fix */
+.mobile-draft-summary {
+  display: none;
+}
+
+.compatible-only-toggle {
+  min-height: 45px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 13px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-weight: 950;
+  cursor: pointer;
+  user-select: none;
+}
+
+.compatible-only-toggle input {
+  width: 18px;
+  height: 18px;
+  accent-color: #b00020;
+}
+
+.player-card-slot-actions {
+  display: none;
+}
+
+@media (max-width: 780px) {
+  .player-round {
+    padding: 14px 10px calc(84px + env(safe-area-inset-bottom));
+  }
+
+  .player-round-header {
+    margin-bottom: 12px;
+  }
+
+  .player-round-header h1 {
+    font-size: clamp(1.7rem, 9vw, 2.3rem);
+  }
+
+  .player-round-header p {
+    font-size: 0.95rem;
+    line-height: 1.35;
+  }
+
+  .round-status-card {
+    display: none;
+  }
+
+  .last-selection-banner {
+    max-width: calc(100vw - 20px);
+    margin: 0 auto 10px;
+    padding: 10px 12px;
+    gap: 5px;
+  }
+
+  .mobile-draft-summary {
+    max-width: calc(100vw - 20px);
+    margin: 0 auto 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 8px 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    color: #f2d2d7;
+    font-size: 0.82rem;
+    font-weight: 900;
+    scrollbar-width: none;
+  }
+
+  .mobile-draft-summary::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobile-draft-summary strong {
+    color: #ffffff;
+    white-space: nowrap;
+  }
+
+  .mobile-draft-summary span {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .player-round-layout-interactive {
+    max-width: calc(100vw - 20px);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .players-panel {
+    order: 1;
+    padding: 12px;
+    border-radius: 20px;
+  }
+
+  .interactive-draft-column {
+    order: 2;
+  }
+
+  .draft-left-column {
+    order: 3;
+  }
+
+  .interactive-draft-board {
+    padding: 12px;
+    border-radius: 20px;
+  }
+
+  .interactive-draft-board header {
+    margin-bottom: 8px;
+  }
+
+  .interactive-draft-board .tactical-pitch {
+    min-height: 0;
+    max-height: 58vh;
+  }
+
+  .interactive-draft-help {
+    padding: 10px;
+    margin-top: 8px;
+  }
+
+  .draft-placement-helper {
+    margin-bottom: 10px;
+    padding: 12px;
+    border-radius: 18px;
+  }
+
+  .draft-placement-helper strong {
+    font-size: 1rem;
+  }
+
+  .draft-placement-helper small {
+    font-size: 0.86rem;
+  }
+
+  .players-toolbar {
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .players-toolbar input,
+  .players-toolbar select,
+  .compatible-only-toggle {
+    min-height: 44px;
+    padding: 10px 12px;
+    border-radius: 13px;
+    font-size: 0.95rem;
+  }
+
+  .players-count {
+    margin-bottom: 10px;
+    font-size: 0.84rem;
+  }
+
+  .players-grid {
+    gap: 10px;
+  }
+
+  .player-card {
+    gap: 8px;
+    padding: 12px;
+    border-radius: 18px;
+  }
+
+  .player-card-header {
+    align-items: center;
+    gap: 10px;
+  }
+
+  .player-card h2 {
+    font-size: 1.08rem;
+    margin-bottom: 2px;
+  }
+
+  .player-card p {
+    font-size: 0.88rem;
+  }
+
+  .overall-badge {
+    min-width: 52px;
+    height: 52px;
+    border-radius: 16px;
+  }
+
+  .overall-badge strong {
+    font-size: 1.3rem;
+  }
+
+  .compatible-slots-chip {
+    max-width: 100%;
+    font-size: 0.72rem;
+    line-height: 1.25;
+  }
+
+  .player-skills {
+    gap: 5px;
+  }
+
+  .player-skills span {
+    padding: 5px 7px;
+    font-size: 0.68rem;
+  }
+
+  .player-meta {
+    display: none;
+  }
+
+  .player-warning {
+    font-size: 0.78rem;
+  }
+
+  .player-card-slot-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+
+  .player-card-slot-actions button {
+    width: 100%;
+    background: #5bdc87 !important;
+    color: #06240f !important;
+    padding: 10px 12px;
+    border-radius: 13px;
+    box-shadow: 0 10px 22px rgba(91, 220, 135, 0.14);
+  }
+
+  .player-card > button {
+    padding: 10px 12px;
+    border-radius: 13px;
+  }
+
+  .player-card:has(.player-card-slot-actions) > button {
+    display: none;
+  }
+
+  .skills-dashboard-panel {
+    padding: 12px;
+    border-radius: 20px;
+  }
+
+  .skills-dashboard-header {
+    align-items: center;
+    margin-bottom: 6px;
+  }
+
+  .skills-dashboard-header h2 {
+    font-size: 1.05rem;
+  }
+
+  .skills-dashboard-header > strong {
+    min-width: 46px;
+    height: 46px;
+    border-radius: 15px;
+    font-size: 1.14rem;
+  }
+
+  .skills-dashboard-subtitle {
+    margin-bottom: 8px;
+    font-size: 0.82rem;
+  }
+
+  .skills-radar-card {
+    display: none;
+  }
+
+  .skills-dashboard-bars,
+  .skills-dashboard-mini-grid,
+  .skills-dashboard-summary {
+    display: none;
+  }
+
+  .skills-radar-labels {
+    display: grid;
+  }
+}

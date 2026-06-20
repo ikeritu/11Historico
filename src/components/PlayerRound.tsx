@@ -389,6 +389,7 @@ export function PlayerRound({
   const [search, setSearch] = useState("");
   const [lineFilter, setLineFilter] = useState<"ALL" | FormationSlot["line"]>("ALL");
   const [sortKey, setSortKey] = useState<SortKey>("overall");
+  const [compatibleOnly, setCompatibleOnly] = useState(false);
   const [selectedPlayerId, setSelectedPlayerId] = useState<string | undefined>(undefined);
 
   const seasonPlayers = getPlayersBySeason(season);
@@ -456,6 +457,15 @@ export function PlayerRound({
           return false;
         }
 
+        if (compatibleOnly &&
+            !canPlayerBeDraftedNow({
+              player,
+              formation,
+              selectedPlayers,
+            })) {
+          return false;
+        }
+
         return true;
       })
       .sort((a, b) => {
@@ -465,7 +475,7 @@ export function PlayerRound({
 
         return a.name.localeCompare(b.name);
       });
-  }, [draftPlayerPool, lineFilter, search, sortKey]);
+  }, [compatibleOnly, draftPlayerPool, formation, lineFilter, search, selectedPlayers, sortKey]);
 
   const selectedPlayer = useMemo(() => {
     const player = draftPlayerPool.find((item) => item.id === selectedPlayerId);
@@ -556,6 +566,27 @@ export function PlayerRound({
     setSortKey("overall");
   }
 
+  function handleQuickPlacePlayer(player: PlayerSeason, slot: FormationSlot) {
+    if (isPlayerAlreadySelected(player, selectedPlayers) || isPlayerNameAlreadySelected(player, selectedPlayers)) {
+      return;
+    }
+
+    const placement = resolvePlayerSlotPlacement(player, slot);
+
+    if (!placement.canPlace || !placement.assignedPosition) return;
+
+    onSelectPlayer({
+      slotId: slot.id,
+      position: placement.assignedPosition,
+      playerSeason: player,
+    });
+
+    setSelectedPlayerId(undefined);
+    setSearch("");
+    setLineFilter("ALL");
+    setSortKey("overall");
+  }
+
   return (
     <section className="player-round">
       <header className="player-round-header">
@@ -586,6 +617,12 @@ export function PlayerRound({
           </small>
         </div>
       )}
+
+      <div className="mobile-draft-summary" aria-label="Resumen rápido del draft">
+        <strong>{formation.name}</strong>
+        <span>{selectedPlayers.length}/{formation.slots.length} jugadores</span>
+        <span>Temporada {effectiveDraftSeason}</span>
+      </div>
 
       <div className="player-round-layout player-round-layout-interactive">
         <aside className="draft-left-column">
@@ -677,6 +714,15 @@ export function PlayerRound({
                 </option>
               ))}
             </select>
+
+            <label className="compatible-only-toggle">
+              <input
+                type="checkbox"
+                checked={compatibleOnly}
+                onChange={(event) => setCompatibleOnly(event.target.checked)}
+              />
+              Solo colocables
+            </label>
           </div>
 
           <div className="players-count">
@@ -748,6 +794,20 @@ export function PlayerRound({
 
                   {!alreadySelected && !hasAvailableSlot && (
                     <p className="player-warning">No encaja en ningún puesto libre.</p>
+                  )}
+
+                  {selectable && (
+                    <div className="player-card-slot-actions" aria-label={`Colocar a ${player.name}`}>
+                      {availableSlots.slice(0, 3).map((slot) => (
+                        <button
+                          key={slot.id}
+                          type="button"
+                          onClick={() => handleQuickPlacePlayer(player, slot)}
+                        >
+                          Añadir en {slot.label}
+                        </button>
+                      ))}
+                    </div>
                   )}
 
                   <button

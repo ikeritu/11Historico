@@ -166,3 +166,49 @@
     display: none;
   }
 }
+
+/* v0.18.1 — Mobile compact stepper */
+@media (max-width: 760px) {
+  .phase-progress {
+    padding: 7px 8px;
+  }
+
+  .phase-progress-inner {
+    max-width: none;
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+  }
+
+  .phase-progress-inner::-webkit-scrollbar {
+    display: none;
+  }
+
+  .phase-step {
+    flex: 0 0 auto;
+    min-width: 108px;
+    padding: 7px 9px;
+    gap: 7px;
+    scroll-snap-align: start;
+  }
+
+  .phase-step-number {
+    width: 24px;
+    height: 24px;
+    flex-basis: 24px;
+    font-size: 0.72rem;
+  }
+
+  .phase-step strong {
+    font-size: 0.73rem;
+  }
+
+  .phase-step small {
+    display: block;
+    font-size: 0.62rem;
+    margin-top: 1px;
+  }
+}
