@@ -129,6 +129,22 @@ function getSafeTeamRating(
   }
 }
 
+function getCoachBaseBonus(overall: number): number {
+  if (overall <= 80) return 1;
+  if (overall <= 85) return 2;
+  return 3;
+}
+
+function getCoachSpecialistText(coach: SelectedCoach["coachSeason"]): string {
+  const strengths: string[] = [];
+
+  if (coach.skills.management >= 86) strengths.push("Liga +1");
+  if ((coach.skills.cup ?? 0) >= 86) strengths.push("Copa +1");
+  if ((coach.skills.europe ?? 0) >= 86) strengths.push("Europa +1");
+
+  return strengths.length > 0 ? strengths.join(" · ") : "Sin bonus específico";
+}
+
 function RatingBar({ label, value }: { label: string; value: number }) {
   const safeValue = clampRating(value);
 
@@ -218,6 +234,8 @@ export function TeamSummary({
             <h2>{coach.name}</h2>
             <p>Temporada {coach.season}</p>
             <strong>Media {coach.overall}</strong>
+            <p>Bonus general aplicado: +{getCoachBaseBonus(coach.overall)}</p>
+            <p>Bonus específico: {getCoachSpecialistText(coach)}</p>
 
             <div className="team-summary-coach-chips">
               <span>Ataque {coach.skills.attack}</span>

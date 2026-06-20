@@ -976,39 +976,23 @@ function getCoachCompetitionBoost(context: unknown, competition: "league" | "cup
           cup?: number;
           europe?: number;
           management?: number;
-          mentality?: number;
         };
-        dataConfidence?: number;
-        ratingMethod?: string;
       };
     };
   }).selectedCoach?.coachSeason;
 
   if (!coach?.skills) return 0;
 
-  const rawValue =
+  const competitionSkill =
     competition === "cup"
       ? coach.skills.cup
       : competition === "europe"
         ? coach.skills.europe
         : coach.skills.management;
 
-  if (typeof rawValue !== "number") return 0;
-
-  let boost = 0;
-
-  if (rawValue >= 92) boost = 3;
-  else if (rawValue >= 86) boost = 2;
-  else if (rawValue >= 80) boost = 1;
-  else if (rawValue <= 58) boost = -1;
-
-  // La confianza no debe convertir un buen entrenador en malo,
-  // pero sÃ­ suaviza estimaciones muy dudosas.
-  if ((coach.dataConfidence ?? 1) < 0.55 && boost > 1) {
-    boost -= 1;
-  }
-
-  return boost;
+  // v0.18.3 — bonus específico de competición limitado:
+  // solo +1 si el entrenador es realmente fuerte en esa competición.
+  return typeof competitionSkill === "number" && competitionSkill >= 86 ? 1 : 0;
 }
 
 function applyCoachCompetitionBoostToTeamRating(
@@ -1019,12 +1003,13 @@ function applyCoachCompetitionBoostToTeamRating(
 
   return {
     ...teamRating,
-    attack: clamp(teamRating.attack + Math.round(boost * 0.45), 40, 99),
-    defense: clamp(teamRating.defense + Math.round(boost * 0.35), 40, 99),
-    control: clamp(teamRating.control + Math.round(boost * 0.45), 40, 99),
-    physical: clamp(teamRating.physical + Math.round(boost * 0.25), 40, 99),
+    attack: clamp(teamRating.attack + boost, 40, 99),
+    defense: clamp(teamRating.defense + boost, 40, 99),
+    control: clamp(teamRating.control + boost, 40, 99),
+    physical: clamp(teamRating.physical + boost, 40, 99),
     mentality: clamp(teamRating.mentality + boost, 40, 99),
-    overall: clamp(teamRating.overall + Math.round(boost * 0.35), 40, 99),
+    goalkeeping: clamp(teamRating.goalkeeping + boost, 40, 99),
+    overall: clamp(teamRating.overall + boost, 40, 99),
   };
 }
 function getCupRoundChaos(roundId: CupFixture["roundId"]): number {

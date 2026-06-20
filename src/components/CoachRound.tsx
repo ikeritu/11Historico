@@ -54,6 +54,23 @@ function getCoachProfileLabel(coach: CoachSeason): string {
   return "Carácter y partidos grandes";
 }
 
+
+function getCoachBaseBonus(coach: CoachSeason): number {
+  if (coach.overall <= 80) return 1;
+  if (coach.overall <= 85) return 2;
+  return 3;
+}
+
+function getCoachCompetitionTags(coach: CoachSeason): string[] {
+  const tags: string[] = [];
+
+  if (coach.skills.management >= 86) tags.push("Liga +1");
+  if ((coach.skills.cup ?? 0) >= 86) tags.push("Copa +1");
+  if ((coach.skills.europe ?? 0) >= 86) tags.push("Europa +1");
+
+  return tags;
+}
+
 function getCoachImpactText(coach: CoachSeason): string {
   const profile = getCoachMainProfile(coach);
 
@@ -158,6 +175,12 @@ function CoachVisualCard({
       </div>
 
       <p className="coach-impact-text">{getCoachImpactText(coach)}</p>
+      <p className="coach-impact-text">
+        Bonus general: +{getCoachBaseBonus(coach)} media
+        {getCoachCompetitionTags(coach).length > 0
+          ? ` · Especialista: ${getCoachCompetitionTags(coach).join(" · ")}`
+          : ""}
+      </p>
 
       <div className="coach-skill-bars">
         <CoachSkillRow label="Ataque" value={coach.skills.attack} />

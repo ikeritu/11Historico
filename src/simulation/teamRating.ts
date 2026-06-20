@@ -411,8 +411,19 @@ function applyFormationModifiers(
   };
 }
 
+function getCoachBaseOverallBonus(coachOverall: number): number {
+  // v0.18.3 — El entrenador no debe regalar siempre +5 a la media.
+  // Regla de bonus general acordada:
+  // - 80 o menos: +1
+  // - 81 a 85: +2
+  // - 86 o más: +3
+  if (coachOverall <= 80) return 1;
+  if (coachOverall <= 85) return 2;
+  return 3;
+}
+
 /**
- * Aplica modificadores del entrenador.
+ * Aplica modificadores generales del entrenador.
  */
 function applyCoachModifiers(
   rating: InternalRatingBreakdown,
@@ -421,39 +432,17 @@ function applyCoachModifiers(
   if (!selectedCoach) return rating;
 
   const coach = selectedCoach.coachSeason;
-
-  /**
-   * El entrenador suma como ajuste moderado, no debe tapar el nivel real del once.
-   * Escala:
-   * - entrenador 50: no suma ni resta
-   * - entrenador 90: suma aprox +4
-   */
-  const attackBonus = (coach.skills.attack - 50) * 0.1;
-  const defenseBonus = (coach.skills.defense - 50) * 0.1;
-  const controlBonus = (coach.skills.management - 50) * 0.07;
-  const mentalityBonus = (coach.skills.mentality - 50) * 0.12;
-
-  const attack = rating.attack + attackBonus;
-  const defense = rating.defense + defenseBonus;
-  const control = rating.control + controlBonus;
-  const mentality = rating.mentality + mentalityBonus;
-
-  const overall = weightedAverage([
-    { value: attack, weight: 0.24 },
-    { value: defense, weight: 0.24 },
-    { value: control, weight: 0.18 },
-    { value: rating.physical, weight: 0.1 },
-    { value: mentality, weight: 0.12 },
-    { value: rating.goalkeeping, weight: 0.12 },
-  ]);
+  const baseBonus = getCoachBaseOverallBonus(coach.overall);
 
   return {
     ...rating,
-    attack,
-    defense,
-    control,
-    mentality,
-    overall,
+    attack: rating.attack + baseBonus,
+    defense: rating.defense + baseBonus,
+    control: rating.control + baseBonus,
+    physical: rating.physical + baseBonus,
+    mentality: rating.mentality + baseBonus,
+    goalkeeping: rating.goalkeeping + baseBonus,
+    overall: rating.overall + baseBonus,
   };
 }
 

@@ -1,6 +1,6 @@
 // src/components/PlayerRound.tsx
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import type {
   Formation,
@@ -391,6 +391,14 @@ export function PlayerRound({
   const [sortKey, setSortKey] = useState<SortKey>("overall");
   const [compatibleOnly, setCompatibleOnly] = useState(false);
   const [selectedPlayerId, setSelectedPlayerId] = useState<string | undefined>(undefined);
+  const formationBoardRef = useRef<HTMLElement | null>(null);
+
+  function scrollToFormationBoard() {
+    formationBoardRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }
 
   const seasonPlayers = getPlayersBySeason(season);
 
@@ -618,11 +626,17 @@ export function PlayerRound({
         </div>
       )}
 
-      <div className="mobile-draft-summary" aria-label="Resumen rápido del draft">
+      <button
+        type="button"
+        className="mobile-draft-summary"
+        aria-label={`Ir al campo de la formación ${formation.name}`}
+        onClick={scrollToFormationBoard}
+      >
         <strong>{formation.name}</strong>
         <span>{selectedPlayers.length}/{formation.slots.length} jugadores</span>
         <span>Temporada {effectiveDraftSeason}</span>
-      </div>
+        <em>Ver campo ↓</em>
+      </button>
 
       <div className="player-round-layout player-round-layout-interactive">
         <aside className="draft-left-column">
@@ -824,7 +838,7 @@ export function PlayerRound({
         </main>
 
         <aside className="interactive-draft-column">
-          <section className="interactive-draft-board">
+          <section className="interactive-draft-board" ref={formationBoardRef} id="draft-formation-board">
             <header>
               <div>
                 <p className="eyebrow">Tu once</p>
