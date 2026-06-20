@@ -243,6 +243,99 @@ function getCupResultLabel(result: NonNullable<FinalGameSummary["cupResults"]>[n
   return "Derrota";
 }
 
+function getCoachBaseBonus(coach: SelectedCoach["coachSeason"]): number {
+  if (coach.overall <= 80) return 1;
+  if (coach.overall <= 85) return 2;
+  return 3;
+}
+
+function getCoachCompetitionBonus(coach: SelectedCoach["coachSeason"], competition: "league" | "cup" | "europe"): number {
+  const skill =
+    competition === "league"
+      ? coach.skills.management
+      : competition === "cup"
+        ? coach.skills.cup
+        : coach.skills.europe;
+
+  return typeof skill === "number" && skill >= 86 ? 1 : 0;
+}
+
+function getCoachSpecialtyLabel(coach: SelectedCoach["coachSeason"]): string {
+  const specialties: string[] = [];
+
+  if (getCoachCompetitionBonus(coach, "league") > 0) specialties.push("Liga +1");
+  if (getCoachCompetitionBonus(coach, "cup") > 0) specialties.push("Copa +1");
+  if (getCoachCompetitionBonus(coach, "europe") > 0) specialties.push("Europa +1");
+
+  return specialties.length > 0 ? specialties.join(" · ") : "Sin bonus específico";
+}
+
+function clampFinalRating(value: number): number {
+  return Math.max(40, Math.min(99, Math.round(value)));
+}
+
+function getSelectedPlayersAverage(selectedPlayers: SelectedPlayer[]): number {
+  if (selectedPlayers.length === 0) return 0;
+
+  return Math.round(
+    selectedPlayers.reduce((sum, selected) => sum + selected.playerSeason.overall, 0) /
+      selectedPlayers.length
+  );
+}
+
+function CoachRatingBreakdown({
+  selectedCoach,
+  selectedPlayers,
+  teamRating,
+}: {
+  selectedCoach: SelectedCoach;
+  selectedPlayers: SelectedPlayer[];
+  teamRating: TeamRating;
+}) {
+  const coach = selectedCoach.coachSeason;
+  const xiAverage = getSelectedPlayersAverage(selectedPlayers);
+  const baseBonus = getCoachBaseBonus(coach);
+  const leagueBonus = getCoachCompetitionBonus(coach, "league");
+  const cupBonus = getCoachCompetitionBonus(coach, "cup");
+  const europeBonus = getCoachCompetitionBonus(coach, "europe");
+
+  return (
+    <div className="final-coach-breakdown">
+      <article>
+        <span>Media XI</span>
+        <strong>{xiAverage}</strong>
+      </article>
+      <article>
+        <span>Bonus base entrenador</span>
+        <strong>+{baseBonus}</strong>
+      </article>
+      <article>
+        <span>Media visible equipo</span>
+        <strong>{teamRating.overall}</strong>
+      </article>
+      <article className={leagueBonus > 0 ? "final-coach-breakdown-boosted" : ""}>
+        <span>Liga</span>
+        <strong>{clampFinalRating(teamRating.overall + leagueBonus)}</strong>
+        <small>{leagueBonus > 0 ? "+1 especialista" : "sin extra"}</small>
+      </article>
+      <article className={cupBonus > 0 ? "final-coach-breakdown-boosted" : ""}>
+        <span>Copa</span>
+        <strong>{clampFinalRating(teamRating.overall + cupBonus)}</strong>
+        <small>{cupBonus > 0 ? "+1 especialista" : "sin extra"}</small>
+      </article>
+      <article className={europeBonus > 0 ? "final-coach-breakdown-boosted" : ""}>
+        <span>Europa futura</span>
+        <strong>{clampFinalRating(teamRating.overall + europeBonus)}</strong>
+        <small>{europeBonus > 0 ? "+1 especialista" : "sin extra"}</small>
+      </article>
+      <p>
+        La media visible ya incluye formación y bonus base. El +1 de especialidad solo se aplica
+        en la competición correspondiente.
+      </p>
+    </div>
+  );
+}
+
 function buildShareText(summary: FinalGameSummary): string {
   const topScorer = summary.topScorer
     ? `${summary.topScorer.playerName} (${summary.topScorer.goals} goles)`
@@ -410,6 +503,45 @@ function LeagueTableFinal({ table, summary }: { table?: LeagueTableRow[]; summar
             })}
           </tbody>
         </table>
+      </div>
+
+      <div className="final-league-mobile-list" aria-label="Clasificación final resumida">
+        {table.map((row, index) => {
+          const highlighted = isUserTeam(row);
+          const qualificationInfo = qualificationMap.get(getRowKey(row, index)) ?? { zone: "middle" };
+
+          return (
+            <article
+              key={`mobile_${row.teamId}_${index}`}
+              className={`final-league-mobile-row ${getLeagueZoneClass(qualificationInfo)} ${
+                highlighted ? "final-league-mobile-user-row" : ""
+              }`}
+            >
+              <div className="final-league-mobile-position">{index + 1}</div>
+              <div className="final-league-mobile-team">
+                <strong>{getDisplayTeamName(row)}</strong>
+                <span>
+                  {row.won}V · {row.drawn}E · {row.lost}D · DG {row.goalDifference > 0 ? `+${row.goalDifference}` : row.goalDifference}
+                </span>
+                <div className="final-league-team-tags">
+                  {qualificationInfo.label && (
+                    <span className={`final-league-qualification-tag final-league-qualification-${qualificationInfo.zone}`}>
+                      {qualificationInfo.label}
+                    </span>
+                  )}
+                  {qualificationInfo.detail && (
+                    <span className="final-league-qualification-detail">{qualificationInfo.detail}</span>
+                  )}
+                  {highlighted && <span>Tu equipo</span>}
+                </div>
+              </div>
+              <div className="final-league-mobile-points">
+                <strong>{row.points}</strong>
+                <span>pts</span>
+              </div>
+            </article>
+          );
+        })}
       </div>
     </section>
   );
@@ -682,7 +814,7 @@ export function FinalSummary({
             <ResultStatCard label="Copa del Rey" value={summary.cupTrophyWon ? "Campeón" : "-"} helper={getCupSummaryText(summary)} />
           </div>
 
-          <FinalAccordion title="Palmarés" eyebrow="Vitrina histórica" defaultOpen>
+          <FinalAccordion title="Palmarés" eyebrow="Vitrina histórica" defaultOpen={false}>
             <PalmaresTrophyCase summary={summary} />
           </FinalAccordion>
 
@@ -716,8 +848,16 @@ export function FinalSummary({
             <div className="final-coach-card">
               <strong>{selectedCoach.coachSeason.name}</strong>
               <span>Temporada {selectedCoach.coachSeason.season}</span>
-              <small>Media {selectedCoach.coachSeason.overall}</small>
+              <small>
+                Media {selectedCoach.coachSeason.overall} · Bonus base +{getCoachBaseBonus(selectedCoach.coachSeason)}
+              </small>
+              <small>{getCoachSpecialtyLabel(selectedCoach.coachSeason)}</small>
             </div>
+            <CoachRatingBreakdown
+              selectedCoach={selectedCoach}
+              selectedPlayers={selectedPlayers}
+              teamRating={teamRating}
+            />
           </section>
 
           <section className="final-card">

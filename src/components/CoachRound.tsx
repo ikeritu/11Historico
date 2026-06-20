@@ -21,6 +21,12 @@ interface CoachRoundProps {
 
 type CoachMainProfile = "defense" | "attack" | "management" | "mentality";
 
+interface CoachCompetitionSpecialty {
+  id: "league" | "cup" | "europe";
+  label: string;
+  detail: string;
+}
+
 const COACH_REVEAL_STEP_MS = 1250;
 const COACH_ROULETTE_TICK_MS = 110;
 
@@ -61,14 +67,34 @@ function getCoachBaseBonus(coach: CoachSeason): number {
   return 3;
 }
 
-function getCoachCompetitionTags(coach: CoachSeason): string[] {
-  const tags: string[] = [];
+function getCoachCompetitionSpecialties(coach: CoachSeason): CoachCompetitionSpecialty[] {
+  const specialties: CoachCompetitionSpecialty[] = [];
 
-  if (coach.skills.management >= 86) tags.push("Liga +1");
-  if ((coach.skills.cup ?? 0) >= 86) tags.push("Copa +1");
-  if ((coach.skills.europe ?? 0) >= 86) tags.push("Europa +1");
+  if (coach.skills.management >= 86) {
+    specialties.push({
+      id: "league",
+      label: "Liga",
+      detail: "+1 solo en Liga",
+    });
+  }
 
-  return tags;
+  if ((coach.skills.cup ?? 0) >= 86) {
+    specialties.push({
+      id: "cup",
+      label: "Copa",
+      detail: "+1 solo en Copa",
+    });
+  }
+
+  if ((coach.skills.europe ?? 0) >= 86) {
+    specialties.push({
+      id: "europe",
+      label: "Europa",
+      detail: "+1 solo en Europa",
+    });
+  }
+
+  return specialties;
 }
 
 function getCoachImpactText(coach: CoachSeason): string {
@@ -155,6 +181,9 @@ function CoachVisualCard({
   disabled?: boolean;
   onSelect?: () => void;
 }) {
+  const baseBonus = getCoachBaseBonus(coach);
+  const specialties = getCoachCompetitionSpecialties(coach);
+
   return (
     <article
       className={`coach-card coach-visual-card ${
@@ -175,12 +204,26 @@ function CoachVisualCard({
       </div>
 
       <p className="coach-impact-text">{getCoachImpactText(coach)}</p>
-      <p className="coach-impact-text">
-        Bonus general: +{getCoachBaseBonus(coach)} media
-        {getCoachCompetitionTags(coach).length > 0
-          ? ` · Especialista: ${getCoachCompetitionTags(coach).join(" · ")}`
-          : ""}
-      </p>
+      <div className="coach-bonus-box" aria-label="Bonus de entrenador">
+        <div className="coach-bonus-main">
+          <span>Bonus base</span>
+          <strong>+{baseBonus}</strong>
+          <small>Se suma a la media general del equipo</small>
+        </div>
+
+        <div className="coach-specialty-list">
+          <span className="coach-specialty-title">Especialidad</span>
+          {specialties.length > 0 ? (
+            specialties.map((specialty) => (
+              <span key={specialty.id} className={`coach-specialty-pill coach-specialty-${specialty.id}`}>
+                {specialty.label}: {specialty.detail}
+              </span>
+            ))
+          ) : (
+            <span className="coach-specialty-pill coach-specialty-none">Sin +1 específico</span>
+          )}
+        </div>
+      </div>
 
       <div className="coach-skill-bars">
         <CoachSkillRow label="Ataque" value={coach.skills.attack} />
@@ -348,7 +391,9 @@ export function CoachRound({
           <strong>
             {selectedCoach.name} · {selectedCoach.season}
           </strong>
-          <small>{getCoachProfileLabel(selectedCoach)} · Media {selectedCoach.overall}</small>
+          <small>
+            {getCoachProfileLabel(selectedCoach)} · Media {selectedCoach.overall} · Bonus base +{getCoachBaseBonus(selectedCoach)}
+          </small>
         </aside>
       )}
 

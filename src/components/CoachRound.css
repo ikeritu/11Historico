@@ -332,3 +332,114 @@
 .coach-reveal-status {
   display: none !important;
 }
+
+/* v0.18.4 — claridad visual del bonus de entrenador */
+.coach-bonus-box {
+  display: grid;
+  grid-template-columns: 130px minmax(0, 1fr);
+  gap: 10px;
+  padding: 12px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+}
+
+.coach-bonus-main {
+  display: grid;
+  gap: 3px;
+  padding: 10px;
+  border-radius: 16px;
+  background: #ffffff;
+  color: #b00020;
+  text-align: center;
+}
+
+.coach-bonus-main span,
+.coach-specialty-title {
+  font-size: 0.72rem;
+  font-weight: 950;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.coach-bonus-main strong {
+  font-size: 2.2rem;
+  line-height: 0.95;
+}
+
+.coach-bonus-main small {
+  color: #6f0014;
+  font-size: 0.72rem;
+  font-weight: 850;
+  line-height: 1.25;
+}
+
+.coach-specialty-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  align-content: start;
+  align-items: center;
+}
+
+.coach-specialty-title {
+  width: 100%;
+  color: #ffdce1;
+}
+
+.coach-specialty-pill {
+  display: inline-flex;
+  padding: 7px 9px;
+  border-radius: 999px;
+  color: #ffffff;
+  font-size: 0.76rem;
+  font-weight: 950;
+  line-height: 1.15;
+}
+
+.coach-specialty-league {
+  background: rgba(88, 214, 141, 0.22);
+  color: #aaffc4;
+}
+
+.coach-specialty-cup {
+  background: rgba(255, 213, 79, 0.22);
+  color: #ffe08a;
+}
+
+.coach-specialty-europe {
+  background: rgba(74, 144, 226, 0.24);
+  color: #9fcbff;
+}
+
+.coach-specialty-none {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffdce1;
+}
+
+@media (max-width: 620px) {
+  .coach-card {
+    gap: 12px;
+    padding: 14px;
+    border-radius: 22px;
+  }
+
+  .coach-bonus-box {
+    grid-template-columns: 1fr;
+  }
+
+  .coach-bonus-main {
+    grid-template-columns: auto auto;
+    align-items: center;
+    text-align: left;
+  }
+
+  .coach-bonus-main strong {
+    justify-self: end;
+    grid-row: span 2;
+  }
+
+  .coach-bonus-main small {
+    grid-column: 1 / 2;
+  }
+}
