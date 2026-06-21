@@ -240,6 +240,16 @@ export default function App() {
   );
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const scrollToTop = () => {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    };
+
+    window.requestAnimationFrame(scrollToTop);
+  }, [screen]);
+
+  useEffect(() => {
     if (screen === "home") return;
 
     saveGameState({
