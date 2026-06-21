@@ -345,6 +345,32 @@ export function CoachRound({
         </p>
       </header>
 
+      <aside className={`coach-confirm-panel ${selectedCoach ? "coach-confirm-panel-ready" : ""}`} aria-label="Confirmar entrenador elegido">
+        <div>
+          <span>{selectedCoach ? "Entrenador seleccionado" : "Elige un entrenador"}</span>
+          <strong>
+            {selectedCoach
+              ? `${selectedCoach.name} · ${selectedCoach.season}`
+              : allCoachesRevealed
+                ? "Selecciona uno de los técnicos revelados"
+                : "Espera a que se revelen los 3 técnicos"}
+          </strong>
+          <small>
+            {selectedCoach
+              ? `${getCoachProfileLabel(selectedCoach)} · Media ${selectedCoach.overall} · Bonus base +${getCoachBaseBonus(selectedCoach)}`
+              : "El botón se activará cuando tengas entrenador seleccionado."}
+          </small>
+        </div>
+        <button
+          type="button"
+          className="confirm-coach-button confirm-coach-button-top"
+          disabled={!selectedCoach || !allCoachesRevealed}
+          onClick={handleConfirmCoach}
+        >
+          Confirmar entrenador
+        </button>
+      </aside>
+
       <div className="coach-visual-reveal-board" aria-live="polite">
 <div className="coach-options-grid coach-options-grid-visual">
           {Array.from({ length: optionsCount }).map((_, index) => {
@@ -385,28 +411,7 @@ export function CoachRound({
         </div>
       </div>
 
-      {selectedCoach && (
-        <aside className="selected-coach-banner">
-          <span>Seleccionado</span>
-          <strong>
-            {selectedCoach.name} · {selectedCoach.season}
-          </strong>
-          <small>
-            {getCoachProfileLabel(selectedCoach)} · Media {selectedCoach.overall} · Bonus base +{getCoachBaseBonus(selectedCoach)}
-          </small>
-        </aside>
-      )}
 
-      <footer className="coach-round-footer coach-round-footer-single">
-        <button
-          type="button"
-          className="confirm-coach-button"
-          disabled={!selectedCoach || !allCoachesRevealed}
-          onClick={handleConfirmCoach}
-        >
-          Confirmar entrenador
-        </button>
-      </footer>
     </section>
   );
 }

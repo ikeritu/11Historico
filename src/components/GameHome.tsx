@@ -37,7 +37,9 @@ const DIFFICULTY_OPTIONS: Array<{
     label: "Leyenda",
     description: "Antes Modo Difícil. Madrid, Barça y Atlético aprietan de verdad.",
   },
-];
+ ];
+
+const FEEDBACK_URL = "https://github.com/ikeritu/11Historico/issues/new?title=Feedback%20Futbol11&body=Version%3A%20v0.18.6%0A%0AQue%20ha%20pasado%3A%0A%0APasos%20para%20repetirlo%3A%0A%0AQue%20cambiarias%3A%0A";
 
 export function GameHome({
   hasSavedGame,
@@ -175,9 +177,17 @@ export function GameHome({
           <h3>Estado de beta online</h3>
           <p>Versión pública de prueba: histórico completo, draft, Liga, Copa, simulación y pantalla final aceptadas.</p>
         </div>
-        <div>
+        <div className="game-home-feedback-block">
           <h3>Feedback</h3>
-          <p>Juega una partida completa y dime dónde te pierdes, qué texto no entiendes y si repetirías otra temporada.</p>
+          <p>Juega una partida completa y envía bugs, textos confusos o mejoras que te gustaría ver.</p>
+          <a
+            className="game-home-feedback-button"
+            href={FEEDBACK_URL}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Enviar feedback
+          </a>
         </div>
       </section>
 

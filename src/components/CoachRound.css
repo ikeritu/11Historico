@@ -443,3 +443,71 @@
     grid-column: 1 / 2;
   }
 }
+
+
+/* v0.18.6 — confirmar entrenador arriba */
+.coach-confirm-panel {
+  max-width: 940px;
+  margin: 0 auto 18px;
+  padding: 14px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.11);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.18);
+}
+
+.coach-confirm-panel-ready {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.08));
+  border-color: rgba(255, 255, 255, 0.42);
+}
+
+.coach-confirm-panel span,
+.coach-confirm-panel strong,
+.coach-confirm-panel small {
+  display: block;
+}
+
+.coach-confirm-panel span {
+  color: #ffdce1;
+  font-size: 0.72rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.coach-confirm-panel strong {
+  margin-top: 3px;
+  font-size: 1.05rem;
+}
+
+.coach-confirm-panel small {
+  margin-top: 3px;
+  color: #f2d2d7;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.confirm-coach-button-top {
+  min-width: 220px;
+  min-height: 54px;
+}
+
+@media (max-width: 620px) {
+  .coach-confirm-panel {
+    grid-template-columns: 1fr;
+    margin-bottom: 14px;
+    position: sticky;
+    top: 84px;
+    z-index: 6;
+    backdrop-filter: blur(16px);
+  }
+
+  .confirm-coach-button-top {
+    width: 100%;
+    min-width: 0;
+  }
+}
