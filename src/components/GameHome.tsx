@@ -39,7 +39,7 @@ const DIFFICULTY_OPTIONS: Array<{
   },
  ];
 
-const FEEDBACK_URL = "https://github.com/ikeritu/11Historico/issues/new?title=Feedback%20Futbol11&body=Version%3A%20v0.18.6%0A%0AQue%20ha%20pasado%3A%0A%0APasos%20para%20repetirlo%3A%0A%0AQue%20cambiarias%3A%0A";
+const FEEDBACK_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfSHQS1PVKoWNl8u7mTrYO2Fchuj-2UC82Ap4AVktUnBrBZ8A/viewform?usp=publish-editor";
 
 export function GameHome({
   hasSavedGame,
@@ -65,7 +65,7 @@ export function GameHome({
         <div className="game-home-version-card" aria-label="Estado de la versión">
           <strong>{APP_VERSION}</strong>
           <span>{APP_VERSION_NAME}</span>
-          <small>Liga, Copa y UX final validadas. Esta versión está lista para prueba externa local.</small>
+          <small>Liga, Copa, draft y UX móvil validadas. Versión online abierta para pruebas y feedback.</small>
         </div>
 
         <section className="game-home-difficulty-card" aria-label="Seleccionar dificultad">
@@ -179,7 +179,7 @@ export function GameHome({
         </div>
         <div className="game-home-feedback-block">
           <h3>Feedback</h3>
-          <p>Juega una partida completa y envía bugs, textos confusos o mejoras que te gustaría ver.</p>
+          <p>Juega una partida completa y envía tu opinión en un formulario sencillo: nombre, email y feedback.</p>
           <a
             className="game-home-feedback-button"
             href={FEEDBACK_URL}
@@ -191,11 +191,11 @@ export function GameHome({
         </div>
       </section>
 
-      <details className="game-home-tester-card" aria-label="Guía rápida de beta">
+      <details className="game-home-tester-card" aria-label="Guía rápida de prueba">
         <summary className="game-home-tester-summary">
           <span aria-hidden="true">🧪</span>
           <div>
-            <h3>Guía rápida de beta</h3>
+            <h3>Guía rápida de prueba</h3>
             <p>Abre este bloque si quieres comprobar el flujo completo de una partida.</p>
           </div>
           <strong>Ver guía</strong>

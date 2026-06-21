@@ -101,7 +101,7 @@ Las plantillas combinan fuentes oficiales, referencias históricas y estimacione
 
 ## Beta privada local v0.17.0
 
-Esta versión está pensada para prueba externa local.
+Esta versión está pensada para prueba online pública.
 
 Comandos principales en Windows PowerShell:
 
