@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.21.0a — Career rules skeleton
+
+- Añadidos tipos mínimos de modo carrera.
+- Añadidas reglas puras para objetivo, clasificación europea, dificultad, palmarés y cambio de formación compatible.
+- Documentación añadida en `docs/v0_21_0a_CAREER_RULES_SKELETON.md`.
+- Sin integrar todavía flujo jugable de carrera, ranking global ni Google Apps Script.
+- Sin cambios en motor, Liga, Copa, ratings, draft ni simulación.
+
 ## v0.20.0 — Pre-career foundation
 
 - Entrada visual para `Modo carrera Athletic`.

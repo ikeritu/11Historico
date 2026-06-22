@@ -4,7 +4,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.20.0_PRE_CAREER_FOUNDATION`.
+Versión pública actual: `v0.21.0a_CAREER_RULES_SKELETON`.
 
 Base jugable cerrada:
 
@@ -39,6 +39,7 @@ https://ikeritu.github.io/11Historico/
 - Botón de feedback público mediante Google Forms.
 - Botón para compartir el juego.
 - Entrada informativa de Modo carrera Athletic en preparación.
+- Reglas puras del modo carrera preparadas para el MVP jugable.
 
 ## Cómo se juega
 
@@ -120,6 +121,14 @@ No subir al repositorio:
 Las plantillas combinan fuentes oficiales, referencias históricas y estimaciones para gameplay. Los ratings no son datos oficiales: son valores internos para equilibrar el juego.
 
 ## Changelog breve
+
+### v0.21.0a — Career rules skeleton
+
+- Añadidos tipos mínimos de modo carrera.
+- Añadidas reglas puras para objetivo, clasificación europea, dificultad, palmarés y cambio de formación compatible.
+- Documentación interna de carrera en `docs/v0_21_0a_CAREER_RULES_SKELETON.md`.
+- Sin integrar todavía flujo jugable de carrera, ranking global ni Google Apps Script.
+- Sin cambios en motor, Liga, Copa, ratings, draft ni simulación.
 
 ### v0.20.0 — Pre-career foundation
 
