@@ -1,40 +1,61 @@
-# Futbol11 — Athletic Club Histórico
+# Futbol11 — Once histórico Zurigorri
 
 Juego web en React + TypeScript para construir un once histórico del Athletic Club, elegir entrenador y simular LaLiga 25/26 + Copa del Rey.
 
 ## Estado actual
 
-Versión estable de trabajo: `v0.16.5_UX_CLEANUP_BETA_READINESS`.
+Versión pública actual: `v0.19.0_BETA_PUBLICA_ESTABLE`.
 
-Base cerrada antes de esta fase:
+Base jugable cerrada:
 
 - `v0.15.8_BALANCE_LIGA_OK`: balance de Liga aceptado y congelado.
 - `v0.16.0_COPA_DEL_REY_REALISTA_OK`: Copa del Rey realista aceptada y congelada.
+- `v0.18.7_PUBLIC_COPY_AND_FEEDBACK_FORM`: beta online con formulario público de feedback.
 
 No reabrir balance de Liga/Copa salvo decisión expresa.
 
-## Incluye
+## Enlace online
+
+GitHub Pages:
+
+```text
+https://ikeritu.github.io/11Historico/
+```
+
+## Qué incluye
 
 - Histórico Athletic 1928/29–2025/26, sin temporadas sin Liga nacional.
 - Modo Fácil con selector de rangos históricos.
-- Modo Normal sin cambios de lógica.
+- Modo Normal.
 - Modo Leyenda.
 - Draft histórico con variedad de temporadas.
 - Validación de posiciones y jugadores repetidos.
-- Entrenadores históricos.
+- Entrenadores históricos con bonus visible y ajustado.
 - Simulación visual con botón único `Simular` / `Parar simulación`.
 - LaLiga 25/26 balanceada.
 - Copa del Rey con factor sorpresa.
-- Pantalla final con clasificación, Copa, historial local y mejor partida.
-- Auditorías por PowerShell.
-- Versión visible en interfaz.
+- Resultado final con clasificación, Copa, historial del navegador y mejor partida.
+- UX móvil pulida para draft, entrenador y resultado final.
+- Botón de feedback público mediante Google Forms.
+- Botón para compartir el juego.
 
-## Requisitos
+## Cómo se juega
+
+1. Elige dificultad.
+2. En Modo Fácil, elige rango de temporadas.
+3. Elige formación.
+4. Completa el draft de 11 jugadores.
+5. Elige entrenador.
+6. Revisa el Athletic Club histórico creado.
+7. Simula Liga y Copa.
+8. Consulta el resultado final y comparte feedback si quieres.
+
+## Requisitos para desarrollo
 
 - Node.js 20 o superior recomendado.
 - npm.
 
-## Instalación
+## Instalación local en Windows
 
 ```powershell
 cd "D:\Proyectos\⚽ Futbol11"
@@ -73,16 +94,15 @@ Copa del Rey:
 npm.cmd run audit:copa:100
 ```
 
-## Flujo de juego
+## Despliegue en GitHub Pages
 
-1. Elegir dificultad.
-2. En Modo Fácil, elegir rango de temporadas.
-3. Elegir formación.
-4. Completar el draft de 11 jugadores.
-5. Elegir entrenador.
-6. Revisar el Athletic Club Histórico creado.
-7. Simular Liga y Copa.
-8. Revisar resultado final, clasificación e historial.
+El repositorio debe usar:
+
+```text
+Settings → Pages → Source: GitHub Actions
+```
+
+El workflow `.github/workflows/deploy.yml` compila el proyecto y publica `dist/`.
 
 ## Mantenimiento
 
@@ -98,53 +118,34 @@ No subir al repositorio:
 
 Las plantillas combinan fuentes oficiales, referencias históricas y estimaciones para gameplay. Los ratings no son datos oficiales: son valores internos para equilibrar el juego.
 
+## Changelog breve
 
-## Beta privada local v0.17.0
+### v0.19.0 — Beta pública estable
 
-Esta versión está pensada para prueba online pública.
+- Portada orientada a usuario público.
+- Estado visible cambiado a `Beta pública`.
+- Botón `Compartir juego`.
+- Feedback público mediante Google Forms.
+- README público actualizado.
+- Changelog simple incorporado.
+- Sin cambios en motor, Liga, Copa, ratings, draft ni simulación.
 
-Comandos principales en Windows PowerShell:
+### v0.18.x — Beta online
 
-```powershell
-npm.cmd install
-npm.cmd run dev
-```
+- Publicación en GitHub Pages.
+- Layout móvil del draft mejorado.
+- Atajo móvil para ver formación.
+- Bonus de entrenador corregido y explicado.
+- Resultado final móvil más compacto.
+- Reset de scroll al cambiar de fase.
+- Formulario público de feedback.
 
-Auditorías disponibles:
+### v0.16.x — Base UX y beta local
 
-```powershell
-npm.cmd run audit:balance:100
-npm.cmd run audit:copa:100
-```
+- Copa del Rey realista cerrada.
+- Pantalla final y portada pulidas.
+- Botones de apoyo integrados.
 
-Documentos útiles:
+### v0.15.x — Balance Liga cerrado
 
-- `docs/v0_17_0_checklist_tester_externo.md`
-- `docs/v0_17_0_feedback_template.md`
-
-Liga y Copa están cerradas. No reabrir balance salvo decisión expresa.
-
-
-## Beta online v0.18.0
-
-Esta versión está preparada para publicarse en GitHub Pages.
-
-Comandos principales:
-
-```powershell
-npm.cmd install
-npm.cmd run build
-npm.cmd run dev
-```
-
-Despliegue recomendado:
-
-1. Subir el proyecto a un repositorio de GitHub.
-2. Activar GitHub Pages con origen **GitHub Actions**.
-3. Hacer push a `main`.
-4. El workflow `.github/workflows/deploy.yml` compila y publica la carpeta `dist`.
-
-Documentación:
-
-- `docs/v0_18_0_BETA_ONLINE_GITHUB_PAGES_READY.md`
-- `docs/v0_18_0_github_pages_deploy.md`
+- Balance de Liga validado y congelado.

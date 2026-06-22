@@ -1,5 +1,6 @@
 // src/components/GameHome.tsx
 
+import { useState } from "react";
 import type { EasyModeSeasonRangeId, GameDifficulty } from "../types/game";
 import { EASY_MODE_SEASON_RANGES } from "../data/easyModeSeasonRanges";
 import { APP_STATUS, APP_VERSION, APP_VERSION_NAME } from "../config/appVersion";
@@ -40,6 +41,8 @@ const DIFFICULTY_OPTIONS: Array<{
  ];
 
 const FEEDBACK_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfSHQS1PVKoWNl8u7mTrYO2Fchuj-2UC82Ap4AVktUnBrBZ8A/viewform?usp=publish-editor";
+const PUBLIC_GAME_URL = "https://ikeritu.github.io/11Historico/";
+const SHARE_TEXT = "Prueba Futbol11: crea tu once histórico del Athletic y simula Liga + Copa.";
 
 export function GameHome({
   hasSavedGame,
@@ -50,6 +53,28 @@ export function GameHome({
   onNewGame,
   onContinueGame,
 }: GameHomeProps) {
+  const [shareStatus, setShareStatus] = useState("");
+
+  const handleShareGame = async () => {
+    setShareStatus("");
+
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: "Futbol11 — Once histórico Zurigorri",
+          text: SHARE_TEXT,
+          url: PUBLIC_GAME_URL,
+        });
+        return;
+      }
+
+      await navigator.clipboard.writeText(PUBLIC_GAME_URL);
+      setShareStatus("Enlace copiado");
+    } catch {
+      setShareStatus("Copia el enlace desde la barra del navegador");
+    }
+  };
+
   return (
     <main className="game-home">
       <section className="game-home-hero">
@@ -58,14 +83,14 @@ export function GameHome({
         <h1>Once histórico Zurigorri</h1>
 
         <p className="game-home-subtitle">
-          Construye un once histórico del Athletic con jugadores de distintas épocas
-          y ponlo a competir en LaLiga 25/26 y la Copa del Rey.
+          Construye tu once histórico del Athletic, mezcla leyendas de distintas épocas
+          y compite en LaLiga 25/26 y la Copa del Rey.
         </p>
 
         <div className="game-home-version-card" aria-label="Estado de la versión">
           <strong>{APP_VERSION}</strong>
           <span>{APP_VERSION_NAME}</span>
-          <small>Liga, Copa, draft y UX móvil validadas. Versión online abierta para pruebas y feedback.</small>
+          <small>Beta pública estable: draft histórico, Liga, Copa, resultado final móvil y feedback público activos.</small>
         </div>
 
         <section className="game-home-difficulty-card" aria-label="Seleccionar dificultad">
@@ -131,7 +156,19 @@ export function GameHome({
           >
             Continuar partida
           </button>
+
+          <button
+            type="button"
+            className="share-home-button"
+            onClick={handleShareGame}
+          >
+            Compartir juego
+          </button>
         </div>
+
+        {shareStatus && (
+          <p className="share-home-message" role="status">{shareStatus}</p>
+        )}
 
         {!hasSavedGame && (
           <p className="no-save-message">
@@ -160,7 +197,7 @@ export function GameHome({
             <li>No puedes poner jugadores fuera de posición.</li>
             <li>Cada formación cambia el estilo del equipo.</li>
             <li>El Athletic histórico sustituye al Athletic real 25/26.</li>
-            <li>La Liga y la Copa están balanceadas como base jugable cerrada.</li>
+            <li>La Liga y la Copa están ajustadas como experiencia jugable.</li>
           </ul>
         </div>
 
@@ -172,14 +209,14 @@ export function GameHome({
           </p>
         </div>
       </section>
-      <section className="game-home-beta-card" aria-label="Guía de beta online">
+      <section className="game-home-beta-card" aria-label="Beta pública y feedback">
         <div>
-          <h3>Estado de beta online</h3>
-          <p>Versión pública de prueba: histórico completo, draft, Liga, Copa, simulación y pantalla final aceptadas.</p>
+          <h3>Beta pública estable</h3>
+          <p>Juega una partida rápida, crea tu once histórico, simula Liga y Copa, y compara tu resultado final.</p>
         </div>
         <div className="game-home-feedback-block">
-          <h3>Feedback</h3>
-          <p>Juega una partida completa y envía tu opinión en un formulario sencillo: nombre, email y feedback.</p>
+          <h3>Ayuda a mejorar Futbol11</h3>
+          <p>Envía tu opinión en un formulario sencillo. Basta con nombre, email y feedback.</p>
           <a
             className="game-home-feedback-button"
             href={FEEDBACK_URL}
@@ -190,24 +227,6 @@ export function GameHome({
           </a>
         </div>
       </section>
-
-      <details className="game-home-tester-card" aria-label="Guía rápida de prueba">
-        <summary className="game-home-tester-summary">
-          <span aria-hidden="true">🧪</span>
-          <div>
-            <h3>Guía rápida de prueba</h3>
-            <p>Abre este bloque si quieres comprobar el flujo completo de una partida.</p>
-          </div>
-          <strong>Ver guía</strong>
-        </summary>
-        <ol>
-          <li>Elige dificultad y, si usas Modo Fácil, prueba un rango de temporadas.</li>
-          <li>Completa el draft sin ayuda y revisa si las posiciones se entienden.</li>
-          <li>Simula la temporada usando solo los botones visibles.</li>
-          <li>Lee el resultado final y confirma si entiendes Liga, Copa y rendimiento del once.</li>
-          <li>Anota tres cosas: bug, parte confusa y mejora que más te gustaría ver.</li>
-        </ol>
-      </details>
 
       <SupportButton variant="home" />
     </main>

@@ -716,3 +716,34 @@
     width: 100%;
   }
 }
+
+/* v0.19.0 — beta pública estable */
+.share-home-button {
+  min-width: 190px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 18px;
+  padding: 15px 18px;
+  font-weight: 950;
+  cursor: pointer;
+  background: rgba(255,255,255,0.13);
+  color: #ffffff;
+}
+
+.share-home-button:hover,
+.share-home-button:focus-visible {
+  transform: translateY(-1px);
+  background: rgba(255,255,255,0.2);
+}
+
+.share-home-message {
+  margin: 12px auto 0;
+  color: #ffe08a;
+  font-weight: 900;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 620px) {
+  .share-home-button {
+    width: 100%;
+  }
+}
