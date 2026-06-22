@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.20.0 — Pre-career foundation
+
+- Entrada visual para `Modo carrera Athletic`.
+- Pantalla informativa con reglas cerradas del futuro modo carrera.
+- Documentación añadida en `docs/v0_20_0_PRE_CAREER_FOUNDATION.md`.
+- Sin cambios en motor, Liga, Copa, ratings, draft ni simulación.
+
 ## v0.19.0 — Beta pública estable
 
 - Cambio de estado visible a `Beta pública`.

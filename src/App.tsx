@@ -45,7 +45,7 @@ import "./App.css";
 
 const TOTAL_PLAYER_ROUNDS = 11;
 
-type AppScreen = "home" | "season_reveal" | GamePhase;
+type AppScreen = "home" | "career_preview" | "season_reveal" | GamePhase;
 
 function getSeasonYearNumber(season: SeasonId): number {
   const [startYear] = season.split("/");
@@ -303,6 +303,11 @@ export default function App() {
     setScreen("formation_selection");
   }
 
+  function handleOpenCareerPreview() {
+    setScreen("career_preview");
+  }
+
+
   function handleContinueGame() {
     const loadedGame = loadGameState();
     if (!loadedGame) return;
@@ -470,7 +475,7 @@ export default function App() {
     window.alert(shareText);
   }
 
-  const shouldShowProgress = screen !== "home";
+  const shouldShowProgress = screen !== "home" && screen !== "career_preview";
 
   return (
     <div className="app-shell">
@@ -526,7 +531,49 @@ export default function App() {
           onEasyModeSeasonRangeChange={setEasyModeSeasonRangeId}
           onNewGame={handleNewGame}
           onContinueGame={handleContinueGame}
+          onCareerPreview={handleOpenCareerPreview}
         />
+      )}
+
+      {screen === "career_preview" && (
+        <main className="career-preview-screen">
+          <section className="career-preview-card">
+            <p className="eyebrow">Modo carrera Athletic</p>
+            <h1>Sobrevive temporada a temporada</h1>
+            <p>
+              Base preparada para el futuro modo carrera: empieza en 2025/26,
+              clasifica a Europa o gana la Copa, y evita el descenso para seguir vivo.
+            </p>
+
+            <div className="career-preview-grid">
+              <article>
+                <strong>Objetivo</strong>
+                <span>Champions, Europa League, Conference o Copa del Rey. Si desciendes, Game Over.</span>
+              </article>
+              <article>
+                <strong>Entre temporadas</strong>
+                <span>Cambiar un jugador o cambiar entrenador. Si ganas Liga, podrás ajustar formación compatible.</span>
+              </article>
+              <article>
+                <strong>Progresión</strong>
+                <span>Los rivales subirán poco a poco y la Copa será cada año más exigente.</span>
+              </article>
+              <article>
+                <strong>Ranking arcade</strong>
+                <span>Top 100 global futuro por temporadas superadas y puntos de palmarés.</span>
+              </article>
+            </div>
+
+            <div className="career-preview-actions">
+              <button type="button" className="primary-home-button" onClick={handleNewGame}>
+                Jugar partida rápida
+              </button>
+              <button type="button" className="secondary-home-button" onClick={() => setScreen("home")}>
+                Volver
+              </button>
+            </div>
+          </section>
+        </main>
       )}
 
       {screen === "formation_selection" && (

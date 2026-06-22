@@ -174,7 +174,8 @@
 }
 
 .primary-home-button,
-.secondary-home-button {
+.secondary-home-button,
+.career-home-button {
   min-width: 190px;
   border: 0;
   border-radius: 18px;
@@ -191,6 +192,11 @@
 .secondary-home-button {
   background: rgba(255,255,255,0.13);
   color: #ffffff;
+}
+
+.career-home-button {
+  background: #ffe08a;
+  color: #6f0014;
 }
 
 .secondary-home-button:disabled {

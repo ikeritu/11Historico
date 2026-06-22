@@ -169,3 +169,80 @@ button:not(:disabled):hover {
     width: 100%;
   }
 }
+
+
+/* Modo carrera preview */
+.career-preview-screen {
+  min-height: 100vh;
+  padding: 36px 18px;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.1), transparent 28%),
+    linear-gradient(135deg, #16070b 0%, #2b0710 44%, #080808 100%);
+  color: #ffffff;
+}
+
+.career-preview-card {
+  width: min(980px, 100%);
+  padding: 32px;
+  border-radius: 32px;
+  background: rgba(255, 255, 255, 0.085);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.3);
+}
+
+.career-preview-card h1 {
+  margin: 0 0 12px;
+  font-size: clamp(2rem, 5vw, 4.2rem);
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+}
+
+.career-preview-card p {
+  max-width: 760px;
+  margin: 0 0 22px;
+  color: #f2d2d7;
+  line-height: 1.5;
+}
+
+.career-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.career-preview-grid article {
+  padding: 16px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.career-preview-grid strong,
+.career-preview-grid span {
+  display: block;
+}
+
+.career-preview-grid strong {
+  margin-bottom: 8px;
+  color: #ffe08a;
+}
+
+.career-preview-grid span {
+  color: #f2d2d7;
+  line-height: 1.42;
+}
+
+.career-preview-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+@media (max-width: 760px) {
+  .career-preview-screen { padding: 24px 12px; }
+  .career-preview-card { padding: 24px 16px; }
+  .career-preview-grid { grid-template-columns: 1fr; }
+  .career-preview-actions { display: grid; }
+}

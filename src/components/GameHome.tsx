@@ -16,6 +16,7 @@ interface GameHomeProps {
   onEasyModeSeasonRangeChange: (rangeId: EasyModeSeasonRangeId) => void;
   onNewGame: () => void;
   onContinueGame: () => void;
+  onCareerPreview: () => void;
 }
 
 const DIFFICULTY_OPTIONS: Array<{
@@ -52,6 +53,7 @@ export function GameHome({
   onEasyModeSeasonRangeChange,
   onNewGame,
   onContinueGame,
+  onCareerPreview,
 }: GameHomeProps) {
   const [shareStatus, setShareStatus] = useState("");
 
@@ -155,6 +157,14 @@ export function GameHome({
             disabled={!hasSavedGame}
           >
             Continuar partida
+          </button>
+
+          <button
+            type="button"
+            className="career-home-button"
+            onClick={onCareerPreview}
+          >
+            Modo carrera Athletic
           </button>
 
           <button
