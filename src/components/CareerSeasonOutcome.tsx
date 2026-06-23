@@ -9,6 +9,7 @@ interface CareerSeasonOutcomeProps {
   objectiveResult: CareerObjectiveResult;
   onViewFullSummary: () => void;
   onRestart: () => void;
+  onContinueCareer?: () => void;
 }
 
 function getEuropeanLabel(result: CareerSeasonResult): string {
@@ -24,6 +25,7 @@ export function CareerSeasonOutcome({
   objectiveResult,
   onViewFullSummary,
   onRestart,
+  onContinueCareer,
 }: CareerSeasonOutcomeProps) {
   const survived = objectiveResult.survives;
 
@@ -59,7 +61,7 @@ export function CareerSeasonOutcome({
 
         {survived ? (
           <p className="career-outcome-note">
-            En la siguiente subfase se añadirá la pantalla entre temporadas para cambiar 1 jugador o entrenador.
+            Ya puedes continuar carrera: elige cambiar 1 jugador o cambiar entrenador antes de la siguiente temporada.
           </p>
         ) : (
           <p className="career-outcome-note">
@@ -68,7 +70,12 @@ export function CareerSeasonOutcome({
         )}
 
         <div className="career-outcome-actions">
-          <button type="button" className="primary-home-button" onClick={onViewFullSummary}>
+          {survived && onContinueCareer && (
+            <button type="button" className="primary-home-button" onClick={onContinueCareer}>
+              Continuar carrera
+            </button>
+          )}
+          <button type="button" className={survived ? "secondary-home-button" : "primary-home-button"} onClick={onViewFullSummary}>
             Ver resumen completo
           </button>
           <button type="button" className="secondary-home-button" onClick={onRestart}>

@@ -15,7 +15,7 @@ import type {
 } from "./types/game";
 
 import type { UserLeagueSimulationContext } from "./simulation/leagueSimulator";
-import type { CareerObjectiveResult, CareerSeasonResult } from "./types/career";
+import type { CareerObjectiveResult, CareerSeasonResult, CareerTrophyCounts } from "./types/career";
 
 import { getPlayerIdentityKey, resolvePlayerSlotPlacement } from "./domain/positionRules";
 
@@ -35,6 +35,8 @@ import TeamSummary from "./components/TeamSummary";
 import LeagueSimulatorView from "./components/LeagueSimulatorView";
 import FinalSummary from "./components/FinalSummary";
 import CareerSeasonOutcome from "./components/CareerSeasonOutcome";
+import CareerInterseasonReward from "./components/CareerInterseasonReward";
+import CareerPlayerReplacementPicker from "./components/CareerPlayerReplacementPicker";
 
 import {
   clearSavedGameState,
@@ -54,7 +56,47 @@ import "./App.css";
 
 const TOTAL_PLAYER_ROUNDS = 11;
 
-type AppScreen = "home" | "career_preview" | "career_season_result" | "career_game_over" | "season_reveal" | GamePhase;
+
+function createEmptyCareerTrophyCounts(): CareerTrophyCounts {
+  return {
+    champions: 0,
+    liga: 0,
+    europaLeague: 0,
+    copa: 0,
+    conference: 0,
+    supercopa: 0,
+  };
+}
+
+function getCareerSeasonLabelFromIndex(index: number): string {
+  const startYear = 2025 + Math.max(0, index);
+  const endYear = String((startYear + 1) % 100).padStart(2, "0");
+
+  return `${startYear}/${endYear}`;
+}
+
+function addCareerTrophiesFromSeason(
+  trophyCounts: CareerTrophyCounts,
+  seasonResult: CareerSeasonResult,
+): CareerTrophyCounts {
+  return {
+    ...trophyCounts,
+    liga: trophyCounts.liga + (seasonResult.wonLeague ? 1 : 0),
+    copa: trophyCounts.copa + (seasonResult.wonCopa ? 1 : 0),
+    supercopa: trophyCounts.supercopa + (seasonResult.wonSupercopa ? 1 : 0),
+  };
+}
+
+type AppScreen =
+  | "home"
+  | "career_preview"
+  | "career_season_result"
+  | "career_game_over"
+  | "career_interseason_reward"
+  | "career_player_replacement_pick"
+  | "career_player_replacement_draft"
+  | "season_reveal"
+  | GamePhase;
 
 function getSeasonYearNumber(season: SeasonId): number {
   const [startYear] = season.split("/");
@@ -120,11 +162,11 @@ function createGameId(): string {
 }
 
 
-function buildCareerSeasonResult(summary: FinalGameSummary): CareerSeasonResult {
+function buildCareerSeasonResult(summary: FinalGameSummary, seasonLabel = CAREER_INITIAL_SEASON_LABEL): CareerSeasonResult {
   const wonCopa = Boolean(summary.cupTrophyWon);
 
   return {
-    seasonLabel: CAREER_INITIAL_SEASON_LABEL,
+    seasonLabel,
     leaguePosition: summary.leaguePosition,
     wonLeague: summary.leaguePosition === 1,
     wonCopa,
@@ -237,6 +279,11 @@ export default function App() {
   const [isCareerMode, setIsCareerMode] = useState<boolean>(() => savedGame?.isCareerMode ?? false);
   const [careerSeasonResult, setCareerSeasonResult] = useState<CareerSeasonResult | undefined>();
   const [careerObjectiveResult, setCareerObjectiveResult] = useState<CareerObjectiveResult | undefined>();
+  const [careerCompletedSeasons, setCareerCompletedSeasons] = useState(0);
+  const [careerSeasonLabel, setCareerSeasonLabel] = useState(CAREER_INITIAL_SEASON_LABEL);
+  const [careerTrophyCounts, setCareerTrophyCounts] = useState<CareerTrophyCounts>(() => createEmptyCareerTrophyCounts());
+  const [replacementDraftSeason, setReplacementDraftSeason] = useState<SeasonId | undefined>();
+  const [replacementRemovedPlayer, setReplacementRemovedPlayer] = useState<SelectedPlayer | undefined>();
 
   const [gameId, setGameId] = useState<string>(() => savedGame?.gameId ?? createGameId());
   const [phase, setPhase] = useState<GamePhase>(() => savedGame?.phase ?? "formation_selection");
@@ -327,6 +374,11 @@ export default function App() {
     setIsCareerMode(false);
     setCareerSeasonResult(undefined);
     setCareerObjectiveResult(undefined);
+    setCareerCompletedSeasons(0);
+    setCareerSeasonLabel(CAREER_INITIAL_SEASON_LABEL);
+    setCareerTrophyCounts(createEmptyCareerTrophyCounts());
+    setReplacementDraftSeason(undefined);
+    setReplacementRemovedPlayer(undefined);
   }
 
   function handleNewGame() {
@@ -345,6 +397,11 @@ export default function App() {
     setIsCareerMode(true);
     setCareerSeasonResult(undefined);
     setCareerObjectiveResult(undefined);
+    setCareerCompletedSeasons(0);
+    setCareerSeasonLabel(CAREER_INITIAL_SEASON_LABEL);
+    setCareerTrophyCounts(createEmptyCareerTrophyCounts());
+    setReplacementDraftSeason(undefined);
+    setReplacementRemovedPlayer(undefined);
     setScreen("formation_selection");
   }
 
@@ -374,6 +431,11 @@ export default function App() {
     setIsCareerMode(loadedGame.isCareerMode ?? false);
     setCareerSeasonResult(undefined);
     setCareerObjectiveResult(undefined);
+    setCareerCompletedSeasons(0);
+    setCareerSeasonLabel(CAREER_INITIAL_SEASON_LABEL);
+    setCareerTrophyCounts(createEmptyCareerTrophyCounts());
+    setReplacementDraftSeason(undefined);
+    setReplacementRemovedPlayer(undefined);
     setLastSelection(undefined);
     setScreen(loadedGame.phase);
   }
@@ -504,7 +566,7 @@ export default function App() {
     setPhase("finished");
 
     if (isCareerMode) {
-      const seasonResult = buildCareerSeasonResult(summary);
+      const seasonResult = buildCareerSeasonResult(summary, careerSeasonLabel);
       const objectiveResult = evaluateCareerObjective(seasonResult);
 
       setCareerSeasonResult(seasonResult);
@@ -514,6 +576,106 @@ export default function App() {
     }
 
     setScreen("finished");
+  }
+
+  function handleContinueCareerAfterSeason() {
+    if (!careerSeasonResult || !careerObjectiveResult?.survives) return;
+
+    const nextCompletedSeasons = careerCompletedSeasons + 1;
+    setCareerCompletedSeasons(nextCompletedSeasons);
+    setCareerSeasonLabel(getCareerSeasonLabelFromIndex(nextCompletedSeasons));
+    setCareerTrophyCounts((previous) => addCareerTrophiesFromSeason(previous, careerSeasonResult));
+    setLeagueContext(undefined);
+    setFinalSummary(undefined);
+    setTeamRating(undefined);
+    setReplacementDraftSeason(undefined);
+    setReplacementRemovedPlayer(undefined);
+    setPhase("team_summary");
+    setScreen("career_interseason_reward");
+  }
+
+  function handleChooseCareerCoachChange() {
+    setSelectedCoach(undefined);
+    setTeamRating(undefined);
+    setLeagueContext(undefined);
+    setFinalSummary(undefined);
+    setCareerSeasonResult(undefined);
+    setCareerObjectiveResult(undefined);
+    setReplacementDraftSeason(undefined);
+    setReplacementRemovedPlayer(undefined);
+    setPhase("coach_selection");
+    setScreen("coach_selection");
+  }
+
+  function handleChooseCareerPlayerChange() {
+    if (!selectedFormation) return;
+
+    setTeamRating(undefined);
+    setLeagueContext(undefined);
+    setFinalSummary(undefined);
+    setReplacementDraftSeason(undefined);
+    setReplacementRemovedPlayer(undefined);
+    setPhase("player_selection");
+    setScreen("career_player_replacement_pick");
+  }
+
+  function handleSelectPlayerToReplace(selection: SelectedPlayer) {
+    const nextPlayers = selectedPlayers.filter(
+      (item) => !(item.slotId === selection.slotId && item.playerSeason.id === selection.playerSeason.id)
+    );
+
+    setSelectedPlayers(nextPlayers);
+    setReplacementRemovedPlayer(selection);
+    setReplacementDraftSeason(pickRandomSeason(currentDraftSeasonPool));
+    setCurrentRoundIndex(nextPlayers.length);
+    setLastSelection(undefined);
+    setTeamValidationErrors([]);
+    setPhase("player_selection");
+    setScreen("career_player_replacement_draft");
+  }
+
+  function handleCancelPlayerReplacement() {
+    if (replacementRemovedPlayer) {
+      setSelectedPlayers((previous) => {
+        const alreadyRestored = previous.some(
+          (item) => item.slotId === replacementRemovedPlayer.slotId &&
+            item.playerSeason.id === replacementRemovedPlayer.playerSeason.id
+        );
+
+        return alreadyRestored ? previous : [...previous, replacementRemovedPlayer];
+      });
+    }
+
+    setReplacementDraftSeason(undefined);
+    setReplacementRemovedPlayer(undefined);
+    setTeamValidationErrors([]);
+    setScreen("career_interseason_reward");
+  }
+
+  function handleSelectReplacementPlayer(selection: SelectedPlayer) {
+    if (!selectedFormation) return;
+
+    const nextPlayers = [...selectedPlayers, selection];
+    const validation = validateSelectedTeam({
+      formation: selectedFormation,
+      selectedPlayers: nextPlayers,
+    });
+
+    if (!validation.valid) {
+      setTeamValidationErrors(validation.errors);
+      return;
+    }
+
+    setSelectedPlayers(nextPlayers);
+    setLastSelection(selection);
+    setReplacementDraftSeason(undefined);
+    setReplacementRemovedPlayer(undefined);
+    setTeamValidationErrors([]);
+    setCurrentRoundIndex(nextPlayers.length);
+    setCareerSeasonResult(undefined);
+    setCareerObjectiveResult(undefined);
+    setPhase("team_summary");
+    setScreen("team_summary");
   }
 
   function handleRestart() {
@@ -530,7 +692,14 @@ export default function App() {
     window.alert(shareText);
   }
 
-  const shouldShowProgress = !["home", "career_preview", "career_season_result", "career_game_over"].includes(screen);
+  const shouldShowProgress = ![
+    "home",
+    "career_preview",
+    "career_season_result",
+    "career_game_over",
+    "career_interseason_reward",
+    "career_player_replacement_pick",
+  ].includes(screen);
 
   return (
     <div className="app-shell">
@@ -676,7 +845,7 @@ export default function App() {
           selectedCoach={selectedCoach}
           onStartLeagueSimulation={handleStartLeagueSimulation}
           onBackToCoach={() => setScreen("coach_selection")}
-          modeLabel={isCareerMode ? `Carrera Athletic · ${CAREER_INITIAL_SEASON_LABEL}` : undefined}
+          modeLabel={isCareerMode ? `Carrera Athletic · ${careerSeasonLabel}` : undefined}
           startButtonLabel={isCareerMode ? "Jugar temporada de carrera" : undefined}
         />
       )}
@@ -701,8 +870,59 @@ export default function App() {
           seasonResult={careerSeasonResult}
           objectiveResult={careerObjectiveResult}
           onViewFullSummary={() => setScreen("finished")}
+          onContinueCareer={careerObjectiveResult.survives ? handleContinueCareerAfterSeason : undefined}
           onRestart={handleRestart}
         />
+      )}
+
+      {screen === "career_interseason_reward" && selectedFormation && careerSeasonResult && careerObjectiveResult && (
+        <CareerInterseasonReward
+          completedSeasons={careerCompletedSeasons}
+          nextSeasonLabel={careerSeasonLabel}
+          formation={selectedFormation}
+          selectedPlayers={selectedPlayers}
+          selectedCoach={selectedCoach}
+          seasonResult={careerSeasonResult}
+          objectiveResult={careerObjectiveResult}
+          trophyCounts={careerTrophyCounts}
+          onChoosePlayerChange={handleChooseCareerPlayerChange}
+          onChooseCoachChange={handleChooseCareerCoachChange}
+          onRestart={handleRestart}
+        />
+      )}
+
+      {screen === "career_player_replacement_pick" && selectedFormation && (
+        <CareerPlayerReplacementPicker
+          formation={selectedFormation}
+          selectedPlayers={selectedPlayers}
+          nextSeasonLabel={careerSeasonLabel}
+          onSelectPlayerToReplace={handleSelectPlayerToReplace}
+          onCancel={() => setScreen("career_interseason_reward")}
+        />
+      )}
+
+      {screen === "career_player_replacement_draft" && selectedFormation && replacementDraftSeason && (
+        <PlayerRound
+          roundNumber={1}
+          totalRounds={1}
+          season={replacementDraftSeason}
+          formation={selectedFormation}
+          selectedPlayers={selectedPlayers}
+          lastSelection={lastSelection}
+          onSelectPlayer={handleSelectReplacementPlayer}
+          onSkipRound={() => setReplacementDraftSeason(pickRandomSeason(currentDraftSeasonPool))}
+        />
+      )}
+
+      {screen === "career_player_replacement_draft" && replacementRemovedPlayer && (
+        <div className="career-replacement-floating-actions">
+          <span>
+            Sustituyendo a {replacementRemovedPlayer.playerSeason.name} ({replacementRemovedPlayer.position})
+          </span>
+          <button type="button" onClick={handleCancelPlayerReplacement}>
+            Cancelar cambio
+          </button>
+        </div>
       )}
 
       {screen === "finished" && finalSummary && selectedFormation && selectedCoach && teamRating && (

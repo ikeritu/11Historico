@@ -1,0 +1,103 @@
+.career-reward-screen {
+  min-height: 100vh;
+  padding: 32px 16px 56px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.career-reward-card {
+  width: min(1100px, 100%);
+  background: rgba(9, 18, 36, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 28px;
+  padding: 28px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.3);
+}
+
+.career-reward-card h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+}
+
+.career-reward-lead {
+  max-width: 760px;
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.6;
+}
+
+.career-reward-grid,
+.career-reward-current-team {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.career-reward-current-team {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.career-reward-grid article,
+.career-reward-current-team article,
+.career-reward-bonus {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  padding: 16px;
+}
+
+.career-reward-grid span,
+.career-reward-current-team span {
+  display: block;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 0.85rem;
+}
+
+.career-reward-grid strong,
+.career-reward-current-team strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 1.25rem;
+}
+
+.career-reward-grid small,
+.career-reward-current-team small {
+  display: block;
+  margin-top: 6px;
+  color: rgba(255, 255, 255, 0.58);
+}
+
+.career-reward-bonus {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.career-reward-bonus span {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.career-reward-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 26px;
+}
+
+@media (max-width: 760px) {
+  .career-reward-card {
+    padding: 20px;
+    border-radius: 22px;
+  }
+
+  .career-reward-grid,
+  .career-reward-current-team {
+    grid-template-columns: 1fr;
+  }
+
+  .career-reward-actions > button {
+    width: 100%;
+  }
+}

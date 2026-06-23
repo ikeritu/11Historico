@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.21.0c — Interseason rewards
+
+- Añade pantalla entre temporadas tras superar objetivo en modo carrera.
+- Permite continuar carrera cambiando 1 jugador o cambiando entrenador.
+- El cambio de jugador obliga a elegir a quién sacar, sortea una temporada histórica y permite fichar un sustituto compatible.
+- Mantiene el bucle Liga + Copa para la siguiente temporada.
+- Actualiza marcador de temporadas superadas y palmarés básico de Liga/Copa/Supercopa.
+- No introduce todavía ranking global, Supercopa jugable ni Europa jugable.
+
+
 ## v0.21.0b — Career flow basic
 
 - El modo carrera Athletic ya permite iniciar una carrera básica desde 2025/26.

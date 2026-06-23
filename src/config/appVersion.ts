@@ -1,3 +1,3 @@
-export const APP_VERSION = "v0.21.0b";
-export const APP_VERSION_NAME = "Career flow basic";
-export const APP_STATUS = "Carrera básica jugable";
+export const APP_VERSION = "v0.21.0c";
+export const APP_VERSION_NAME = "Interseason rewards";
+export const APP_STATUS = "Recompensas entre temporadas activas";
