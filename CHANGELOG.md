@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.21.0f — Career promotion and summary fix
+
+- En modo carrera, los 3 equipos descendidos dejan de estar en la Liga de la temporada siguiente.
+- Se incorporan 3 equipos ascendidos desde una bolsa de Segunda/clubes candidatos para mantener una liga de 20 equipos.
+- El botón `Ver resumen completo` ya no corta la continuidad del modo carrera: permite volver a la pantalla de carrera para continuar.
+- Mantiene la compresión de rating efectiva de v0.21.0e.
+
+## v0.21.0e — Career effective rating balance
+
+- Añade rating efectivo solo para modo carrera con compresión de élite: `80 + (rating - 80) * 0.55`.
+- Mantiene intactas las medias visibles de jugadores, el resumen del equipo, la partida rápida y el balance base de Liga/Copa.
+- La compresión se aplica justo antes de simular Liga/Copa en carrera, para probar un modo carrera más realista y menos propenso a dobletes consecutivos.
+
 ## v0.21.0d — Critical audit fixes
 
 - Corrige el bonus de entrenador en Copa: el contexto de simulación conserva `selectedCoach`, por lo que entrenadores con `cup >= 86` aplican el +1 previsto.

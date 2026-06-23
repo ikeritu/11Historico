@@ -12,9 +12,11 @@ import type {
   SelectedPlayer,
   SeasonId,
   TeamRating,
+  RivalTeam,
 } from "./types/game";
 
 import type { UserLeagueSimulationContext } from "./simulation/leagueSimulator";
+import { createNextCareerLeagueRivals, getInitialCareerLeagueRivals } from "./simulation/leagueSimulator";
 import type { CareerObjectiveResult, CareerSeasonResult, CareerTrophyCounts } from "./types/career";
 
 import { getPlayerIdentityKey, resolvePlayerSlotPlacement } from "./domain/positionRules";
@@ -282,6 +284,7 @@ export default function App() {
   const [careerCompletedSeasons, setCareerCompletedSeasons] = useState(0);
   const [careerSeasonLabel, setCareerSeasonLabel] = useState(CAREER_INITIAL_SEASON_LABEL);
   const [careerTrophyCounts, setCareerTrophyCounts] = useState<CareerTrophyCounts>(() => createEmptyCareerTrophyCounts());
+  const [careerLeagueRivals, setCareerLeagueRivals] = useState<RivalTeam[]>(() => getInitialCareerLeagueRivals());
   const [replacementDraftSeason, setReplacementDraftSeason] = useState<SeasonId | undefined>();
   const [replacementRemovedPlayer, setReplacementRemovedPlayer] = useState<SelectedPlayer | undefined>();
 
@@ -377,6 +380,7 @@ export default function App() {
     setCareerCompletedSeasons(0);
     setCareerSeasonLabel(CAREER_INITIAL_SEASON_LABEL);
     setCareerTrophyCounts(createEmptyCareerTrophyCounts());
+    setCareerLeagueRivals(getInitialCareerLeagueRivals());
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
   }
@@ -400,6 +404,7 @@ export default function App() {
     setCareerCompletedSeasons(0);
     setCareerSeasonLabel(CAREER_INITIAL_SEASON_LABEL);
     setCareerTrophyCounts(createEmptyCareerTrophyCounts());
+    setCareerLeagueRivals(getInitialCareerLeagueRivals());
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
     setScreen("formation_selection");
@@ -434,6 +439,7 @@ export default function App() {
     setCareerCompletedSeasons(0);
     setCareerSeasonLabel(CAREER_INITIAL_SEASON_LABEL);
     setCareerTrophyCounts(createEmptyCareerTrophyCounts());
+    setCareerLeagueRivals(getInitialCareerLeagueRivals());
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
     setLastSelection(undefined);
@@ -579,12 +585,21 @@ export default function App() {
   }
 
   function handleContinueCareerAfterSeason() {
-    if (!careerSeasonResult || !careerObjectiveResult?.survives) return;
+    if (!careerSeasonResult || !careerObjectiveResult?.survives || !finalSummary) return;
 
     const nextCompletedSeasons = careerCompletedSeasons + 1;
     setCareerCompletedSeasons(nextCompletedSeasons);
     setCareerSeasonLabel(getCareerSeasonLabelFromIndex(nextCompletedSeasons));
     setCareerTrophyCounts((previous) => addCareerTrophiesFromSeason(previous, careerSeasonResult));
+    if (finalSummary.table) {
+      setCareerLeagueRivals((currentRivals) =>
+        createNextCareerLeagueRivals({
+          previousTable: finalSummary.table ?? [],
+          currentRivals,
+          completedSeasons: nextCompletedSeasons,
+        })
+      );
+    }
     setLeagueContext(undefined);
     setFinalSummary(undefined);
     setTeamRating(undefined);
@@ -858,6 +873,8 @@ export default function App() {
           selectedPlayers={selectedPlayers}
           selectedCoach={selectedCoach}
           teamRating={teamRating}
+          isCareerMode={isCareerMode}
+          leagueRivals={isCareerMode ? careerLeagueRivals : undefined}
           initialContext={leagueContext}
           onContextChange={setLeagueContext}
           onFinishLeague={handleFinishLeague}
@@ -934,6 +951,7 @@ export default function App() {
           selectedCoach={selectedCoach}
           teamRating={teamRating}
           onRestart={handleRestart}
+          onReturnToCareer={isCareerMode && careerSeasonResult && careerObjectiveResult ? () => setScreen(careerObjectiveResult.survives ? "career_season_result" : "career_game_over") : undefined}
           onShare={handleCopyShareText}
         />
       )}

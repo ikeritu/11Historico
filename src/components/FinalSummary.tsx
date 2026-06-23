@@ -34,6 +34,7 @@ interface FinalSummaryProps {
   selectedCoach: SelectedCoach;
   teamRating: TeamRating;
   onRestart?: () => void;
+  onReturnToCareer?: () => void;
   onShare?: (shareText: string) => void;
 }
 
@@ -745,6 +746,7 @@ export function FinalSummary({
   selectedCoach,
   teamRating,
   onRestart,
+  onReturnToCareer,
   onShare,
 }: FinalSummaryProps) {
   const shareText = buildShareText(summary);
@@ -785,12 +787,19 @@ export function FinalSummary({
         </h1>
         <p>{summary.finalCategory}</p>
       </header>
-      {onRestart && (
+      {(onRestart || onReturnToCareer) && (
         <div className="final-primary-cta-bar" aria-label="Acciones de final de temporada">
-          <button type="button" className="final-primary-restart-button" onClick={onRestart}>
-            Jugar otra temporada
-          </button>
-          <span>Prueba otro once histórico, otra formación y una nueva simulación.</span>
+          {onReturnToCareer && (
+            <button type="button" className="final-primary-restart-button" onClick={onReturnToCareer}>
+              Volver a carrera
+            </button>
+          )}
+          {onRestart && (
+            <button type="button" className="secondary-final-button" onClick={onRestart}>
+              Volver al inicio
+            </button>
+          )}
+          <span>{onReturnToCareer ? "Revisa el resumen y vuelve para continuar la carrera." : "Prueba otro once histórico, otra formación y una nueva simulación."}</span>
         </div>
       )}
       <div className="final-summary-layout">
@@ -900,9 +909,15 @@ export function FinalSummary({
                   Copiar resumen
                 </button>
 
+                {onReturnToCareer && (
+                  <button type="button" className="secondary-final-button" onClick={onReturnToCareer}>
+                    Volver a carrera
+                  </button>
+                )}
+
                 {onRestart && (
                   <button type="button" className="secondary-final-button" onClick={onRestart}>
-                    Jugar otra temporada
+                    Volver al inicio
                   </button>
                 )}
               </div>

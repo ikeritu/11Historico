@@ -13,6 +13,7 @@ import type {
   TeamRating,
   UserPlayerSeasonStats,
   UserTeamSeasonStats,
+  LeagueTableRow,
 } from "../types/game";
 
 import {
@@ -89,6 +90,19 @@ function seededRandom(seed: number): number {
   const x = Math.sin(seed + SIMULATION_SESSION_SALT) * 10000;
   return x - Math.floor(x);
 }
+
+const CAREER_PROMOTION_CANDIDATES: RivalTeam[] = [
+  createCupTeam("real_valladolid", "Real Valladolid", 74, "purple_white_shirt"),
+  createCupTeam("cd_leganes", "CD Leganés", 73, "blue_white_shirt"),
+  createCupTeam("ud_las_palmas_career", "UD Las Palmas", 74, "yellow_blue_shirt"),
+  createCupTeam("granada_cf_career", "Granada CF", 72, "red_white_shirt"),
+  createCupTeam("sd_eibar_career", "SD Eibar", 72, "blue_red_shirt"),
+  createCupTeam("real_zaragoza_career", "Real Zaragoza", 73, "white_blue_shirt"),
+  createCupTeam("racing_santander_career", "Racing de Santander", 72, "green_white_shirt"),
+  createCupTeam("deportivo_coruna_career", "Deportivo de La Coruña", 72, "blue_white_shirt"),
+  createCupTeam("malaga_cf_career", "Málaga CF", 70, "blue_white_shirt"),
+  createCupTeam("sporting_gijon_career", "Sporting de Gijón", 72, "red_white_shirt"),
+];
 
 const EXTRA_COPA_TEAMS: RivalTeam[] = [
   createCupTeam("cd_mirandes", "Club Deportivo Mirandés", 72, "red_shirt"),
@@ -596,6 +610,68 @@ function createInitialCupState(): CupSimulationState {
   };
 }
 
+
+
+export function getInitialCareerLeagueRivals(): RivalTeam[] {
+  return getLaliga2526RivalsExcludingAthletic();
+}
+
+function getCareerRivalById(teamId: string, currentRivals: RivalTeam[]): RivalTeam | undefined {
+  return (
+    currentRivals.find((team) => team.id === teamId) ??
+    getLaliga2526TeamById(teamId) ??
+    CAREER_PROMOTION_CANDIDATES.find((team) => team.id === teamId)
+  );
+}
+
+export function createNextCareerLeagueRivals(params: {
+  previousTable: LeagueTableRow[];
+  currentRivals: RivalTeam[];
+  completedSeasons: number;
+}): RivalTeam[] {
+  const { previousTable, currentRivals, completedSeasons } = params;
+  const sortedTable = [...previousTable].sort((a, b) => {
+    if (b.points !== a.points) return b.points - a.points;
+    if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference;
+    if (b.goalsFor !== a.goalsFor) return b.goalsFor - a.goalsFor;
+    return a.teamName.localeCompare(b.teamName);
+  });
+
+  const relegatedRows = sortedTable
+    .filter((row) => row.teamId !== USER_TEAM_ID)
+    .slice(-3);
+
+  const relegatedIds = new Set(relegatedRows.map((row) => row.teamId));
+  const survivingRivals = currentRivals.filter((team) => !relegatedIds.has(team.id));
+  const survivingIds = new Set(survivingRivals.map((team) => team.id));
+
+  const promoted: RivalTeam[] = [];
+  const rotation = completedSeasons % CAREER_PROMOTION_CANDIDATES.length;
+  const promotionPool = [
+    ...CAREER_PROMOTION_CANDIDATES.slice(rotation),
+    ...CAREER_PROMOTION_CANDIDATES.slice(0, rotation),
+  ];
+
+  for (const candidate of promotionPool) {
+    if (promoted.length >= 3) break;
+    if (survivingIds.has(candidate.id) || relegatedIds.has(candidate.id)) continue;
+    promoted.push(candidate);
+    survivingIds.add(candidate.id);
+  }
+
+  const fallbackTeams = previousTable
+    .map((row) => getCareerRivalById(row.teamId, currentRivals))
+    .filter((team): team is RivalTeam => Boolean(team))
+    .filter((team) => !survivingIds.has(team.id) && !relegatedIds.has(team.id));
+
+  for (const fallback of fallbackTeams) {
+    if (promoted.length >= 3) break;
+    promoted.push(fallback);
+    survivingIds.add(fallback.id);
+  }
+
+  return [...survivingRivals, ...promoted].slice(0, 19);
+}
 
 export function createUserLeagueSimulation(
   params: CreateUserLeagueSimulationParams = {}

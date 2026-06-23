@@ -4,7 +4,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.21.0d_CAREER_FLOW_BASIC`.
+Versión pública actual: `v0.21.0f_CAREER_PROMOTION_AND_SUMMARY_FIX`.
 
 Base jugable cerrada:
 
@@ -123,6 +123,12 @@ No subir al repositorio:
 Las plantillas combinan fuentes oficiales, referencias históricas y estimaciones para gameplay. Los ratings no son datos oficiales: son valores internos para equilibrar el juego.
 
 ## Changelog breve
+
+### v0.21.0e — Career effective rating balance
+
+- Añade compresión de rating efectiva solo en modo carrera: los ratings visibles se mantienen intactos, pero los valores superiores a 80 se simulan con la fórmula `80 + (rating - 80) * 0.55`.
+- La compresión se aplica únicamente al rating usado por la simulación de Liga/Copa en carrera; partida rápida y ratings históricos visibles no se rebajan.
+- Objetivo: reducir dobletes demasiado frecuentes sin tocar el balance histórico ya cerrado.
 
 ### v0.21.0d — Critical audit fixes
 

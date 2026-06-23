@@ -9,6 +9,7 @@ import type {
   SelectedCoach,
   SelectedPlayer,
   TeamRating,
+  RivalTeam,
 } from "../types/game";
 
 import {
@@ -41,6 +42,8 @@ interface LeagueSimulatorViewProps {
   selectedPlayers: SelectedPlayer[];
   selectedCoach: SelectedCoach;
   teamRating: TeamRating;
+  isCareerMode?: boolean;
+  leagueRivals?: RivalTeam[];
   initialContext?: UserLeagueSimulationContext;
   onContextChange?: (context: UserLeagueSimulationContext) => void;
   onFinishLeague?: (summary: ReturnType<typeof createFinalLeagueSummary>) => void;
@@ -172,11 +175,12 @@ function ScoreTeam({ teamName, goals }: { teamName: string; goals: number }) {
 
 function normalizeLeagueContext(
   initialContext: UserLeagueSimulationContext | undefined,
-  selectedCoach: SelectedCoach
+  selectedCoach: SelectedCoach,
+  leagueRivals?: RivalTeam[]
 ): UserLeagueSimulationContext {
   if (!initialContext || !initialContext.cupState) {
     return {
-      ...createUserLeagueSimulation(),
+      ...createUserLeagueSimulation({ rivals: leagueRivals }),
       selectedCoach,
     };
   }
@@ -187,23 +191,55 @@ function normalizeLeagueContext(
   };
 }
 
+const CAREER_EFFECTIVE_RATING_BASE = 80;
+const CAREER_EFFECTIVE_RATING_FACTOR = 0.55;
+
+function compressCareerRating(value: number): number {
+  if (value <= CAREER_EFFECTIVE_RATING_BASE) return value;
+
+  return (
+    CAREER_EFFECTIVE_RATING_BASE +
+    (value - CAREER_EFFECTIVE_RATING_BASE) * CAREER_EFFECTIVE_RATING_FACTOR
+  );
+}
+
+function applyCareerEffectiveRating(teamRating: TeamRating, isCareerMode: boolean): TeamRating {
+  if (!isCareerMode) return teamRating;
+
+  const clampCompressed = (value: number) =>
+    Math.max(40, Math.min(99, Math.round(compressCareerRating(value))));
+
+  return {
+    ...teamRating,
+    attack: clampCompressed(teamRating.attack),
+    defense: clampCompressed(teamRating.defense),
+    control: clampCompressed(teamRating.control),
+    physical: clampCompressed(teamRating.physical),
+    mentality: clampCompressed(teamRating.mentality),
+    goalkeeping: clampCompressed(teamRating.goalkeeping),
+    overall: clampCompressed(teamRating.overall),
+  };
+}
+
 function applyDifficultyToTeamRating(
   teamRating: TeamRating,
-  difficulty: GameDifficulty
+  difficulty: GameDifficulty,
+  isCareerMode: boolean
 ): TeamRating {
+  const careerRating = applyCareerEffectiveRating(teamRating, isCareerMode);
   const modifier = difficulty === "normal" ? 2 : difficulty === "leyenda" ? -4 : 0;
 
   const clamp = (value: number) => Math.max(40, Math.min(99, Math.round(value + modifier)));
 
   return {
-    ...teamRating,
-    attack: clamp(teamRating.attack),
-    defense: clamp(teamRating.defense),
-    control: clamp(teamRating.control),
-    physical: clamp(teamRating.physical),
-    mentality: clamp(teamRating.mentality),
-    goalkeeping: clamp(teamRating.goalkeeping),
-    overall: clamp(teamRating.overall),
+    ...careerRating,
+    attack: clamp(careerRating.attack),
+    defense: clamp(careerRating.defense),
+    control: clamp(careerRating.control),
+    physical: clamp(careerRating.physical),
+    mentality: clamp(careerRating.mentality),
+    goalkeeping: clamp(careerRating.goalkeeping),
+    overall: clamp(careerRating.overall),
   };
 }
 
@@ -214,20 +250,22 @@ export function LeagueSimulatorView({
   selectedPlayers,
   selectedCoach,
   teamRating,
+  isCareerMode = false,
+  leagueRivals,
   initialContext,
   onContextChange,
   onFinishLeague,
 }: LeagueSimulatorViewProps) {
   const [context, setContext] = useState<UserLeagueSimulationContext>(
-    () => normalizeLeagueContext(initialContext, selectedCoach)
+    () => normalizeLeagueContext(initialContext, selectedCoach, leagueRivals)
   );
 
   const [lastResult, setLastResult] = useState<MatchResult | undefined>(undefined);
   const [isAutoSimulating, setIsAutoSimulating] = useState(false);
 
   const effectiveTeamRating = useMemo(
-    () => applyDifficultyToTeamRating(teamRating, difficulty),
-    [teamRating, difficulty]
+    () => applyDifficultyToTeamRating(teamRating, difficulty, isCareerMode),
+    [teamRating, difficulty, isCareerMode]
   );
 
   const userSummary = useMemo(

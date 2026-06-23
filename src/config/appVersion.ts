@@ -1,3 +1,3 @@
-export const APP_VERSION = "v0.21.0e";
-export const APP_VERSION_NAME = "Career effective rating balance";
-export const APP_STATUS = "Compresión de rating efectiva solo en modo carrera";
+export const APP_VERSION = "v0.21.0f";
+export const APP_VERSION_NAME = "Career promotion and summary fix";
+export const APP_STATUS = "Ascensos y descensos en carrera + resumen sin cortar continuidad";
