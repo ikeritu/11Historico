@@ -171,13 +171,20 @@ function ScoreTeam({ teamName, goals }: { teamName: string; goals: number }) {
 }
 
 function normalizeLeagueContext(
-  initialContext: UserLeagueSimulationContext | undefined
+  initialContext: UserLeagueSimulationContext | undefined,
+  selectedCoach: SelectedCoach
 ): UserLeagueSimulationContext {
   if (!initialContext || !initialContext.cupState) {
-    return createUserLeagueSimulation();
+    return {
+      ...createUserLeagueSimulation(),
+      selectedCoach,
+    };
   }
 
-  return initialContext;
+  return {
+    ...initialContext,
+    selectedCoach,
+  };
 }
 
 function applyDifficultyToTeamRating(
@@ -212,7 +219,7 @@ export function LeagueSimulatorView({
   onFinishLeague,
 }: LeagueSimulatorViewProps) {
   const [context, setContext] = useState<UserLeagueSimulationContext>(
-    () => normalizeLeagueContext(initialContext)
+    () => normalizeLeagueContext(initialContext, selectedCoach)
   );
 
   const [lastResult, setLastResult] = useState<MatchResult | undefined>(undefined);
@@ -254,8 +261,13 @@ export function LeagueSimulatorView({
   const leagueProgressLabel = `Jornada ${Math.min(leagueMatchesPlayed + 1, 38)} / 38`;
 
   function commitContext(nextContext: UserLeagueSimulationContext) {
-    setContext(nextContext);
-    onContextChange?.(nextContext);
+    const contextWithCoach = {
+      ...nextContext,
+      selectedCoach,
+    };
+
+    setContext(contextWithCoach);
+    onContextChange?.(contextWithCoach);
   }
 
   function finishIfReady(nextContext: UserLeagueSimulationContext) {

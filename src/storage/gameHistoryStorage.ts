@@ -75,14 +75,22 @@ export function loadGameHistory(): GameHistoryEntry[] {
 export function saveGameHistory(history: GameHistoryEntry[]): void {
   if (typeof window === "undefined") return;
 
-  const cleanHistory = history.slice(0, MAX_HISTORY_ENTRIES);
-  window.localStorage.setItem(GAME_HISTORY_STORAGE_KEY, JSON.stringify(cleanHistory));
+  try {
+    const cleanHistory = history.slice(0, MAX_HISTORY_ENTRIES);
+    window.localStorage.setItem(GAME_HISTORY_STORAGE_KEY, JSON.stringify(cleanHistory));
+  } catch {
+    // No bloquea el flujo de partida si localStorage está lleno o deshabilitado.
+  }
 }
 
 export function clearGameHistory(): void {
   if (typeof window === "undefined") return;
 
-  window.localStorage.removeItem(GAME_HISTORY_STORAGE_KEY);
+  try {
+    window.localStorage.removeItem(GAME_HISTORY_STORAGE_KEY);
+  } catch {
+    // No bloquea la UI si localStorage no está disponible.
+  }
 }
 
 export function buildHistoryEntry(params: {

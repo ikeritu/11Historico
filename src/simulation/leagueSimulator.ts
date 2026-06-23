@@ -9,6 +9,7 @@ import type {
   MatchResult,
   RivalTeam,
   SelectedPlayer,
+  SelectedCoach,
   TeamRating,
   UserPlayerSeasonStats,
   UserTeamSeasonStats,
@@ -51,6 +52,7 @@ export interface UserLeagueSimulationContext {
   userTeamStats: UserTeamSeasonStats;
   cupState: CupSimulationState;
   leagueSeasonSalt?: number;
+  selectedCoach?: SelectedCoach;
 }
 
 export interface SimulateNextUserMatchParams {
@@ -968,18 +970,11 @@ export function simulateFullUserLeague(
   return context;
 }
 
-function getCoachCompetitionBoost(context: unknown, competition: "league" | "cup" | "europe"): number {
-  const coach = (context as {
-    selectedCoach?: {
-      coachSeason?: {
-        skills?: {
-          cup?: number;
-          europe?: number;
-          management?: number;
-        };
-      };
-    };
-  }).selectedCoach?.coachSeason;
+function getCoachCompetitionBoost(
+  context: Pick<UserLeagueSimulationContext, "selectedCoach">,
+  competition: "league" | "cup" | "europe"
+): number {
+  const coach = context.selectedCoach?.coachSeason;
 
   if (!coach?.skills) return 0;
 
@@ -1226,8 +1221,8 @@ function adjustCupRivalByVenueAndRound(params: {
   const awayUnderdogPenalty = isVerySmall ? 6 : 3;
 
   // venue se interpreta desde el punto de vista del Athletic.
-  // venue === "away": el rival pequeÃ±o juega en casa y puede dar sorpresa.
-  // venue === "home": el rival pequeÃ±o juega fuera y su sorpresa baja.
+  // venue === "away": el rival pequeño juega en casa y puede dar sorpresa.
+  // venue === "home": el rival pequeño juega fuera y su sorpresa baja.
   const adjustment =
     venue === "away"
       ? clamp(homeUnderdogBoost - fatigue, 0, 4)
@@ -1256,7 +1251,7 @@ function getCupRivalFromFixture(fixture: CupFixture): {
   const rival = getCupTeamById(fixture.rivalTeamId);
 
   if (!rival) {
-    throw new Error(`No se encontrÃ³ el rival de Copa con id: ${fixture.rivalTeamId}`);
+    throw new Error(`No se encontró el rival de Copa con id: ${fixture.rivalTeamId}`);
   }
 
   const venue = fixture.venue;

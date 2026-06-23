@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.21.0d — Critical audit fixes
+
+- Corrige el bonus de entrenador en Copa: el contexto de simulación conserva `selectedCoach`, por lo que entrenadores con `cup >= 86` aplican el +1 previsto.
+- Corrige mojibake visible en textos de formaciones y comentarios/errores de Copa.
+- Corrige 11 posiciones duplicadas en plantillas históricas (`["LI", "LI"]`, `["LD", "LD"]`) con secundarios conservadores.
+- Protege el guardado/borrado de historial con `try/catch` para evitar rupturas por `localStorage`.
+- Elimina backups/copias sueltas sin referencias de código activo.
+
 ## v0.21.0c — Interseason rewards
 
 - Añade pantalla entre temporadas tras superar objetivo en modo carrera.

@@ -1,3 +1,3 @@
-export const APP_VERSION = "v0.21.0c";
-export const APP_VERSION_NAME = "Interseason rewards";
-export const APP_STATUS = "Recompensas entre temporadas activas";
+export const APP_VERSION = "v0.21.0d";
+export const APP_VERSION_NAME = "Critical audit fixes";
+export const APP_STATUS = "Fixes críticos de auditoría";

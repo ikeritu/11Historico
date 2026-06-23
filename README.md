@@ -4,7 +4,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.21.0c_CAREER_FLOW_BASIC`.
+Versión pública actual: `v0.21.0d_CAREER_FLOW_BASIC`.
 
 Base jugable cerrada:
 
@@ -124,7 +124,7 @@ Las plantillas combinan fuentes oficiales, referencias históricas y estimacione
 
 ## Changelog breve
 
-### v0.21.0c — Interseason rewards
+### v0.21.0d — Critical audit fixes
 
 - Modo carrera básico jugable para una temporada.
 - Inicio desde 2025/26 reutilizando formación, draft, entrenador, Liga y Copa.

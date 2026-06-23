@@ -570,8 +570,8 @@ export const FORMATIONS: Formation[] = [
     ],
     weaknesses: [
       "Puede sufrir a la espalda de los carrileros",
-      "Exige centrales rÃ¡pidos",
-      "Menos seguridad si se pierde el balÃ³n en salida",
+      "Exige centrales rápidos",
+      "Menos seguridad si se pierde el balón en salida",
     ],
     slots: [
       { id: "gk", label: "POR", allowedPositions: ["POR"], line: "goalkeeper" },
@@ -598,11 +598,11 @@ export const FORMATIONS: Formation[] = [
     id: "5-4-1",
     name: "5-4-1",
     description:
-      "Sistema muy defensivo y ordenado. Protege el Ã¡rea, cierra bandas y busca competir desde la solidez.",
+      "Sistema muy defensivo y ordenado. Protege el área, cierra bandas y busca competir desde la solidez.",
     strengths: [
       "Muy fuerte defensivamente",
-      "Cinco defensas protegen muy bien el Ã¡rea",
-      "Bueno para partidos de mÃ¡xima dificultad",
+      "Cinco defensas protegen muy bien el área",
+      "Bueno para partidos de máxima dificultad",
       "Reduce mucho el riesgo",
     ],
     weaknesses: [
@@ -635,15 +635,15 @@ export const FORMATIONS: Formation[] = [
     id: "3-6-1",
     name: "3-6-1",
     description:
-      "Sistema de control extremo. Acumula centrocampistas, protege el centro y busca dominar la posesiÃ³n con un solo delantero.",
+      "Sistema de control extremo. Acumula centrocampistas, protege el centro y busca dominar la posesión con un solo delantero.",
     strengths: [
       "Mucho control en el centro del campo",
       "Permite juntar muchos perfiles creativos",
-      "Muy Ãºtil para dormir partidos",
-      "Buena presiÃ³n tras pÃ©rdida",
+      "Muy útil para dormir partidos",
+      "Buena presión tras pérdida",
     ],
     weaknesses: [
-      "Poca presencia en el Ã¡rea",
+      "Poca presencia en el área",
       "Exige carrileros con recorrido",
       "Puede atascarse si el delantero queda solo",
     ],
@@ -674,13 +674,13 @@ export const FORMATIONS: Formation[] = [
     description:
       "Sistema ultraofensivo y arriesgado. Cuatro atacantes, tres medios y tres defensas para partidos donde solo vale ganar.",
     strengths: [
-      "MÃ¡xima presencia ofensiva",
+      "Máxima presencia ofensiva",
       "Muchos rematadores y extremos",
       "Ideal para buscar goles",
       "Muy divertido para plantillas ofensivas",
     ],
     weaknesses: [
-      "MuchÃ­simo riesgo defensivo",
+      "Muchísimo riesgo defensivo",
       "Puede partirse el equipo",
       "Exige centrales dominantes",
     ],
@@ -709,9 +709,9 @@ export const FORMATIONS: Formation[] = [
     id: "4-2-4",
     name: "4-2-4",
     description:
-      "Sistema ofensivo clÃ¡sico con cuatro atacantes. Muy agresivo, vertical y pensado para atacar rÃ¡pido.",
+      "Sistema ofensivo clásico con cuatro atacantes. Muy agresivo, vertical y pensado para atacar rápido.",
     strengths: [
-      "MuchÃ­sima amenaza arriba",
+      "Muchísima amenaza arriba",
       "Dos delanteros y dos extremos",
       "Ideal para equipos con pegada",
       "Genera muchos duelos ofensivos",
@@ -746,17 +746,17 @@ export const FORMATIONS: Formation[] = [
     id: "4-6-0",
     name: "4-6-0",
     description:
-      "Sistema sin delantero fijo. Acumula mediapuntas y centrocampistas para atacar desde segunda lÃ­nea y desordenar marcas.",
+      "Sistema sin delantero fijo. Acumula mediapuntas y centrocampistas para atacar desde segunda línea y desordenar marcas.",
     strengths: [
       "Mucho control y movilidad",
-      "DifÃ­cil de defender si hay buenos mediapuntas",
+      "Difícil de defender si hay buenos mediapuntas",
       "Permite jugar sin delantero puro",
-      "Muy Ãºtil con llegadores desde segunda lÃ­nea",
+      "Muy útil con llegadores desde segunda línea",
     ],
     weaknesses: [
-      "Puede faltar remate en el Ã¡rea",
-      "Requiere mucha calidad tÃ©cnica",
-      "No encaja bien con plantillas de delanteros clÃ¡sicos",
+      "Puede faltar remate en el área",
+      "Requiere mucha calidad técnica",
+      "No encaja bien con plantillas de delanteros clásicos",
     ],
     slots: [
       { id: "gk", label: "POR", allowedPositions: ["POR"], line: "goalkeeper" },
@@ -783,17 +783,17 @@ export const FORMATIONS: Formation[] = [
     id: "5-2-3",
     name: "5-2-3",
     description:
-      "Sistema de cinco defensas y tres atacantes. Protege atrÃ¡s sin renunciar a salir con extremos y un delantero referencia.",
+      "Sistema de cinco defensas y tres atacantes. Protege atrás sin renunciar a salir con extremos y un delantero referencia.",
     strengths: [
-      "Buena protecciÃ³n defensiva",
+      "Buena protección defensiva",
       "Tres atacantes para contraatacar",
       "Carrileros importantes",
-      "Ãštil contra rivales fuertes",
+      "Útil contra rivales fuertes",
     ],
     weaknesses: [
       "Solo dos centrocampistas",
-      "Puede perder posesiÃ³n",
-      "Depende de transiciones rÃ¡pidas",
+      "Puede perder posesión",
+      "Depende de transiciones rápidas",
     ],
     slots: [
       { id: "gk", label: "POR", allowedPositions: ["POR"], line: "goalkeeper" },
