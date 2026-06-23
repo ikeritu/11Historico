@@ -1,3 +1,3 @@
-export const APP_VERSION = "v0.21.0d";
-export const APP_VERSION_NAME = "Critical audit fixes";
-export const APP_STATUS = "Fixes críticos de auditoría";
+﻿export const APP_VERSION = "v0.21.0e";
+export const APP_VERSION_NAME = "Career effective rating balance";
+export const APP_STATUS = "Compresión de rating efectiva solo en modo carrera";
