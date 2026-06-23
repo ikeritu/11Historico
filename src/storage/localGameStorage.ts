@@ -32,6 +32,7 @@ export interface SavedGameState {
 
   leagueContext?: UserLeagueSimulationContext;
   finalSummary?: FinalGameSummary;
+  isCareerMode?: boolean;
 
   savedAt: string;
 }
@@ -68,6 +69,7 @@ export function loadGameState(): SavedGameState | undefined {
       playerRoundSeasons: parsed.playerRoundSeasons ?? [],
       currentRoundIndex: parsed.currentRoundIndex ?? 0,
       selectedPlayers: parsed.selectedPlayers ?? [],
+      isCareerMode: parsed.isCareerMode ?? false,
       savedAt: parsed.savedAt ?? new Date().toISOString(),
     } as SavedGameState;
   } catch (error) {

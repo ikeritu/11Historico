@@ -7,10 +7,10 @@ function getSelectedPlayersAverageOverall(selectedPlayers: SelectedPlayer[]): nu
   );
 }
 
-function getRatingCeilingBySquadAverage(squadAverage: number, key: string): number {
-  // La valoracion colectiva no puede separarse demasiado de la media real del once.
-  // Ejemplo: si el once tiene media 85, el overall del equipo no deberia irse a 96.
-  if (key === "overall") return Math.min(99, Math.round(squadAverage + 5));
+function getRatingCeilingBySquadAverage(squadAverage: number, key: string, overallHeadroom = 5): number {
+  // La valoración colectiva no puede separarse demasiado de la media real del once.
+  // El overall usa una holgura específica para no convertir cualquier entrenador en un +5 fijo.
+  if (key === "overall") return Math.min(99, Math.round(squadAverage + overallHeadroom));
   if (key === "attack") return Math.min(99, Math.round(squadAverage + 8));
   if (key === "defense") return Math.min(99, Math.round(squadAverage + 8));
   if (key === "control") return Math.min(99, Math.round(squadAverage + 8));
@@ -21,8 +21,13 @@ function getRatingCeilingBySquadAverage(squadAverage: number, key: string): numb
   return 99;
 }
 
-function capRatingBySquadAverage(value: number, squadAverage: number, key: string): number {
-  return Math.min(value, getRatingCeilingBySquadAverage(squadAverage, key));
+function capRatingBySquadAverage(
+  value: number,
+  squadAverage: number,
+  key: string,
+  overallHeadroom = 5
+): number {
+  return Math.min(value, getRatingCeilingBySquadAverage(squadAverage, key, overallHeadroom));
 }
 
 // src/simulation/teamRating.ts
@@ -553,6 +558,7 @@ export function calculateTeamRating(params: {
   const playerSeasons = selectedPlayers.map((selected) => selected.playerSeason);
   const squadAverage = getSelectedPlayersAverageOverall(selectedPlayers);
   const coach = selectedCoach?.coachSeason;
+  const coachOverallHeadroom = coach ? getCoachBaseOverallBonus(coach.overall) : 0;
 
   const baseRatings = calculateBaseRatings(selectedPlayers, formation);
   const withFormation = applyFormationModifiers(baseRatings, formation);
@@ -581,7 +587,7 @@ export function calculateTeamRating(params: {
     physical: clampRating(capRatingBySquadAverage(numericRating.physical, squadAverage, "physical")),
     mentality: clampRating(capRatingBySquadAverage(numericRating.mentality, squadAverage, "mentality")),
     goalkeeping: clampRating(capRatingBySquadAverage(numericRating.goalkeeping, squadAverage, "goalkeeping")),
-    overall: clampRating(capRatingBySquadAverage(numericRating.overall, squadAverage, "overall")),
+    overall: clampRating(capRatingBySquadAverage(numericRating.overall, squadAverage, "overall", coachOverallHeadroom)),
   };
 
   return {

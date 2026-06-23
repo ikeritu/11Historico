@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.21.0b — Career flow basic
+
+- El modo carrera Athletic ya permite iniciar una carrera básica desde 2025/26.
+- Reutiliza el flujo validado de formación, draft, entrenador, Liga y Copa.
+- Evalúa objetivo de carrera al terminar la temporada: Europa o Copa, con descenso como Game Over duro.
+- Añadidas pantallas básicas de temporada superada y Game Over de carrera.
+- El entrenador queda validado al seleccionarlo; se elimina el paso redundante de confirmar entrenador.
+- Sin recompensas entre temporadas, Supercopa, ranking global ni Europa jugable todavía.
+
 ## v0.21.0a — Career rules skeleton
 
 - Añadidos tipos mínimos de modo carrera.

@@ -1,4 +1,4 @@
-﻿// src/components/CoachRound.tsx
+// src/components/CoachRound.tsx
 
 import { useEffect, useMemo, useState } from "react";
 
@@ -257,7 +257,7 @@ function CoachVisualCard({
           disabled={disabled}
           onClick={onSelect}
         >
-          {isSelected ? "Entrenador seleccionado" : "Elegir entrenador"}
+          Seleccionar entrenador
         </button>
       )}
     </article>
@@ -290,14 +290,10 @@ export function CoachRound({
 
   const [revealedCount, setRevealedCount] = useState(0);
   const [rouletteIndex, setRouletteIndex] = useState(0);
-  const [selectedCoachId, setSelectedCoachId] = useState<string | undefined>(undefined);
-
   const roulettePool = useMemo(() => getAllCoachPool(), []);
 
   useEffect(() => {
     setRevealedCount(0);
-    setSelectedCoachId(undefined);
-
     const timers = coachOptions.map((_, index) =>
       window.setTimeout(() => {
         setRevealedCount(index + 1);
@@ -319,18 +315,13 @@ export function CoachRound({
     return () => window.clearInterval(interval);
   }, [coachOptions.length, revealedCount]);
 
-  const selectedCoach = useMemo(
-    () => coachOptions.find((coach) => coach.id === selectedCoachId),
-    [coachOptions, selectedCoachId]
-  );
-
   const allCoachesRevealed = revealedCount >= coachOptions.length;
 
-  function handleConfirmCoach() {
-    if (!selectedCoach || !allCoachesRevealed) return;
+  function handleSelectCoach(coach: CoachSeason) {
+    if (!allCoachesRevealed) return;
 
     onSelectCoach({
-      coachSeason: selectedCoach,
+      coachSeason: coach,
     });
   }
 
@@ -341,35 +332,9 @@ export function CoachRound({
         <h1>Elige entrenador</h1>
         <p>
           Se revelan 3 técnicos históricos, uno por uno. Cuando estén los tres
-          sobre la mesa, elige quién dirigirá tu Once histórico Zurigorri.
+          sobre la mesa, pulsa un entrenador para validarlo directamente.
         </p>
       </header>
-
-      <aside className={`coach-confirm-panel ${selectedCoach ? "coach-confirm-panel-ready" : ""}`} aria-label="Confirmar entrenador elegido">
-        <div>
-          <span>{selectedCoach ? "Entrenador seleccionado" : "Elige un entrenador"}</span>
-          <strong>
-            {selectedCoach
-              ? `${selectedCoach.name} · ${selectedCoach.season}`
-              : allCoachesRevealed
-                ? "Selecciona uno de los técnicos revelados"
-                : "Espera a que se revelen los 3 técnicos"}
-          </strong>
-          <small>
-            {selectedCoach
-              ? `${getCoachProfileLabel(selectedCoach)} · Media ${selectedCoach.overall} · Bonus base +${getCoachBaseBonus(selectedCoach)}`
-              : "El botón se activará cuando tengas entrenador seleccionado."}
-          </small>
-        </div>
-        <button
-          type="button"
-          className="confirm-coach-button confirm-coach-button-top"
-          disabled={!selectedCoach || !allCoachesRevealed}
-          onClick={handleConfirmCoach}
-        >
-          Confirmar entrenador
-        </button>
-      </aside>
 
       <div className="coach-visual-reveal-board" aria-live="polite">
 <div className="coach-options-grid coach-options-grid-visual">
@@ -388,9 +353,8 @@ export function CoachRound({
                   key={finalCoach.id}
                   coach={finalCoach}
                   isLocked
-                  isSelected={finalCoach.id === selectedCoachId}
                   disabled={!allCoachesRevealed}
-                  onSelect={() => setSelectedCoachId(finalCoach.id)}
+                  onSelect={() => handleSelectCoach(finalCoach)}
                 />
               );
             }

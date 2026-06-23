@@ -15,6 +15,7 @@ import type {
 } from "./types/game";
 
 import type { UserLeagueSimulationContext } from "./simulation/leagueSimulator";
+import type { CareerObjectiveResult, CareerSeasonResult } from "./types/career";
 
 import { getPlayerIdentityKey, resolvePlayerSlotPlacement } from "./domain/positionRules";
 
@@ -33,6 +34,7 @@ import CoachRound from "./components/CoachRound";
 import TeamSummary from "./components/TeamSummary";
 import LeagueSimulatorView from "./components/LeagueSimulatorView";
 import FinalSummary from "./components/FinalSummary";
+import CareerSeasonOutcome from "./components/CareerSeasonOutcome";
 
 import {
   clearSavedGameState,
@@ -41,11 +43,18 @@ import {
   saveGameState,
 } from "./storage/localGameStorage";
 
+import {
+  CAREER_INITIAL_SEASON_LABEL,
+  CAREER_RELEGATION_POSITION,
+  evaluateCareerObjective,
+  getEuropeanQualification,
+} from "./career/careerRules";
+
 import "./App.css";
 
 const TOTAL_PLAYER_ROUNDS = 11;
 
-type AppScreen = "home" | "career_preview" | "season_reveal" | GamePhase;
+type AppScreen = "home" | "career_preview" | "career_season_result" | "career_game_over" | "season_reveal" | GamePhase;
 
 function getSeasonYearNumber(season: SeasonId): number {
   const [startYear] = season.split("/");
@@ -108,6 +117,21 @@ function getDraftSeasonPool(params: {
 
 function createGameId(): string {
   return `game_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+}
+
+
+function buildCareerSeasonResult(summary: FinalGameSummary): CareerSeasonResult {
+  const wonCopa = Boolean(summary.cupTrophyWon);
+
+  return {
+    seasonLabel: CAREER_INITIAL_SEASON_LABEL,
+    leaguePosition: summary.leaguePosition,
+    wonLeague: summary.leaguePosition === 1,
+    wonCopa,
+    wonSupercopa: false,
+    isRelegated: summary.leaguePosition >= CAREER_RELEGATION_POSITION,
+    europeanQualification: getEuropeanQualification(summary.leaguePosition, wonCopa),
+  };
 }
 
 
@@ -210,6 +234,9 @@ function sanitizeSelectedPlayers(params: {
 export default function App() {
   const savedGame = useMemo(() => loadGameState(), []);
   const [screen, setScreen] = useState<AppScreen>("home");
+  const [isCareerMode, setIsCareerMode] = useState<boolean>(() => savedGame?.isCareerMode ?? false);
+  const [careerSeasonResult, setCareerSeasonResult] = useState<CareerSeasonResult | undefined>();
+  const [careerObjectiveResult, setCareerObjectiveResult] = useState<CareerObjectiveResult | undefined>();
 
   const [gameId, setGameId] = useState<string>(() => savedGame?.gameId ?? createGameId());
   const [phase, setPhase] = useState<GamePhase>(() => savedGame?.phase ?? "formation_selection");
@@ -250,7 +277,7 @@ export default function App() {
   }, [screen]);
 
   useEffect(() => {
-    if (screen === "home") return;
+    if (screen === "home" || screen === "career_preview") return;
 
     saveGameState({
       gameId,
@@ -265,6 +292,7 @@ export default function App() {
       teamRating,
       leagueContext,
       finalSummary,
+      isCareerMode,
     });
   }, [
     gameId,
@@ -280,6 +308,7 @@ export default function App() {
     teamRating,
     leagueContext,
     finalSummary,
+    isCareerMode,
   ]);
 
   function resetGameState() {
@@ -295,6 +324,9 @@ export default function App() {
     setFinalSummary(undefined);
     setLastSelection(undefined);
     setTeamValidationErrors([]);
+    setIsCareerMode(false);
+    setCareerSeasonResult(undefined);
+    setCareerObjectiveResult(undefined);
   }
 
   function handleNewGame() {
@@ -305,6 +337,15 @@ export default function App() {
 
   function handleOpenCareerPreview() {
     setScreen("career_preview");
+  }
+
+  function handleStartCareer() {
+    clearSavedGameState();
+    resetGameState();
+    setIsCareerMode(true);
+    setCareerSeasonResult(undefined);
+    setCareerObjectiveResult(undefined);
+    setScreen("formation_selection");
   }
 
 
@@ -330,6 +371,9 @@ export default function App() {
     setTeamRating(loadedGame.teamRating);
     setLeagueContext(loadedGame.leagueContext);
     setFinalSummary(loadedGame.finalSummary);
+    setIsCareerMode(loadedGame.isCareerMode ?? false);
+    setCareerSeasonResult(undefined);
+    setCareerObjectiveResult(undefined);
     setLastSelection(undefined);
     setScreen(loadedGame.phase);
   }
@@ -458,6 +502,17 @@ export default function App() {
   function handleFinishLeague(summary: FinalGameSummary) {
     setFinalSummary(summary);
     setPhase("finished");
+
+    if (isCareerMode) {
+      const seasonResult = buildCareerSeasonResult(summary);
+      const objectiveResult = evaluateCareerObjective(seasonResult);
+
+      setCareerSeasonResult(seasonResult);
+      setCareerObjectiveResult(objectiveResult);
+      setScreen(objectiveResult.survives ? "career_season_result" : "career_game_over");
+      return;
+    }
+
     setScreen("finished");
   }
 
@@ -475,7 +530,7 @@ export default function App() {
     window.alert(shareText);
   }
 
-  const shouldShowProgress = screen !== "home" && screen !== "career_preview";
+  const shouldShowProgress = !["home", "career_preview", "career_season_result", "career_game_over"].includes(screen);
 
   return (
     <div className="app-shell">
@@ -548,7 +603,7 @@ export default function App() {
             <div className="career-preview-grid">
               <article>
                 <strong>Objetivo</strong>
-                <span>Champions, Europa League, Conference o Copa del Rey. Si desciendes, Game Over.</span>
+                <span>Clasifícate para Europa o gana la Copa del Rey. Si no, Game Over.</span>
               </article>
               <article>
                 <strong>Entre temporadas</strong>
@@ -565,7 +620,10 @@ export default function App() {
             </div>
 
             <div className="career-preview-actions">
-              <button type="button" className="primary-home-button" onClick={handleNewGame}>
+              <button type="button" className="primary-home-button" onClick={handleStartCareer}>
+                Empezar carrera 2025/26
+              </button>
+              <button type="button" className="secondary-home-button" onClick={handleNewGame}>
                 Jugar partida rápida
               </button>
               <button type="button" className="secondary-home-button" onClick={() => setScreen("home")}>
@@ -618,6 +676,8 @@ export default function App() {
           selectedCoach={selectedCoach}
           onStartLeagueSimulation={handleStartLeagueSimulation}
           onBackToCoach={() => setScreen("coach_selection")}
+          modeLabel={isCareerMode ? `Carrera Athletic · ${CAREER_INITIAL_SEASON_LABEL}` : undefined}
+          startButtonLabel={isCareerMode ? "Jugar temporada de carrera" : undefined}
         />
       )}
 
@@ -632,6 +692,16 @@ export default function App() {
           initialContext={leagueContext}
           onContextChange={setLeagueContext}
           onFinishLeague={handleFinishLeague}
+        />
+      )}
+
+      {(screen === "career_season_result" || screen === "career_game_over") && finalSummary && careerSeasonResult && careerObjectiveResult && (
+        <CareerSeasonOutcome
+          summary={finalSummary}
+          seasonResult={careerSeasonResult}
+          objectiveResult={careerObjectiveResult}
+          onViewFullSummary={() => setScreen("finished")}
+          onRestart={handleRestart}
         />
       )}
 

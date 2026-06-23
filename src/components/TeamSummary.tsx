@@ -22,6 +22,8 @@ interface TeamSummaryProps {
 
   // Se mantiene opcional para compatibilidad con App.tsx, pero no se muestra botón de cambio.
   onBackToCoach?: () => void;
+  modeLabel?: string;
+  startButtonLabel?: string;
 }
 
 type SafeTeamRating = TeamRating & {
@@ -166,6 +168,8 @@ export function TeamSummary({
   selectedPlayers,
   selectedCoach,
   onStartLeagueSimulation,
+  modeLabel,
+  startButtonLabel,
 }: TeamSummaryProps) {
   const teamRating = useMemo(
     () => getSafeTeamRating(formation, selectedPlayers, selectedCoach),
@@ -189,7 +193,7 @@ export function TeamSummary({
   return (
     <section className="team-summary">
       <header className="team-summary-header">
-        <p className="eyebrow">Resumen del equipo</p>
+        <p className="eyebrow">{modeLabel ?? "Resumen del equipo"}</p>
 
         <div className="team-summary-header-row">
           <div>
@@ -204,7 +208,7 @@ export function TeamSummary({
             className="start-league-button start-league-button-header"
             onClick={handleStartLeague}
           >
-            Empezar Liga 25/26
+            {startButtonLabel ?? "Empezar Liga 25/26"}
           </button>
         </div>
       </header>
