@@ -1,3 +1,19 @@
+## v0.21.0j — Desktop home simplification
+
+- Simplificada la portada de escritorio en layout de dos columnas.
+- Añadidos chips informativos de Liga, Copa y modo carrera.
+- Reordenadas acciones principales para reducir fricción visual en PC.
+- Sin cambios en simulación, carrera, ratings, ascensos/descensos ni calendario.
+
+
+## v0.21.0i — Mobile home simplification
+
+- Simplificada la portada pública en móvil con enfoque tipo app.
+- CTA principal más claro para nueva partida y modo carrera.
+- “Cómo se juega” pasa a bloque plegable.
+- Apoyo, feedback y versión quedan más discretos.
+- No se toca la lógica de simulación, carrera, ascensos/descensos ni rating efectivo.
+
 # Changelog
 
 ## v0.21.0h — Career dynamic calendar fix

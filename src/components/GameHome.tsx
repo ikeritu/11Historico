@@ -3,7 +3,7 @@
 import { useState } from "react";
 import type { EasyModeSeasonRangeId, GameDifficulty } from "../types/game";
 import { EASY_MODE_SEASON_RANGES } from "../data/easyModeSeasonRanges";
-import { APP_STATUS, APP_VERSION, APP_VERSION_NAME } from "../config/appVersion";
+import { APP_VERSION, APP_VERSION_NAME } from "../config/appVersion";
 
 import "./GameHome.css";
 import SupportButton from "./SupportButton";
@@ -37,9 +37,9 @@ const DIFFICULTY_OPTIONS: Array<{
   {
     id: "leyenda",
     label: "Leyenda",
-    description: "Antes Modo Difícil. Madrid, Barça y Atlético aprietan de verdad.",
+    description: "Madrid, Barça y Atlético aprietan de verdad.",
   },
- ];
+];
 
 const FEEDBACK_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfSHQS1PVKoWNl8u7mTrYO2Fchuj-2UC82Ap4AVktUnBrBZ8A/viewform?usp=publish-editor";
 const PUBLIC_GAME_URL = "https://ikeritu.github.io/11Historico/";
@@ -56,6 +56,8 @@ export function GameHome({
   onCareerPreview,
 }: GameHomeProps) {
   const [shareStatus, setShareStatus] = useState("");
+
+  const selectedDifficulty = DIFFICULTY_OPTIONS.find((option) => option.id === difficulty);
 
   const handleShareGame = async () => {
     setShareStatus("");
@@ -78,128 +80,151 @@ export function GameHome({
   };
 
   return (
-    <main className="game-home">
-      <section className="game-home-hero">
-        <div className="game-home-badge">⚪🔴 {APP_STATUS} · {APP_VERSION}</div>
-
-        <h1>Once histórico Zurigorri</h1>
-
-        <p className="game-home-subtitle">
-          Construye tu once histórico del Athletic, mezcla leyendas de distintas épocas
-          y compite en LaLiga 25/26 y la Copa del Rey.
-        </p>
-
-        <div className="game-home-version-card" aria-label="Estado de la versión">
-          <strong>{APP_VERSION}</strong>
-          <span>{APP_VERSION_NAME}</span>
-          <small>Beta pública estable: draft histórico, Liga, Copa, resultado final móvil y feedback público activos.</small>
-        </div>
-
-        <section className="game-home-difficulty-card" aria-label="Seleccionar dificultad">
-          <div className="game-home-difficulty-header">
-            <strong>Dificultad</strong>
-            <span>
-              {difficulty === "normal"
-                ? "Fácil"
-                : difficulty === "leyenda"
-                  ? "Leyenda"
-                  : "Normal"}
-            </span>
-          </div>
-
-          <div className="game-home-difficulty-options">
-            {DIFFICULTY_OPTIONS.map((option) => (
-              <button
-                key={option.id}
-                type="button"
-                className={difficulty === option.id ? "difficulty-option-active" : ""}
-                onClick={() => onDifficultyChange(option.id)}
-              >
-                <strong>{option.label}</strong>
-                <small>{option.description}</small>
-              </button>
-            ))}
-          </div>
-
-          {difficulty === "normal" && (
-            <section className="game-home-season-range-card" aria-label="Rango de temporadas del modo fácil">
-              <div className="game-home-season-range-header">
-                <strong>Rango de temporadas</strong>
-                <span>Solo afecta al Modo Fácil</span>
+    <main className="game-home game-home--compact">
+      <section className="game-home-hero" aria-label="Portada Futbol11">
+        <div className="game-home-main-grid">
+          <div className="game-home-intro">
+            <div className="game-home-top-row">
+              <div className="game-home-badge" aria-label="Versión actual">
+                <span aria-hidden="true">⚪</span>
+                <span aria-hidden="true">🔴</span>
+                <span>{APP_VERSION} · beta</span>
               </div>
 
-              <div className="game-home-season-range-options">
-                {EASY_MODE_SEASON_RANGES.map((range) => (
+              <a
+                className="game-home-help-link"
+                href={FEEDBACK_URL}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Enviar feedback de Futbol11"
+              >
+                ?
+              </a>
+            </div>
+
+            <h1>Once histórico Zurigorri</h1>
+
+            <p className="game-home-subtitle">
+              Crea tu once histórico del Athletic, mezcla leyendas de distintas épocas y compite en Liga, Copa y modo carrera.
+            </p>
+
+            <div className="game-home-feature-chips" aria-label="Competiciones disponibles">
+              <span>🏆 LaLiga 25/26</span>
+              <span>🏵️ Copa del Rey</span>
+              <span>🔥 Modo carrera</span>
+            </div>
+          </div>
+
+          <div className="game-home-control-panel">
+            <section className="game-home-difficulty-card" aria-label="Seleccionar dificultad">
+              <div className="game-home-difficulty-header">
+                <strong>Dificultad</strong>
+                <span>{selectedDifficulty?.label ?? "Normal"}</span>
+              </div>
+
+              <div className="game-home-difficulty-options" role="group" aria-label="Opciones de dificultad">
+                {DIFFICULTY_OPTIONS.map((option) => (
                   <button
-                    key={range.id}
+                    key={option.id}
                     type="button"
-                    className={easyModeSeasonRangeId === range.id ? "season-range-option-active" : ""}
-                    onClick={() => onEasyModeSeasonRangeChange(range.id)}
+                    className={difficulty === option.id ? "difficulty-option-active" : ""}
+                    aria-pressed={difficulty === option.id}
+                    onClick={() => onDifficultyChange(option.id)}
                   >
-                    <strong>{range.label}</strong>
-                    <small>{range.description}</small>
+                    <strong>{option.label}</strong>
+                    <small>{option.description}</small>
                   </button>
                 ))}
               </div>
+
+              {selectedDifficulty && (
+                <p className="game-home-difficulty-copy">{selectedDifficulty.description}</p>
+              )}
+
+              {difficulty === "normal" && (
+                <details className="game-home-season-range-card">
+                  <summary>Rango de temporadas del modo fácil</summary>
+
+                  <div className="game-home-season-range-options">
+                    {EASY_MODE_SEASON_RANGES.map((range) => (
+                      <button
+                        key={range.id}
+                        type="button"
+                        className={easyModeSeasonRangeId === range.id ? "season-range-option-active" : ""}
+                        aria-pressed={easyModeSeasonRangeId === range.id}
+                        onClick={() => onEasyModeSeasonRangeChange(range.id)}
+                      >
+                        <strong>{range.label}</strong>
+                        <small>{range.description}</small>
+                      </button>
+                    ))}
+                  </div>
+                </details>
+              )}
             </section>
-          )}
-        </section>
 
-        <div className="game-home-actions">
-          <button type="button" className="primary-home-button" onClick={onNewGame}>
-            Nueva partida
-          </button>
+            <div className="game-home-actions" aria-label="Acciones principales">
+              <button type="button" className="primary-home-button" onClick={onNewGame}>
+                <span aria-hidden="true">▷</span>
+                <span>Nueva partida</span>
+              </button>
 
-          <button
-            type="button"
-            className="secondary-home-button"
-            onClick={onContinueGame}
-            disabled={!hasSavedGame}
-          >
-            Continuar partida
-          </button>
+              <div className="game-home-secondary-actions">
+                <button
+                  type="button"
+                  className="secondary-home-button"
+                  onClick={onContinueGame}
+                  disabled={!hasSavedGame}
+                >
+                  Continuar
+                </button>
 
-          <button
-            type="button"
-            className="career-home-button"
-            onClick={onCareerPreview}
-          >
-            Modo carrera Athletic
-          </button>
+                <button
+                  type="button"
+                  className="career-home-button"
+                  onClick={onCareerPreview}
+                >
+                  Modo carrera
+                </button>
+              </div>
 
-          <button
-            type="button"
-            className="share-home-button"
-            onClick={handleShareGame}
-          >
-            Compartir juego
-          </button>
+              <button
+                type="button"
+                className="share-home-button"
+                onClick={handleShareGame}
+              >
+                <span aria-hidden="true">⌘</span>
+                <span>Compartir juego</span>
+              </button>
+            </div>
+
+            {shareStatus && (
+              <p className="share-home-message" role="status">{shareStatus}</p>
+            )}
+          </div>
         </div>
 
-        {shareStatus && (
-          <p className="share-home-message" role="status">{shareStatus}</p>
-        )}
+        <details className="how-to-play-card">
+          <summary>¿Cómo se juega?</summary>
 
-        {!hasSavedGame && (
-          <p className="no-save-message">
-            Todavía no hay una partida guardada en este navegador.
-          </p>
-        )}
+          <div className="how-to-play-steps">
+            <article><strong>1</strong><span>Elige formación</span><p>Decide si quieres atacar, controlar o defender mejor.</p></article>
+            <article><strong>2</strong><span>Salen temporadas aleatorias</span><p>En Modo Fácil puedes limitar el draft a una época concreta del Athletic.</p></article>
+            <article><strong>3</strong><span>Elige jugadores reales</span><p>Cada jugador solo puede usarse una vez y debe jugar en posición válida.</p></article>
+            <article><strong>4</strong><span>Elige entrenador</span><p>El técnico aporta ataque, defensa, gestión y mentalidad.</p></article>
+            <article><strong>5</strong><span>Simula temporada</span><p>Tu Athletic histórico juega LaLiga 25/26 y una Copa del Rey con factor sorpresa.</p></article>
+          </div>
+        </details>
+
+        <SupportButton variant="home" />
+
+        <footer className="game-home-footer">
+          <span>{APP_VERSION}: {APP_VERSION_NAME}</span>
+          <a href={FEEDBACK_URL} target="_blank" rel="noreferrer">Feedback ↗</a>
+        </footer>
       </section>
 
-      <section className="how-to-play-card">
-        <h2>Cómo se juega</h2>
-
-        <div className="how-to-play-steps">
-          <article><strong>1</strong><span>Elige formación</span><p>Decide si quieres atacar, controlar o defender mejor.</p></article>
-          <article><strong>2</strong><span>Salen temporadas aleatorias</span><p>En Modo Fácil puedes limitar el draft a una época concreta del Athletic.</p></article>
-          <article><strong>3</strong><span>Elige jugadores reales</span><p>Cada jugador solo puede usarse una vez y debe jugar en posición válida.</p></article>
-          <article><strong>4</strong><span>Elige entrenador</span><p>El técnico aporta ataque, defensa, gestión y mentalidad.</p></article>
-          <article><strong>5</strong><span>Simula temporada</span><p>Tu Athletic histórico juega LaLiga 25/26 y una Copa del Rey con factor sorpresa.</p></article>
-        </div>
-      </section>
-
-      <section className="game-home-rules">
+      <section className="game-home-rules" aria-label="Reglas y objetivo">
         <div>
           <h3>Reglas clave</h3>
           <ul>
@@ -207,7 +232,6 @@ export function GameHome({
             <li>No puedes poner jugadores fuera de posición.</li>
             <li>Cada formación cambia el estilo del equipo.</li>
             <li>El Athletic histórico sustituye al Athletic real 25/26.</li>
-            <li>La Liga y la Copa están ajustadas como experiencia jugable.</li>
           </ul>
         </div>
 
@@ -219,26 +243,6 @@ export function GameHome({
           </p>
         </div>
       </section>
-      <section className="game-home-beta-card" aria-label="Beta pública y feedback">
-        <div>
-          <h3>Beta pública estable</h3>
-          <p>Juega una partida rápida, crea tu once histórico, simula Liga y Copa, y compara tu resultado final.</p>
-        </div>
-        <div className="game-home-feedback-block">
-          <h3>Ayuda a mejorar Futbol11</h3>
-          <p>Envía tu opinión en un formulario sencillo. Basta con nombre, email y feedback.</p>
-          <a
-            className="game-home-feedback-button"
-            href={FEEDBACK_URL}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Enviar feedback
-          </a>
-        </div>
-      </section>
-
-      <SupportButton variant="home" />
     </main>
   );
 }
