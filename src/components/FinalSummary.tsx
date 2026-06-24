@@ -38,15 +38,6 @@ interface FinalSummaryProps {
   onShare?: (shareText: string) => void;
 }
 
-function getMedalEmoji(position: number): string {
-  if (position === 1) return "🏆";
-  if (position === 2) return "🥈";
-  if (position === 3) return "🥉";
-  if (position <= 4) return "⭐";
-  if (position <= 6) return "🌍";
-  return "🔴⚪";
-}
-
 function isUserTeam(row: LeagueTableRow): boolean {
   const normalizedName = row.teamName.toLowerCase();
 
@@ -335,6 +326,30 @@ function CoachRatingBreakdown({
       </p>
     </div>
   );
+}
+
+
+function getFinalOutcomeTitle(summary: FinalGameSummary, isCareerReturn: boolean): string {
+  if (isCareerReturn) return "Temporada superada";
+  return summary.finalLabel;
+}
+
+function getFinalOutcomeSubtitle(summary: FinalGameSummary, isCareerReturn: boolean): string {
+  if (!isCareerReturn) return summary.finalCategory;
+
+  if (summary.cupTrophyWon) return "Objetivo cumplido: Copa del Rey";
+  if (summary.leaguePosition <= 4) return "Objetivo cumplido: Champions League";
+  if (summary.leaguePosition === 5) return "Objetivo cumplido: Europa League";
+  if (summary.leaguePosition === 6) return "Objetivo cumplido: Conference League";
+
+  return "Objetivo cumplido: clasificación europea";
+}
+
+function getCoachInitials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "DT";
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
 }
 
 function buildShareText(summary: FinalGameSummary): string {
@@ -778,34 +793,37 @@ export function FinalSummary({
     }
   }
 
+  const isCareerSummary = Boolean(onReturnToCareer);
+  const outcomeTitle = getFinalOutcomeTitle(summary, isCareerSummary);
+  const outcomeSubtitle = getFinalOutcomeSubtitle(summary, isCareerSummary);
+
   return (
-    <section className="final-summary">
-      <header className="final-summary-header">
+    <section className="final-summary final-summary-polished">
+      <header className="final-summary-header final-summary-header-polished">
         <p className="eyebrow">Final de temporada</p>
-        <h1>
-          {getMedalEmoji(summary.leaguePosition)} {summary.finalLabel}
-        </h1>
-        <p>{summary.finalCategory}</p>
+        <h1>{outcomeTitle}</h1>
+        <p>{outcomeSubtitle}</p>
+
+        {(onRestart || onReturnToCareer) && (
+          <div className="final-primary-cta-bar" aria-label="Acciones de final de temporada">
+            {onReturnToCareer && (
+              <button type="button" className="final-primary-restart-button" onClick={onReturnToCareer}>
+                Volver a carrera
+              </button>
+            )}
+            {onRestart && (
+              <button type="button" className="secondary-final-button" onClick={onRestart}>
+                Volver al inicio
+              </button>
+            )}
+          </div>
+        )}
       </header>
-      {(onRestart || onReturnToCareer) && (
-        <div className="final-primary-cta-bar" aria-label="Acciones de final de temporada">
-          {onReturnToCareer && (
-            <button type="button" className="final-primary-restart-button" onClick={onReturnToCareer}>
-              Volver a carrera
-            </button>
-          )}
-          {onRestart && (
-            <button type="button" className="secondary-final-button" onClick={onRestart}>
-              Volver al inicio
-            </button>
-          )}
-          <span>{onReturnToCareer ? "Revisa el resumen y vuelve para continuar la carrera." : "Prueba otro once histórico, otra formación y una nueva simulación."}</span>
-        </div>
-      )}
-      <div className="final-summary-layout">
+
+      <div className="final-summary-layout final-summary-layout-polished">
         <main className="final-main-panel">
-          <section className="final-hero-card">
-            <span>Clasificación final</span>
+          <section className="final-hero-card final-hero-card-polished">
+            <span>Clasificación final · Liga 25/26</span>
             <strong>{summary.leaguePosition}º</strong>
             <p>
               {summary.points} puntos · {summary.wins} victorias · {summary.draws} empates ·{" "}
@@ -813,15 +831,20 @@ export function FinalSummary({
             </p>
           </section>
 
-          <BestGamePanel history={history} />
-
-          <div className="final-stats-grid">
-            <ResultStatCard label="Puntos" value={summary.points} helper="Liga 25/26" />
-            <ResultStatCard label="Goles a favor" value={summary.goalsFor} />
-            <ResultStatCard label="Goles en contra" value={summary.goalsAgainst} />
-            <ResultStatCard label="Porterías a cero" value={summary.cleanSheets} />
-            <ResultStatCard label="Copa del Rey" value={summary.cupTrophyWon ? "Campeón" : "-"} helper={getCupSummaryText(summary)} />
+          <div className="final-stats-grid final-stats-grid-polished">
+            <ResultStatCard label="Puntos" value={summary.points} />
+            <ResultStatCard label="G. favor" value={summary.goalsFor} />
+            <ResultStatCard label="G. contra" value={summary.goalsAgainst} />
+            <ResultStatCard label="Porter. a 0" value={summary.cleanSheets} />
           </div>
+
+          <section className="final-card final-cup-compact-card">
+            <span>Copa del Rey</span>
+            <strong>{getCupSummaryText(summary)}</strong>
+            {summary.cupTrophyWon ? <small>🏆 Campeón</small> : summary.cupStatus === "eliminated" ? <small>Resultado copero</small> : null}
+          </section>
+
+          <BestGamePanel history={history} />
 
           <FinalAccordion title="Palmarés" eyebrow="Vitrina histórica" defaultOpen={false}>
             <PalmaresTrophyCase summary={summary} />
@@ -854,13 +877,16 @@ export function FinalSummary({
         <aside className="final-side-panel">
           <section className="final-card">
             <h2>Entrenador</h2>
-            <div className="final-coach-card">
-              <strong>{selectedCoach.coachSeason.name}</strong>
-              <span>Temporada {selectedCoach.coachSeason.season}</span>
-              <small>
-                Media {selectedCoach.coachSeason.overall} · Bonus base +{getCoachBaseBonus(selectedCoach.coachSeason)}
-              </small>
-              <small>{getCoachSpecialtyLabel(selectedCoach.coachSeason)}</small>
+            <div className="final-coach-card final-coach-card-polished">
+              <span className="final-coach-avatar">{getCoachInitials(selectedCoach.coachSeason.name)}</span>
+              <div>
+                <strong>{selectedCoach.coachSeason.name}</strong>
+                <span>Temporada {selectedCoach.coachSeason.season}</span>
+                <small>
+                  Media {selectedCoach.coachSeason.overall} · Bonus base +{getCoachBaseBonus(selectedCoach.coachSeason)}
+                </small>
+                <small>{getCoachSpecialtyLabel(selectedCoach.coachSeason)}</small>
+              </div>
             </div>
             <CoachRatingBreakdown
               selectedCoach={selectedCoach}

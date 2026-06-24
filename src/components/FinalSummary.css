@@ -1288,3 +1288,266 @@
     font-size: 2.45rem;
   }
 }
+
+/* v0.21.0l — final summary polish */
+.final-summary-polished {
+  padding-top: 36px;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.08), transparent 26%),
+    linear-gradient(135deg, #2a070e 0%, #3a0712 42%, #130408 100%);
+}
+
+.final-summary-header-polished {
+  max-width: 1120px;
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+.final-summary-header-polished .eyebrow {
+  margin: 0 0 4px;
+  color: #ff9caf;
+  font-size: 0.78rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.final-summary-header-polished h1 {
+  margin: 0;
+  font-size: clamp(2.35rem, 6vw, 4.65rem);
+  line-height: 0.95;
+}
+
+.final-summary-header-polished > p:not(.eyebrow) {
+  margin-top: 8px;
+  color: #ffd7df;
+  font-size: 1.05rem;
+  font-weight: 950;
+}
+
+.final-summary-polished .final-primary-cta-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  max-width: none;
+  margin: 18px auto 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.final-summary-polished .final-primary-cta-bar span {
+  display: none;
+}
+
+.final-summary-polished .final-primary-restart-button,
+.final-summary-polished .secondary-final-button {
+  min-width: 150px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  padding: 12px 20px;
+  font-weight: 950;
+}
+
+.final-summary-layout-polished {
+  max-width: 1160px;
+  grid-template-columns: minmax(0, 1fr) 250px;
+  gap: 14px;
+}
+
+.final-summary-polished .final-main-panel,
+.final-summary-polished .final-side-panel {
+  gap: 12px;
+}
+
+.final-hero-card-polished {
+  padding: 20px 22px;
+  border-radius: 14px;
+  box-shadow: none;
+}
+
+.final-hero-card-polished span {
+  color: #c3002f;
+  font-size: 0.75rem;
+}
+
+.final-hero-card-polished strong {
+  margin: 4px 0 6px;
+  font-size: clamp(4.25rem, 10vw, 6.2rem);
+}
+
+.final-hero-card-polished p {
+  font-size: 0.95rem;
+}
+
+.final-stats-grid-polished {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.final-stats-grid-polished .final-stat-card,
+.final-summary-polished .final-cup-compact-card,
+.final-summary-polished .final-card,
+.final-summary-polished .final-accordion,
+.final-summary-polished .final-best-game-card {
+  border-radius: 14px;
+  box-shadow: none;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.final-stats-grid-polished .final-stat-card {
+  padding: 13px 14px;
+}
+
+.final-stats-grid-polished .final-stat-card span {
+  color: #ff9caf;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.final-stats-grid-polished .final-stat-card strong {
+  margin: 5px 0 0;
+  font-size: 1.65rem;
+}
+
+.final-cup-compact-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 6px 12px;
+  align-items: center;
+  padding: 15px 18px;
+}
+
+.final-cup-compact-card span {
+  grid-column: 1 / -1;
+  color: #ff9caf;
+  font-size: 0.76rem;
+  font-weight: 950;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.final-cup-compact-card strong {
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+.final-cup-compact-card small {
+  width: fit-content;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 222, 116, 0.18);
+  color: #ffe184;
+  font-weight: 950;
+}
+
+.final-coach-card-polished {
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: center;
+}
+
+.final-coach-avatar {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #c0002a;
+  color: #ffffff !important;
+  font-weight: 1000;
+}
+
+.final-summary-polished .final-card h2,
+.final-summary-polished .final-accordion-header strong {
+  font-size: 1rem;
+}
+
+.final-summary-polished .final-coach-breakdown {
+  margin-top: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.final-summary-polished .final-coach-breakdown article {
+  padding: 9px 10px;
+  border-radius: 10px;
+}
+
+.final-summary-polished .final-coach-breakdown p {
+  grid-column: 1 / -1;
+  margin: 2px 0 0;
+  font-size: 0.72rem;
+}
+
+.final-summary-polished .final-rating-circle {
+  width: 118px;
+  height: 118px;
+}
+
+.final-summary-polished .final-rating-circle strong {
+  font-size: 2.45rem;
+}
+
+.final-summary-polished .final-rating-list span {
+  padding: 6px 8px;
+  font-size: 0.72rem;
+}
+
+.final-summary-polished .final-player-highlight {
+  grid-template-columns: 1fr auto;
+  align-items: center;
+}
+
+.final-summary-polished .final-player-highlight span,
+.final-summary-polished .final-player-highlight small {
+  grid-column: 1;
+}
+
+.final-summary-polished .final-player-highlight strong {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  text-align: right;
+}
+
+.final-summary-polished .final-board-card .selected-team-board,
+.final-summary-polished .final-league-table-card,
+.final-summary-polished .final-history-card {
+  border-radius: 14px;
+  box-shadow: none;
+}
+
+@media (max-width: 1080px) {
+  .final-summary-layout-polished {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .final-summary-polished {
+    padding: 18px 10px 26px;
+  }
+
+  .final-summary-header-polished {
+    text-align: left;
+  }
+
+  .final-summary-polished .final-primary-cta-bar {
+    justify-content: flex-start;
+  }
+
+  .final-summary-polished .final-primary-restart-button,
+  .final-summary-polished .secondary-final-button {
+    width: 100%;
+  }
+
+  .final-stats-grid-polished {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .final-cup-compact-card {
+    grid-template-columns: 1fr;
+  }
+}

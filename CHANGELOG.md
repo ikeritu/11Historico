@@ -1,3 +1,18 @@
+
+## v0.21.0l — Final summary polish
+
+- Pulida la pantalla final de temporada para dar más sensación de cierre/recompensa.
+- Añadido titular más claro en carrera, subtítulo de objetivo cumplido y CTAs superiores compactos.
+- Reordenadas las estadísticas clave, Copa, entrenador, rating y jugadores destacados.
+- No toca simulación, balance, carrera, ascensos/descensos ni calendario dinámico.
+
+
+## v0.21.0k — Career preview cleanup
+
+- Eliminado el botón “Jugar partida rápida” de la pantalla informativa del modo carrera.
+- La pantalla de carrera queda centrada en empezar carrera o volver.
+- Sin cambios en simulación, calendario, ascensos/descensos ni balance.
+
 ## v0.21.0j — Desktop home simplification
 
 - Simplificada la portada de escritorio en layout de dos columnas.

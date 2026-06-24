@@ -845,9 +845,6 @@ export default function App() {
               <button type="button" className="primary-home-button" onClick={handleStartCareer}>
                 Empezar carrera 2025/26
               </button>
-              <button type="button" className="secondary-home-button" onClick={handleNewGame}>
-                Jugar partida rápida
-              </button>
               <button type="button" className="secondary-home-button" onClick={() => setScreen("home")}>
                 Volver
               </button>
