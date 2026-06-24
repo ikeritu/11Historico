@@ -1,4 +1,4 @@
-import type { Formation, FormationSlot } from "./game";
+import type { Formation, FormationSlot, RivalTeam } from "./game";
 
 export type EuropeanCompetition =
   | "champions"
@@ -42,12 +42,20 @@ export interface CareerObjectiveResult {
   isRelegated: boolean;
 }
 
+export interface CareerPromotionTransition {
+  relegated: RivalTeam[];
+  promoted: RivalTeam[];
+  secondDivisionPool: RivalTeam[];
+}
+
 export interface CareerState {
   currentSeasonIndex: number;
   currentSeasonLabel: string;
   completedSeasons: number;
   trophyCounts: CareerTrophyCounts;
   lastSeasonResult?: CareerSeasonResult;
+  secondDivisionPool: RivalTeam[];
+  lastPromotionTransition?: CareerPromotionTransition;
 }
 
 export type CareerRewardChoice = "player" | "coach";

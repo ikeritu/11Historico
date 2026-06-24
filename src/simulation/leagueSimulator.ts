@@ -91,7 +91,7 @@ function seededRandom(seed: number): number {
   return x - Math.floor(x);
 }
 
-const CAREER_PROMOTION_CANDIDATES: RivalTeam[] = [
+export const CAREER_PROMOTION_CANDIDATES: RivalTeam[] = [
   createCupTeam("real_valladolid", "Real Valladolid", 74, "purple_white_shirt"),
   createCupTeam("cd_leganes", "CD Leganés", 73, "blue_white_shirt"),
   createCupTeam("ud_las_palmas_career", "UD Las Palmas", 74, "yellow_blue_shirt"),
@@ -616,20 +616,50 @@ export function getInitialCareerLeagueRivals(): RivalTeam[] {
   return getLaliga2526RivalsExcludingAthletic();
 }
 
-function getCareerRivalById(teamId: string, currentRivals: RivalTeam[]): RivalTeam | undefined {
+export function getInitialCareerSecondDivisionPool(): RivalTeam[] {
+  return [...CAREER_PROMOTION_CANDIDATES];
+}
+
+function dedupeRivalTeams(teams: RivalTeam[]): RivalTeam[] {
+  const usedIds = new Set<string>();
+  const uniqueTeams: RivalTeam[] = [];
+
+  for (const team of teams) {
+    if (team.id === USER_TEAM_ID || usedIds.has(team.id)) continue;
+    uniqueTeams.push(team);
+    usedIds.add(team.id);
+  }
+
+  return uniqueTeams;
+}
+
+function rotateTeams(teams: RivalTeam[], rotation: number): RivalTeam[] {
+  if (teams.length === 0) return [];
+  const safeRotation = rotation % teams.length;
+  return [...teams.slice(safeRotation), ...teams.slice(0, safeRotation)];
+}
+
+function getCareerRivalById(teamId: string, currentRivals: RivalTeam[], secondDivisionPool: RivalTeam[]): RivalTeam | undefined {
   return (
     currentRivals.find((team) => team.id === teamId) ??
+    secondDivisionPool.find((team) => team.id === teamId) ??
     getLaliga2526TeamById(teamId) ??
     CAREER_PROMOTION_CANDIDATES.find((team) => team.id === teamId)
   );
 }
 
-export function createNextCareerLeagueRivals(params: {
+export function createNextCareerLeagueTransition(params: {
   previousTable: LeagueTableRow[];
   currentRivals: RivalTeam[];
+  secondDivisionPool: RivalTeam[];
   completedSeasons: number;
-}): RivalTeam[] {
-  const { previousTable, currentRivals, completedSeasons } = params;
+}): {
+  nextRivals: RivalTeam[];
+  nextSecondDivisionPool: RivalTeam[];
+  promoted: RivalTeam[];
+  relegated: RivalTeam[];
+} {
+  const { previousTable, currentRivals, secondDivisionPool, completedSeasons } = params;
   const sortedTable = [...previousTable].sort((a, b) => {
     if (b.points !== a.points) return b.points - a.points;
     if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference;
@@ -641,36 +671,63 @@ export function createNextCareerLeagueRivals(params: {
     .filter((row) => row.teamId !== USER_TEAM_ID)
     .slice(-3);
 
-  const relegatedIds = new Set(relegatedRows.map((row) => row.teamId));
+  const baseSecondDivisionPool = secondDivisionPool.length > 0
+    ? secondDivisionPool
+    : getInitialCareerSecondDivisionPool();
+  const relegated = relegatedRows
+    .map((row) => getCareerRivalById(row.teamId, currentRivals, baseSecondDivisionPool))
+    .filter((team): team is RivalTeam => Boolean(team));
+  const relegatedIds = new Set(relegated.map((team) => team.id));
   const survivingRivals = currentRivals.filter((team) => !relegatedIds.has(team.id));
-  const survivingIds = new Set(survivingRivals.map((team) => team.id));
+  const firstDivisionIds = new Set(survivingRivals.map((team) => team.id));
 
+  const promotionPool = rotateTeams(
+    dedupeRivalTeams([...baseSecondDivisionPool, ...CAREER_PROMOTION_CANDIDATES]),
+    completedSeasons,
+  );
   const promoted: RivalTeam[] = [];
-  const rotation = completedSeasons % CAREER_PROMOTION_CANDIDATES.length;
-  const promotionPool = [
-    ...CAREER_PROMOTION_CANDIDATES.slice(rotation),
-    ...CAREER_PROMOTION_CANDIDATES.slice(0, rotation),
-  ];
 
   for (const candidate of promotionPool) {
     if (promoted.length >= 3) break;
-    if (survivingIds.has(candidate.id) || relegatedIds.has(candidate.id)) continue;
+    if (firstDivisionIds.has(candidate.id) || relegatedIds.has(candidate.id)) continue;
     promoted.push(candidate);
-    survivingIds.add(candidate.id);
+    firstDivisionIds.add(candidate.id);
   }
 
-  const fallbackTeams = previousTable
-    .map((row) => getCareerRivalById(row.teamId, currentRivals))
+  const fallbackTeams = sortedTable
+    .map((row) => getCareerRivalById(row.teamId, currentRivals, baseSecondDivisionPool))
     .filter((team): team is RivalTeam => Boolean(team))
-    .filter((team) => !survivingIds.has(team.id) && !relegatedIds.has(team.id));
+    .filter((team) => !firstDivisionIds.has(team.id) && !relegatedIds.has(team.id));
 
   for (const fallback of fallbackTeams) {
     if (promoted.length >= 3) break;
     promoted.push(fallback);
-    survivingIds.add(fallback.id);
+    firstDivisionIds.add(fallback.id);
   }
 
-  return [...survivingRivals, ...promoted].slice(0, 19);
+  const promotedIds = new Set(promoted.map((team) => team.id));
+  const nextSecondDivisionPool = dedupeRivalTeams([
+    ...baseSecondDivisionPool.filter((team) => !promotedIds.has(team.id)),
+    ...relegated,
+  ]);
+
+  return {
+    nextRivals: [...survivingRivals, ...promoted].slice(0, 19),
+    nextSecondDivisionPool,
+    promoted,
+    relegated,
+  };
+}
+
+export function createNextCareerLeagueRivals(params: {
+  previousTable: LeagueTableRow[];
+  currentRivals: RivalTeam[];
+  completedSeasons: number;
+}): RivalTeam[] {
+  return createNextCareerLeagueTransition({
+    ...params,
+    secondDivisionPool: getInitialCareerSecondDivisionPool(),
+  }).nextRivals;
 }
 
 export function createUserLeagueSimulation(

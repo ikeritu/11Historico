@@ -1,5 +1,5 @@
 import type { Formation, SelectedCoach, SelectedPlayer } from "../types/game";
-import type { CareerObjectiveResult, CareerSeasonResult, CareerTrophyCounts } from "../types/career";
+import type { CareerObjectiveResult, CareerPromotionTransition, CareerSeasonResult, CareerTrophyCounts } from "../types/career";
 import { calculatePalmaresScore } from "../career/careerRules";
 
 import "./CareerInterseasonReward.css";
@@ -13,6 +13,7 @@ interface CareerInterseasonRewardProps {
   seasonResult: CareerSeasonResult;
   objectiveResult: CareerObjectiveResult;
   trophyCounts: CareerTrophyCounts;
+  promotionTransition?: CareerPromotionTransition;
   onChoosePlayerChange: () => void;
   onChooseCoachChange: () => void;
   onRestart: () => void;
@@ -34,6 +35,7 @@ export function CareerInterseasonReward({
   seasonResult,
   objectiveResult,
   trophyCounts,
+  promotionTransition,
   onChoosePlayerChange,
   onChooseCoachChange,
   onRestart,
@@ -72,6 +74,20 @@ export function CareerInterseasonReward({
             <small>Ligas {trophyCounts.liga} · Copas {trophyCounts.copa}</small>
           </article>
         </div>
+
+        {promotionTransition && (
+          <section className="career-promotion-panel" aria-label="Ascensos y descensos de la temporada">
+            <div>
+              <span>Descienden a Segunda</span>
+              <strong>{promotionTransition.relegated.length > 0 ? promotionTransition.relegated.map((team) => team.name).join(" · ") : "Sin datos"}</strong>
+            </div>
+            <div>
+              <span>Ascienden a Primera</span>
+              <strong>{promotionTransition.promoted.length > 0 ? promotionTransition.promoted.map((team) => team.name).join(" · ") : "Sin datos"}</strong>
+            </div>
+            <small>Los descendidos pasan a la bolsa de Segunda y podrán volver a subir en temporadas futuras.</small>
+          </section>
+        )}
 
         {leagueChampionBonus && (
           <div className="career-reward-bonus">

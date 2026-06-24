@@ -1,3 +1,12 @@
+
+## v0.21.0g — Dynamic promotion pool
+
+- Añadida bolsa dinámica de Segunda División en modo carrera.
+- Los descendidos entran en la bolsa y pueden volver a ascender en temporadas futuras.
+- Los ascendidos salen de la bolsa mientras juegan en Primera.
+- Añadido bloque visual de ascensos y descensos en pantalla entre temporadas.
+- No se toca rating efectivo, Supercopa, Europa ni partida rápida.
+
 # Changelog
 
 ## v0.21.0f — Career promotion and summary fix

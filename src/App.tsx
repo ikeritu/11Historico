@@ -16,8 +16,12 @@ import type {
 } from "./types/game";
 
 import type { UserLeagueSimulationContext } from "./simulation/leagueSimulator";
-import { createNextCareerLeagueRivals, getInitialCareerLeagueRivals } from "./simulation/leagueSimulator";
-import type { CareerObjectiveResult, CareerSeasonResult, CareerTrophyCounts } from "./types/career";
+import {
+  createNextCareerLeagueTransition,
+  getInitialCareerLeagueRivals,
+  getInitialCareerSecondDivisionPool,
+} from "./simulation/leagueSimulator";
+import type { CareerObjectiveResult, CareerPromotionTransition, CareerSeasonResult, CareerTrophyCounts } from "./types/career";
 
 import { getPlayerIdentityKey, resolvePlayerSlotPlacement } from "./domain/positionRules";
 
@@ -279,12 +283,14 @@ export default function App() {
   const savedGame = useMemo(() => loadGameState(), []);
   const [screen, setScreen] = useState<AppScreen>("home");
   const [isCareerMode, setIsCareerMode] = useState<boolean>(() => savedGame?.isCareerMode ?? false);
-  const [careerSeasonResult, setCareerSeasonResult] = useState<CareerSeasonResult | undefined>();
-  const [careerObjectiveResult, setCareerObjectiveResult] = useState<CareerObjectiveResult | undefined>();
-  const [careerCompletedSeasons, setCareerCompletedSeasons] = useState(0);
-  const [careerSeasonLabel, setCareerSeasonLabel] = useState(CAREER_INITIAL_SEASON_LABEL);
-  const [careerTrophyCounts, setCareerTrophyCounts] = useState<CareerTrophyCounts>(() => createEmptyCareerTrophyCounts());
-  const [careerLeagueRivals, setCareerLeagueRivals] = useState<RivalTeam[]>(() => getInitialCareerLeagueRivals());
+  const [careerSeasonResult, setCareerSeasonResult] = useState<CareerSeasonResult | undefined>(() => savedGame?.careerSeasonResult);
+  const [careerObjectiveResult, setCareerObjectiveResult] = useState<CareerObjectiveResult | undefined>(() => savedGame?.careerObjectiveResult);
+  const [careerCompletedSeasons, setCareerCompletedSeasons] = useState(() => savedGame?.careerCompletedSeasons ?? 0);
+  const [careerSeasonLabel, setCareerSeasonLabel] = useState(() => savedGame?.careerSeasonLabel ?? CAREER_INITIAL_SEASON_LABEL);
+  const [careerTrophyCounts, setCareerTrophyCounts] = useState<CareerTrophyCounts>(() => savedGame?.careerTrophyCounts ?? createEmptyCareerTrophyCounts());
+  const [careerLeagueRivals, setCareerLeagueRivals] = useState<RivalTeam[]>(() => savedGame?.careerLeagueRivals ?? getInitialCareerLeagueRivals());
+  const [careerSecondDivisionPool, setCareerSecondDivisionPool] = useState<RivalTeam[]>(() => savedGame?.careerSecondDivisionPool ?? getInitialCareerSecondDivisionPool());
+  const [careerPromotionTransition, setCareerPromotionTransition] = useState<CareerPromotionTransition | undefined>(() => savedGame?.careerPromotionTransition);
   const [replacementDraftSeason, setReplacementDraftSeason] = useState<SeasonId | undefined>();
   const [replacementRemovedPlayer, setReplacementRemovedPlayer] = useState<SelectedPlayer | undefined>();
 
@@ -343,6 +349,14 @@ export default function App() {
       leagueContext,
       finalSummary,
       isCareerMode,
+      careerSeasonResult,
+      careerObjectiveResult,
+      careerCompletedSeasons,
+      careerSeasonLabel,
+      careerTrophyCounts,
+      careerLeagueRivals,
+      careerSecondDivisionPool,
+      careerPromotionTransition,
     });
   }, [
     gameId,
@@ -359,6 +373,14 @@ export default function App() {
     leagueContext,
     finalSummary,
     isCareerMode,
+    careerSeasonResult,
+    careerObjectiveResult,
+    careerCompletedSeasons,
+    careerSeasonLabel,
+    careerTrophyCounts,
+    careerLeagueRivals,
+    careerSecondDivisionPool,
+    careerPromotionTransition,
   ]);
 
   function resetGameState() {
@@ -381,6 +403,8 @@ export default function App() {
     setCareerSeasonLabel(CAREER_INITIAL_SEASON_LABEL);
     setCareerTrophyCounts(createEmptyCareerTrophyCounts());
     setCareerLeagueRivals(getInitialCareerLeagueRivals());
+    setCareerSecondDivisionPool(getInitialCareerSecondDivisionPool());
+    setCareerPromotionTransition(undefined);
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
   }
@@ -405,6 +429,8 @@ export default function App() {
     setCareerSeasonLabel(CAREER_INITIAL_SEASON_LABEL);
     setCareerTrophyCounts(createEmptyCareerTrophyCounts());
     setCareerLeagueRivals(getInitialCareerLeagueRivals());
+    setCareerSecondDivisionPool(getInitialCareerSecondDivisionPool());
+    setCareerPromotionTransition(undefined);
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
     setScreen("formation_selection");
@@ -434,12 +460,14 @@ export default function App() {
     setLeagueContext(loadedGame.leagueContext);
     setFinalSummary(loadedGame.finalSummary);
     setIsCareerMode(loadedGame.isCareerMode ?? false);
-    setCareerSeasonResult(undefined);
-    setCareerObjectiveResult(undefined);
-    setCareerCompletedSeasons(0);
-    setCareerSeasonLabel(CAREER_INITIAL_SEASON_LABEL);
-    setCareerTrophyCounts(createEmptyCareerTrophyCounts());
-    setCareerLeagueRivals(getInitialCareerLeagueRivals());
+    setCareerSeasonResult(loadedGame.careerSeasonResult);
+    setCareerObjectiveResult(loadedGame.careerObjectiveResult);
+    setCareerCompletedSeasons(loadedGame.careerCompletedSeasons ?? 0);
+    setCareerSeasonLabel(loadedGame.careerSeasonLabel ?? CAREER_INITIAL_SEASON_LABEL);
+    setCareerTrophyCounts(loadedGame.careerTrophyCounts ?? createEmptyCareerTrophyCounts());
+    setCareerLeagueRivals(loadedGame.careerLeagueRivals ?? getInitialCareerLeagueRivals());
+    setCareerSecondDivisionPool(loadedGame.careerSecondDivisionPool ?? getInitialCareerSecondDivisionPool());
+    setCareerPromotionTransition(loadedGame.careerPromotionTransition);
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
     setLastSelection(undefined);
@@ -592,13 +620,22 @@ export default function App() {
     setCareerSeasonLabel(getCareerSeasonLabelFromIndex(nextCompletedSeasons));
     setCareerTrophyCounts((previous) => addCareerTrophiesFromSeason(previous, careerSeasonResult));
     if (finalSummary.table) {
-      setCareerLeagueRivals((currentRivals) =>
-        createNextCareerLeagueRivals({
-          previousTable: finalSummary.table ?? [],
-          currentRivals,
-          completedSeasons: nextCompletedSeasons,
-        })
-      );
+      const transition = createNextCareerLeagueTransition({
+        previousTable: finalSummary.table,
+        currentRivals: careerLeagueRivals,
+        secondDivisionPool: careerSecondDivisionPool,
+        completedSeasons: nextCompletedSeasons,
+      });
+
+      setCareerLeagueRivals(transition.nextRivals);
+      setCareerSecondDivisionPool(transition.nextSecondDivisionPool);
+      setCareerPromotionTransition({
+        relegated: transition.relegated,
+        promoted: transition.promoted,
+        secondDivisionPool: transition.nextSecondDivisionPool,
+      });
+    } else {
+      setCareerPromotionTransition(undefined);
     }
     setLeagueContext(undefined);
     setFinalSummary(undefined);
@@ -616,6 +653,7 @@ export default function App() {
     setFinalSummary(undefined);
     setCareerSeasonResult(undefined);
     setCareerObjectiveResult(undefined);
+    setCareerPromotionTransition(undefined);
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
     setPhase("coach_selection");
@@ -902,6 +940,7 @@ export default function App() {
           seasonResult={careerSeasonResult}
           objectiveResult={careerObjectiveResult}
           trophyCounts={careerTrophyCounts}
+          promotionTransition={careerPromotionTransition}
           onChoosePlayerChange={handleChooseCareerPlayerChange}
           onChooseCoachChange={handleChooseCareerCoachChange}
           onRestart={handleRestart}

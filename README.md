@@ -4,7 +4,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.21.0f_CAREER_PROMOTION_AND_SUMMARY_FIX`.
+Versión pública actual: `v0.21.0g_CAREER_PROMOTION_AND_SUMMARY_FIX`.
 
 Base jugable cerrada:
 

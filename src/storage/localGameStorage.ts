@@ -10,8 +10,10 @@ import type {
   SelectedPlayer,
   SeasonId,
   TeamRating,
+  RivalTeam,
 } from "../types/game";
 
+import type { CareerObjectiveResult, CareerPromotionTransition, CareerSeasonResult, CareerTrophyCounts } from "../types/career";
 import type { UserLeagueSimulationContext } from "../simulation/leagueSimulator";
 
 const STORAGE_KEY = "once_historico_zurigorri_saved_game_v1";
@@ -33,6 +35,14 @@ export interface SavedGameState {
   leagueContext?: UserLeagueSimulationContext;
   finalSummary?: FinalGameSummary;
   isCareerMode?: boolean;
+  careerSeasonResult?: CareerSeasonResult;
+  careerObjectiveResult?: CareerObjectiveResult;
+  careerCompletedSeasons?: number;
+  careerSeasonLabel?: string;
+  careerTrophyCounts?: CareerTrophyCounts;
+  careerLeagueRivals?: RivalTeam[];
+  careerSecondDivisionPool?: RivalTeam[];
+  careerPromotionTransition?: CareerPromotionTransition;
 
   savedAt: string;
 }
@@ -70,6 +80,7 @@ export function loadGameState(): SavedGameState | undefined {
       currentRoundIndex: parsed.currentRoundIndex ?? 0,
       selectedPlayers: parsed.selectedPlayers ?? [],
       isCareerMode: parsed.isCareerMode ?? false,
+      careerCompletedSeasons: parsed.careerCompletedSeasons ?? 0,
       savedAt: parsed.savedAt ?? new Date().toISOString(),
     } as SavedGameState;
   } catch (error) {

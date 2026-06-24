@@ -1,3 +1,3 @@
-export const APP_VERSION = "v0.21.0f";
-export const APP_VERSION_NAME = "Career promotion and summary fix";
-export const APP_STATUS = "Ascensos y descensos en carrera + resumen sin cortar continuidad";
+export const APP_VERSION = "v0.21.0g";
+export const APP_VERSION_NAME = "Dynamic promotion pool";
+export const APP_STATUS = "Bolsa dinámica de Segunda: los descendidos pueden volver a subir";
