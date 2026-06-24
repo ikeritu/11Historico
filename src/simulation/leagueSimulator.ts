@@ -54,6 +54,7 @@ export interface UserLeagueSimulationContext {
   cupState: CupSimulationState;
   leagueSeasonSalt?: number;
   selectedCoach?: SelectedCoach;
+  rivals?: RivalTeam[];
 }
 
 export interface SimulateNextUserMatchParams {
@@ -610,6 +611,30 @@ function createInitialCupState(): CupSimulationState {
   };
 }
 
+function createCareerUserTeamFixtures(rivals: RivalTeam[]): SourcedLeagueFixture[] {
+  const cleanRivals = dedupeRivalTeams(rivals).slice(0, 19);
+  const baseFixtures = getLaliga2526UserTeamFixtures();
+
+  return baseFixtures.map((baseFixture, index) => {
+    const rival = cleanRivals[index % cleanRivals.length];
+
+    if (!rival) return baseFixture;
+
+    const userIsHome = baseFixture.homeTeamId === USER_TEAM_ID;
+    const homeTeamId = userIsHome ? USER_TEAM_ID : rival.id;
+    const awayTeamId = userIsHome ? rival.id : USER_TEAM_ID;
+
+    return {
+      ...baseFixture,
+      id: `md${String(baseFixture.matchday).padStart(2, "0")}_${homeTeamId}_vs_${awayTeamId}`,
+      homeTeamId,
+      awayTeamId,
+      includesUserTeam: true,
+      sourceRefs: ["career-dynamic-league-calendar"],
+    };
+  });
+}
+
 
 
 export function getInitialCareerLeagueRivals(): RivalTeam[] {
@@ -736,8 +761,10 @@ export function createUserLeagueSimulation(
   const {
     userTeamName = USER_TEAM_NAME,
     rivals = getLaliga2526RivalsExcludingAthletic(),
-    fixtures = getLaliga2526UserTeamFixtures(),
   } = params;
+  const fixtures = params.fixtures ?? (params.rivals
+    ? createCareerUserTeamFixtures(rivals)
+    : getLaliga2526UserTeamFixtures());
 
   const leagueSeasonSalt = createLeagueSeasonSalt();
 
@@ -757,10 +784,19 @@ export function createUserLeagueSimulation(
     userTeamStats: createInitialUserTeamStats(),
     cupState: createInitialCupState(),
     leagueSeasonSalt,
+    rivals,
   };
 }
 
-function getRivalFromFixture(fixture: LeagueFixture): {
+function getSimulationRivalById(teamId: string, rivals: RivalTeam[] = []): RivalTeam | undefined {
+  return (
+    rivals.find((team) => team.id === teamId) ??
+    getLaliga2526TeamById(teamId) ??
+    CAREER_PROMOTION_CANDIDATES.find((team) => team.id === teamId)
+  );
+}
+
+function getRivalFromFixture(fixture: LeagueFixture, rivals: RivalTeam[] = []): {
   rival: RivalTeam;
   venue: MatchVenue;
 } {
@@ -774,7 +810,7 @@ function getRivalFromFixture(fixture: LeagueFixture): {
   }
 
   const rivalTeamId = userIsHome ? fixture.awayTeamId : fixture.homeTeamId;
-  const rival = getLaliga2526TeamById(rivalTeamId);
+  const rival = getSimulationRivalById(rivalTeamId, rivals);
 
   if (!rival) {
     throw new Error(`No se encontró el rival con id: ${rivalTeamId}`);
@@ -827,11 +863,12 @@ function simulateRivalVsRivalMatch(params: {
   fixture: LeagueFixture;
   seedOffset: number;
   seasonSalt?: number;
+  rivals?: RivalTeam[];
 }): MatchResult {
-  const { fixture, seedOffset, seasonSalt = SIMULATION_SESSION_SALT } = params;
+  const { fixture, seedOffset, seasonSalt = SIMULATION_SESSION_SALT, rivals = [] } = params;
 
-  const home = getLaliga2526TeamById(fixture.homeTeamId);
-  const away = getLaliga2526TeamById(fixture.awayTeamId);
+  const home = getSimulationRivalById(fixture.homeTeamId, rivals);
+  const away = getSimulationRivalById(fixture.awayTeamId, rivals);
 
   if (!home || !away) {
     throw new Error(`No se pudo simular el partido: ${fixture.homeTeamId} vs ${fixture.awayTeamId}`);
@@ -1016,7 +1053,7 @@ export function simulateNextUserLeagueMatch(
     throw new Error(`No se encontró partido del Athletic Club Histórico en la jornada ${context.state.currentMatchday}.`);
   }
 
-  const { rival, venue } = getRivalFromFixture(userFixture);
+  const { rival, venue } = getRivalFromFixture(userFixture, context.rivals);
   const leagueSeasonSalt = context.leagueSeasonSalt ?? SIMULATION_SESSION_SALT;
   const formAdjustedRival = applySeasonFormToRival(rival, leagueSeasonSalt);
 
@@ -1041,6 +1078,7 @@ export function simulateNextUserLeagueMatch(
       fixture,
       seedOffset: context.state.results.length + index + 1,
       seasonSalt: leagueSeasonSalt,
+      rivals: context.rivals,
     })
   );
 

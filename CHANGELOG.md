@@ -1,3 +1,12 @@
+# Changelog
+
+## v0.21.0h — Career dynamic calendar fix
+
+- Corrige el bloqueo al iniciar la segunda temporada de modo carrera tras aplicar ascensos/descensos.
+- El calendario de carrera ahora se genera con los 19 rivales actuales de Primera, incluyendo ascendidos y excluyendo descendidos.
+- Los equipos ascendidos pueden jugar partidos de Liga y rival-vs-rival con sus ratings propios.
+- No toca rating efectivo 0.55, partida rápida, Supercopa ni Europa jugable.
+
 
 ## v0.21.0g — Dynamic promotion pool
 

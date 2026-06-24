@@ -4,7 +4,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.21.0g_CAREER_PROMOTION_AND_SUMMARY_FIX`.
+Versión pública actual: `v0.21.0h_CAREER_DYNAMIC_CALENDAR_FIX`.
 
 Base jugable cerrada:
 
@@ -123,6 +123,12 @@ No subir al repositorio:
 Las plantillas combinan fuentes oficiales, referencias históricas y estimaciones para gameplay. Los ratings no son datos oficiales: son valores internos para equilibrar el juego.
 
 ## Changelog breve
+
+### v0.21.0h — Career dynamic calendar fix
+
+- Corrige el bloqueo al simular la segunda temporada de carrera.
+- Genera el calendario de carrera con la Primera actual tras ascensos/descensos.
+- Permite que los ascendidos compitan correctamente en Liga.
 
 ### v0.21.0e — Career effective rating balance
 
