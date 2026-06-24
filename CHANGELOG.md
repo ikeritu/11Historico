@@ -1,3 +1,12 @@
+## v0.22.0a — Supercopa basic
+
+- Añadida Supercopa básica en modo carrera.
+- Participan 1.º y 2.º de Liga + campeón y subcampeón de Copa.
+- Si hay duplicados, la plaza se rellena con el siguiente mejor clasificado de Liga.
+- Si Athletic está clasificado, juega semifinal y posible final antes de la siguiente Liga.
+- Ganar Supercopa suma +2 al palmarés, pero no salva la temporada ni afecta a Europa.
+- No toca balance base de Liga/Copa ni rating efectivo.
+
 
 ## v0.21.0l — Final summary polish
 

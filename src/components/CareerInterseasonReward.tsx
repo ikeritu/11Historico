@@ -1,5 +1,5 @@
 import type { Formation, SelectedCoach, SelectedPlayer } from "../types/game";
-import type { CareerObjectiveResult, CareerPromotionTransition, CareerSeasonResult, CareerTrophyCounts } from "../types/career";
+import type { CareerObjectiveResult, CareerPromotionTransition, CareerSeasonResult, CareerSupercopaQualification, CareerTrophyCounts } from "../types/career";
 import { calculatePalmaresScore } from "../career/careerRules";
 
 import "./CareerInterseasonReward.css";
@@ -14,6 +14,7 @@ interface CareerInterseasonRewardProps {
   objectiveResult: CareerObjectiveResult;
   trophyCounts: CareerTrophyCounts;
   promotionTransition?: CareerPromotionTransition;
+  pendingSupercopa?: CareerSupercopaQualification;
   onChoosePlayerChange: () => void;
   onChooseCoachChange: () => void;
   onRestart: () => void;
@@ -36,6 +37,7 @@ export function CareerInterseasonReward({
   objectiveResult,
   trophyCounts,
   promotionTransition,
+  pendingSupercopa,
   onChoosePlayerChange,
   onChooseCoachChange,
   onRestart,
@@ -86,6 +88,23 @@ export function CareerInterseasonReward({
               <strong>{promotionTransition.promoted.length > 0 ? promotionTransition.promoted.map((team) => team.name).join(" · ") : "Sin datos"}</strong>
             </div>
             <small>Los descendidos pasan a la bolsa de Segunda y podrán volver a subir en temporadas futuras.</small>
+          </section>
+        )}
+
+
+
+        {pendingSupercopa?.userQualified && (
+          <section className="career-supercopa-panel" aria-label="Clasificación para Supercopa">
+            <div>
+              <span>Supercopa de España</span>
+              <strong>Clasificado para {pendingSupercopa.seasonLabel}</strong>
+              <small>La jugarás antes de la próxima Liga. No salva la temporada, pero suma palmarés si la ganas.</small>
+            </div>
+            <div>
+              <span>Participantes</span>
+              <strong>{pendingSupercopa.participants.map((team) => team.teamName).join(" · ")}</strong>
+              <small>1.º y 2.º de Liga + finalistas de Copa; duplicados se rellenan por Liga.</small>
+            </div>
           </section>
         )}
 

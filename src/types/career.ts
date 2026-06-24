@@ -1,4 +1,4 @@
-import type { Formation, FormationSlot, RivalTeam } from "./game";
+import type { Formation, FormationSlot, MatchResult, RivalTeam } from "./game";
 
 export type EuropeanCompetition =
   | "champions"
@@ -40,6 +40,41 @@ export interface CareerObjectiveResult {
   qualifiedForEurope: boolean;
   wonCopa: boolean;
   isRelegated: boolean;
+}
+
+
+export type CareerSupercopaParticipantSource =
+  | "league_champion"
+  | "league_runner_up"
+  | "cup_champion"
+  | "cup_runner_up"
+  | "league_replacement";
+
+export interface CareerSupercopaParticipant {
+  teamId: string;
+  teamName: string;
+  source: CareerSupercopaParticipantSource;
+  sourceLabel: string;
+}
+
+export interface CareerSupercopaQualification {
+  seasonLabel: string;
+  participants: CareerSupercopaParticipant[];
+  userQualified: boolean;
+  reason: string;
+}
+
+export interface CareerSupercopaResult {
+  seasonLabel: string;
+  participants: CareerSupercopaParticipant[];
+  results: MatchResult[];
+  played: boolean;
+  won: boolean;
+  eliminatedRoundName?: "Semifinal" | "Final";
+  championTeamId: string;
+  championTeamName: string;
+  runnerUpTeamId?: string;
+  runnerUpTeamName?: string;
 }
 
 export interface CareerPromotionTransition {

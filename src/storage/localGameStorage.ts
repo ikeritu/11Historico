@@ -13,7 +13,7 @@ import type {
   RivalTeam,
 } from "../types/game";
 
-import type { CareerObjectiveResult, CareerPromotionTransition, CareerSeasonResult, CareerTrophyCounts } from "../types/career";
+import type { CareerObjectiveResult, CareerPromotionTransition, CareerSeasonResult, CareerSupercopaQualification, CareerSupercopaResult, CareerTrophyCounts } from "../types/career";
 import type { UserLeagueSimulationContext } from "../simulation/leagueSimulator";
 
 const STORAGE_KEY = "once_historico_zurigorri_saved_game_v1";
@@ -43,6 +43,8 @@ export interface SavedGameState {
   careerLeagueRivals?: RivalTeam[];
   careerSecondDivisionPool?: RivalTeam[];
   careerPromotionTransition?: CareerPromotionTransition;
+  careerPendingSupercopa?: CareerSupercopaQualification;
+  careerCurrentSupercopaResult?: CareerSupercopaResult;
 
   savedAt: string;
 }

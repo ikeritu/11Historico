@@ -21,7 +21,7 @@ import {
   getInitialCareerLeagueRivals,
   getInitialCareerSecondDivisionPool,
 } from "./simulation/leagueSimulator";
-import type { CareerObjectiveResult, CareerPromotionTransition, CareerSeasonResult, CareerTrophyCounts } from "./types/career";
+import type { CareerObjectiveResult, CareerPromotionTransition, CareerSeasonResult, CareerSupercopaQualification, CareerSupercopaResult, CareerTrophyCounts } from "./types/career";
 
 import { getPlayerIdentityKey, resolvePlayerSlotPlacement } from "./domain/positionRules";
 
@@ -43,6 +43,7 @@ import FinalSummary from "./components/FinalSummary";
 import CareerSeasonOutcome from "./components/CareerSeasonOutcome";
 import CareerInterseasonReward from "./components/CareerInterseasonReward";
 import CareerPlayerReplacementPicker from "./components/CareerPlayerReplacementPicker";
+import CareerSupercopa from "./components/CareerSupercopa";
 
 import {
   clearSavedGameState,
@@ -57,6 +58,11 @@ import {
   evaluateCareerObjective,
   getEuropeanQualification,
 } from "./career/careerRules";
+
+import {
+  createCareerSupercopaQualification,
+  simulateCareerSupercopa,
+} from "./career/supercopaRules";
 
 import "./App.css";
 
@@ -99,6 +105,7 @@ type AppScreen =
   | "career_season_result"
   | "career_game_over"
   | "career_interseason_reward"
+  | "career_supercopa"
   | "career_player_replacement_pick"
   | "career_player_replacement_draft"
   | "season_reveal"
@@ -168,7 +175,11 @@ function createGameId(): string {
 }
 
 
-function buildCareerSeasonResult(summary: FinalGameSummary, seasonLabel = CAREER_INITIAL_SEASON_LABEL): CareerSeasonResult {
+function buildCareerSeasonResult(
+  summary: FinalGameSummary,
+  seasonLabel = CAREER_INITIAL_SEASON_LABEL,
+  wonSupercopa = false,
+): CareerSeasonResult {
   const wonCopa = Boolean(summary.cupTrophyWon);
 
   return {
@@ -176,7 +187,7 @@ function buildCareerSeasonResult(summary: FinalGameSummary, seasonLabel = CAREER
     leaguePosition: summary.leaguePosition,
     wonLeague: summary.leaguePosition === 1,
     wonCopa,
-    wonSupercopa: false,
+    wonSupercopa,
     isRelegated: summary.leaguePosition >= CAREER_RELEGATION_POSITION,
     europeanQualification: getEuropeanQualification(summary.leaguePosition, wonCopa),
   };
@@ -291,6 +302,8 @@ export default function App() {
   const [careerLeagueRivals, setCareerLeagueRivals] = useState<RivalTeam[]>(() => savedGame?.careerLeagueRivals ?? getInitialCareerLeagueRivals());
   const [careerSecondDivisionPool, setCareerSecondDivisionPool] = useState<RivalTeam[]>(() => savedGame?.careerSecondDivisionPool ?? getInitialCareerSecondDivisionPool());
   const [careerPromotionTransition, setCareerPromotionTransition] = useState<CareerPromotionTransition | undefined>(() => savedGame?.careerPromotionTransition);
+  const [careerPendingSupercopa, setCareerPendingSupercopa] = useState<CareerSupercopaQualification | undefined>(() => savedGame?.careerPendingSupercopa);
+  const [careerCurrentSupercopaResult, setCareerCurrentSupercopaResult] = useState<CareerSupercopaResult | undefined>(() => savedGame?.careerCurrentSupercopaResult);
   const [replacementDraftSeason, setReplacementDraftSeason] = useState<SeasonId | undefined>();
   const [replacementRemovedPlayer, setReplacementRemovedPlayer] = useState<SelectedPlayer | undefined>();
 
@@ -357,6 +370,8 @@ export default function App() {
       careerLeagueRivals,
       careerSecondDivisionPool,
       careerPromotionTransition,
+      careerPendingSupercopa,
+      careerCurrentSupercopaResult,
     });
   }, [
     gameId,
@@ -381,6 +396,8 @@ export default function App() {
     careerLeagueRivals,
     careerSecondDivisionPool,
     careerPromotionTransition,
+    careerPendingSupercopa,
+    careerCurrentSupercopaResult,
   ]);
 
   function resetGameState() {
@@ -405,6 +422,8 @@ export default function App() {
     setCareerLeagueRivals(getInitialCareerLeagueRivals());
     setCareerSecondDivisionPool(getInitialCareerSecondDivisionPool());
     setCareerPromotionTransition(undefined);
+    setCareerPendingSupercopa(undefined);
+    setCareerCurrentSupercopaResult(undefined);
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
   }
@@ -431,6 +450,8 @@ export default function App() {
     setCareerLeagueRivals(getInitialCareerLeagueRivals());
     setCareerSecondDivisionPool(getInitialCareerSecondDivisionPool());
     setCareerPromotionTransition(undefined);
+    setCareerPendingSupercopa(undefined);
+    setCareerCurrentSupercopaResult(undefined);
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
     setScreen("formation_selection");
@@ -468,6 +489,8 @@ export default function App() {
     setCareerLeagueRivals(loadedGame.careerLeagueRivals ?? getInitialCareerLeagueRivals());
     setCareerSecondDivisionPool(loadedGame.careerSecondDivisionPool ?? getInitialCareerSecondDivisionPool());
     setCareerPromotionTransition(loadedGame.careerPromotionTransition);
+    setCareerPendingSupercopa(loadedGame.careerPendingSupercopa);
+    setCareerCurrentSupercopaResult(loadedGame.careerCurrentSupercopaResult);
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
     setLastSelection(undefined);
@@ -591,6 +614,33 @@ export default function App() {
     setTeamValidationErrors([]);
     setTeamRating(nextTeamRating);
     setLeagueContext(undefined);
+
+    if (isCareerMode && careerPendingSupercopa?.userQualified) {
+      setPhase("team_summary");
+      setScreen("career_supercopa");
+      return;
+    }
+
+    setPhase("league_simulation");
+    setScreen("league_simulation");
+  }
+
+  function handleSimulateCareerSupercopa() {
+    if (!careerPendingSupercopa || !teamRating) return;
+
+    const result = simulateCareerSupercopa({
+      qualification: careerPendingSupercopa,
+      teamRating,
+      selectedPlayers,
+      rivals: careerLeagueRivals,
+    });
+
+    setCareerCurrentSupercopaResult(result);
+  }
+
+  function handleContinueAfterSupercopa() {
+    setCareerPendingSupercopa(undefined);
+    setLeagueContext(undefined);
     setPhase("league_simulation");
     setScreen("league_simulation");
   }
@@ -600,7 +650,7 @@ export default function App() {
     setPhase("finished");
 
     if (isCareerMode) {
-      const seasonResult = buildCareerSeasonResult(summary, careerSeasonLabel);
+      const seasonResult = buildCareerSeasonResult(summary, careerSeasonLabel, Boolean(careerCurrentSupercopaResult?.won));
       const objectiveResult = evaluateCareerObjective(seasonResult);
 
       setCareerSeasonResult(seasonResult);
@@ -616,8 +666,9 @@ export default function App() {
     if (!careerSeasonResult || !careerObjectiveResult?.survives || !finalSummary) return;
 
     const nextCompletedSeasons = careerCompletedSeasons + 1;
+    const nextSeasonLabel = getCareerSeasonLabelFromIndex(nextCompletedSeasons);
     setCareerCompletedSeasons(nextCompletedSeasons);
-    setCareerSeasonLabel(getCareerSeasonLabelFromIndex(nextCompletedSeasons));
+    setCareerSeasonLabel(nextSeasonLabel);
     setCareerTrophyCounts((previous) => addCareerTrophiesFromSeason(previous, careerSeasonResult));
     if (finalSummary.table) {
       const transition = createNextCareerLeagueTransition({
@@ -637,6 +688,13 @@ export default function App() {
     } else {
       setCareerPromotionTransition(undefined);
     }
+
+    const supercopaQualification = createCareerSupercopaQualification({
+      seasonLabel: nextSeasonLabel,
+      previousSummary: finalSummary,
+    });
+    setCareerPendingSupercopa(supercopaQualification.userQualified ? supercopaQualification : undefined);
+    setCareerCurrentSupercopaResult(undefined);
     setLeagueContext(undefined);
     setFinalSummary(undefined);
     setTeamRating(undefined);
@@ -751,6 +809,7 @@ export default function App() {
     "career_season_result",
     "career_game_over",
     "career_interseason_reward",
+    "career_supercopa",
     "career_player_replacement_pick",
   ].includes(screen);
 
@@ -896,7 +955,18 @@ export default function App() {
           onStartLeagueSimulation={handleStartLeagueSimulation}
           onBackToCoach={() => setScreen("coach_selection")}
           modeLabel={isCareerMode ? `Carrera Athletic · ${careerSeasonLabel}` : undefined}
-          startButtonLabel={isCareerMode ? "Jugar temporada de carrera" : undefined}
+          startButtonLabel={isCareerMode ? (careerPendingSupercopa?.userQualified ? "Jugar Supercopa y temporada" : "Jugar temporada de carrera") : undefined}
+        />
+      )}
+
+
+      {screen === "career_supercopa" && careerPendingSupercopa && teamRating && (
+        <CareerSupercopa
+          qualification={careerPendingSupercopa}
+          result={careerCurrentSupercopaResult}
+          onSimulate={handleSimulateCareerSupercopa}
+          onContinue={handleContinueAfterSupercopa}
+          onRestart={handleRestart}
         />
       )}
 
@@ -938,6 +1008,7 @@ export default function App() {
           objectiveResult={careerObjectiveResult}
           trophyCounts={careerTrophyCounts}
           promotionTransition={careerPromotionTransition}
+          pendingSupercopa={careerPendingSupercopa}
           onChoosePlayerChange={handleChooseCareerPlayerChange}
           onChooseCoachChange={handleChooseCareerCoachChange}
           onRestart={handleRestart}

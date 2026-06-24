@@ -57,6 +57,11 @@ export function CareerSeasonOutcome({
             <strong>{seasonResult.isRelegated ? "Sí" : "No"}</strong>
             <small>{seasonResult.isRelegated ? "Condición dura de Game Over" : "Sigue vivo si cumple objetivo"}</small>
           </article>
+          <article>
+            <span>Supercopa</span>
+            <strong>{seasonResult.wonSupercopa ? "Campeón" : "Sin título"}</strong>
+            <small>{seasonResult.wonSupercopa ? "+2 palmarés" : "No salva la temporada"}</small>
+          </article>
         </div>
 
         {survived ? (

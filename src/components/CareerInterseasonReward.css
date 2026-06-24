@@ -141,3 +141,46 @@
     grid-template-columns: 1fr;
   }
 }
+
+.career-supercopa-panel {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  background: rgba(255, 224, 138, 0.08);
+  border: 1px solid rgba(255, 224, 138, 0.22);
+  border-radius: 20px;
+  padding: 16px;
+}
+
+.career-supercopa-panel div {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.career-supercopa-panel span {
+  display: block;
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 0.85rem;
+}
+
+.career-supercopa-panel strong {
+  display: block;
+  margin-top: 6px;
+  color: #ffe08a;
+  line-height: 1.35;
+}
+
+.career-supercopa-panel small {
+  display: block;
+  margin-top: 6px;
+  color: rgba(255, 255, 255, 0.62);
+  line-height: 1.4;
+}
+
+@media (max-width: 760px) {
+  .career-supercopa-panel {
+    grid-template-columns: 1fr;
+  }
+}

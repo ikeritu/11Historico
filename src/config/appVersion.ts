@@ -1,3 +1,3 @@
-export const APP_VERSION = "v0.21.0l";
-export const APP_VERSION_NAME = "Final summary polish";
-export const APP_STATUS = "Pantalla final más clara y orientada a continuar carrera";
+export const APP_VERSION = "v0.22.0a";
+export const APP_VERSION_NAME = "Supercopa basic";
+export const APP_STATUS = "Supercopa de carrera: primero y segundo de Liga mas finalistas de Copa";
