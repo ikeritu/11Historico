@@ -302,7 +302,7 @@ function CoachRatingBreakdown({
         <strong>+{baseBonus}</strong>
       </article>
       <article>
-        <span>Media visible equipo</span>
+        <span>Rating visible equipo</span>
         <strong>{teamRating.overall}</strong>
       </article>
       <article className={leagueBonus > 0 ? "final-coach-breakdown-boosted" : ""}>
@@ -321,7 +321,7 @@ function CoachRatingBreakdown({
         <small>{europeBonus > 0 ? "+1 especialista" : "sin extra"}</small>
       </article>
       <p>
-        La media visible ya incluye formación y bonus base. El +1 de especialidad solo se aplica
+        El rating visible ya incluye formación y bonus base. El +1 de especialidad solo se aplica
         en la competición correspondiente.
       </p>
     </div>

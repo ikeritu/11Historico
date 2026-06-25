@@ -994,6 +994,8 @@ export default function App() {
           onViewFullSummary={() => setScreen("finished")}
           onContinueCareer={careerObjectiveResult.survives ? handleContinueCareerAfterSeason : undefined}
           onRestart={handleRestart}
+          selectedPlayers={selectedPlayers}
+          teamRating={teamRating}
         />
       )}
 

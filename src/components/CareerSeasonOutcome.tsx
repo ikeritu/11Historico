@@ -1,4 +1,4 @@
-import type { FinalGameSummary } from "../types/game";
+import type { FinalGameSummary, SelectedPlayer, TeamRating } from "../types/game";
 import type { CareerObjectiveResult, CareerSeasonResult } from "../types/career";
 
 import "./CareerSeasonOutcome.css";
@@ -10,6 +10,17 @@ interface CareerSeasonOutcomeProps {
   onViewFullSummary: () => void;
   onRestart: () => void;
   onContinueCareer?: () => void;
+  selectedPlayers?: SelectedPlayer[];
+  teamRating?: TeamRating;
+}
+
+function getSelectedPlayersAverage(selectedPlayers: SelectedPlayer[] = []): number | undefined {
+  if (selectedPlayers.length === 0) return undefined;
+
+  return Math.round(
+    selectedPlayers.reduce((sum, selected) => sum + selected.playerSeason.overall, 0) /
+      selectedPlayers.length
+  );
 }
 
 function getEuropeanLabel(result: CareerSeasonResult): string {
@@ -26,8 +37,11 @@ export function CareerSeasonOutcome({
   onViewFullSummary,
   onRestart,
   onContinueCareer,
+  selectedPlayers = [],
+  teamRating,
 }: CareerSeasonOutcomeProps) {
   const survived = objectiveResult.survives;
+  const xiAverage = getSelectedPlayersAverage(selectedPlayers);
 
   return (
     <main className={`career-outcome-screen ${survived ? "career-outcome-success" : "career-outcome-game-over"}`}>
@@ -63,6 +77,14 @@ export function CareerSeasonOutcome({
             <small>{seasonResult.wonSupercopa ? "+2 palmarés" : "No salva la temporada"}</small>
           </article>
         </div>
+
+        {(xiAverage || teamRating) && (
+          <p className="career-outcome-team-rating-note">
+            {xiAverage ? <>Media XI actual: <strong>{xiAverage}</strong></> : null}
+            {xiAverage && teamRating ? " · " : null}
+            {teamRating ? <>Rating visible equipo: <strong>{teamRating.overall}</strong></> : null}
+          </p>
+        )}
 
         {survived ? (
           <p className="career-outcome-note">

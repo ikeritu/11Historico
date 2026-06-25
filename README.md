@@ -4,7 +4,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.22.0a_SUPERCOPA_BASIC`.
+Versión pública actual: `v0.22.0b_SUPERCOPA_BASIC`.
 
 Base jugable cerrada:
 

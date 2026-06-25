@@ -1,3 +1,3 @@
-export const APP_VERSION = "v0.22.0a";
-export const APP_VERSION_NAME = "Supercopa basic";
-export const APP_STATUS = "Supercopa de carrera: primero y segundo de Liga mas finalistas de Copa";
+export const APP_VERSION = "v0.22.0b";
+export const APP_VERSION_NAME = "Career rating display fix";
+export const APP_STATUS = "Media XI actual y rating visible diferenciados en carrera";

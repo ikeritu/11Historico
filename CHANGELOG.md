@@ -1,3 +1,9 @@
+## v0.22.0b — Career rating display fix
+
+- Añadida Media XI actual en la pantalla de temporada superada.
+- Renombrado "Media visible equipo" a "Rating visible equipo" para evitar confusión.
+- Sin cambios en simulación, balance, Supercopa ni calendario.
+
 ## v0.22.0a — Supercopa basic
 
 - Añadida Supercopa básica en modo carrera.

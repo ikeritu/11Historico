@@ -92,3 +92,13 @@
   .career-outcome-grid { grid-template-columns: 1fr; }
   .career-outcome-actions { display: grid; }
 }
+
+.career-outcome-team-rating-note {
+  margin: 1rem 0 0;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 0.95rem;
+}
+
+.career-outcome-team-rating-note strong {
+  color: #ffe66d;
+}
