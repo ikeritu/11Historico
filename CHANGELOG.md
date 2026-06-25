@@ -155,3 +155,10 @@
 
 - Lista de jugadores más accesible en móvil.
 - Campo y habilidades bajan de prioridad en mobile.
+
+## v0.22.0c — Career rewards polish
+
+- Clarifica el tipo de recompensa entre temporadas según el mérito conseguido.
+- Distingue recompensa estándar por Europa, premio copero, premio mayor por Liga y Supercopa como palmarés sin recompensa extra.
+- Mantiene estable la lógica: cambiar 1 jugador o cambiar entrenador.
+- No toca simulación, balance, calendario dinámico, Supercopa ni rating efectivo.

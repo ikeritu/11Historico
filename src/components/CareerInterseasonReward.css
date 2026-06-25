@@ -26,6 +26,53 @@
   line-height: 1.6;
 }
 
+.career-reward-profile {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(240px, 0.8fr);
+  gap: 14px;
+  align-items: stretch;
+  background: rgba(255, 224, 138, 0.08);
+  border: 1px solid rgba(255, 224, 138, 0.22);
+  border-radius: 20px;
+  padding: 16px;
+}
+
+.career-reward-profile div,
+.career-reward-profile p {
+  margin: 0;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.career-reward-profile span {
+  display: block;
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+}
+
+.career-reward-profile strong {
+  display: block;
+  margin-top: 6px;
+  color: #ffe08a;
+  font-size: 1.22rem;
+}
+
+.career-reward-profile small,
+.career-reward-profile p {
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.45;
+}
+
+.career-reward-profile small {
+  display: block;
+  margin-top: 6px;
+}
+
 .career-reward-grid,
 .career-reward-current-team {
   display: grid;
@@ -93,7 +140,8 @@
   }
 
   .career-reward-grid,
-  .career-reward-current-team {
+  .career-reward-current-team,
+  .career-reward-profile {
     grid-template-columns: 1fr;
   }
 

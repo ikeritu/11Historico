@@ -1,3 +1,3 @@
-export const APP_VERSION = "v0.22.0b";
-export const APP_VERSION_NAME = "Career rating display fix";
-export const APP_STATUS = "Media XI actual y rating visible diferenciados en carrera";
+export const APP_VERSION = "v0.22.0c";
+export const APP_VERSION_NAME = "Career rewards polish";
+export const APP_STATUS = "Recompensas entre temporadas explicadas por mérito conseguido";

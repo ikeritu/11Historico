@@ -203,3 +203,7 @@ La portada de escritorio se simplifica en dos columnas: presentación del juego 
 - Reordenadas las estadísticas clave, Copa, entrenador, rating y jugadores destacados.
 - No toca simulación, balance, carrera, ascensos/descensos ni calendario dinámico.
 
+
+### v0.22.0c — Career rewards polish
+
+Pulido de la pantalla entre temporadas del modo carrera: ahora explica mejor por qué el jugador recibe la recompensa y qué tipo de mérito ha conseguido. La lógica se mantiene controlada: cambiar un jugador o cambiar entrenador.
