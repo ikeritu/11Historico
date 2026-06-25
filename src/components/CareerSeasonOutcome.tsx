@@ -23,6 +23,22 @@ function getSelectedPlayersAverage(selectedPlayers: SelectedPlayer[] = []): numb
   );
 }
 
+function getCareerOutcomeNote(seasonResult: CareerSeasonResult, objectiveResult: CareerObjectiveResult): string {
+  if (seasonResult.isRelegated) {
+    return "Carrera terminada por descenso. Ni la Copa ni la Supercopa evitan este Game Over.";
+  }
+
+  if (!objectiveResult.survives) {
+    return "Carrera terminada: te quedaste fuera de Europa y no ganaste la Copa del Rey.";
+  }
+
+  if (seasonResult.wonCopa) {
+    return "Temporada salvada por Copa. Elige una mejora controlada antes de seguir.";
+  }
+
+  return "Temporada salvada por Europa. Elige cambiar 1 jugador o cambiar entrenador antes de seguir.";
+}
+
 function getEuropeanLabel(result: CareerSeasonResult): string {
   if (result.europeanQualification === "champions") return "Champions League";
   if (result.europeanQualification === "europa_league") return "Europa League";
@@ -86,15 +102,9 @@ export function CareerSeasonOutcome({
           </p>
         )}
 
-        {survived ? (
-          <p className="career-outcome-note">
-            Ya puedes continuar carrera: elige cambiar 1 jugador o cambiar entrenador antes de la siguiente temporada.
-          </p>
-        ) : (
-          <p className="career-outcome-note">
-            El ranking arcade global llegará en una subfase posterior del MVP.
-          </p>
-        )}
+        <p className="career-outcome-note">
+          {getCareerOutcomeNote(seasonResult, objectiveResult)}
+        </p>
 
         <div className="career-outcome-actions">
           {survived && onContinueCareer && (

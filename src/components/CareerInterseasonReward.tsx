@@ -124,7 +124,7 @@ export function CareerInterseasonReward({
         <p className="eyebrow">Modo carrera Athletic · entre temporadas</p>
         <h1>Temporada superada. Toca decidir.</h1>
         <p className="career-reward-lead">
-          {objectiveResult.reason} Ahora preparas la temporada {nextSeasonLabel} con una mejora controlada.
+          {objectiveResult.reason} Preparas la temporada {nextSeasonLabel} con una mejora controlada.
         </p>
 
         <section className="career-reward-profile" aria-label="Tipo de recompensa obtenida">

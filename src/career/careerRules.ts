@@ -35,6 +35,21 @@ export function getEuropeanQualification(
   return "none";
 }
 
+function getCareerObjectiveSuccessReason(result: CareerSeasonResult): string {
+  if (result.wonCopa) return "Objetivo cumplido: campeón de Copa del Rey.";
+  if (result.europeanQualification === "champions") {
+    return "Objetivo cumplido: clasificación a Champions League.";
+  }
+  if (result.europeanQualification === "europa_league") {
+    return "Objetivo cumplido: clasificación a Europa League.";
+  }
+  if (result.europeanQualification === "conference") {
+    return "Objetivo cumplido: clasificación a Conference League.";
+  }
+
+  return "Objetivo cumplido: clasificación europea.";
+}
+
 export function evaluateCareerObjective(
   result: CareerSeasonResult,
 ): CareerObjectiveResult {
@@ -55,7 +70,7 @@ export function evaluateCareerObjective(
   return {
     survives,
     reason: survives
-      ? "Objetivo cumplido: Europa o Copa."
+      ? getCareerObjectiveSuccessReason(result)
       : "Objetivo fallido: no clasificó a Europa ni ganó Copa.",
     isGameOver: !survives,
     qualifiedForEurope,

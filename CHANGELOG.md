@@ -1,3 +1,11 @@
+## v0.22.0d — Career QA and copy polish
+
+- Objetivo cumplido más concreto en modo carrera: Champions, Europa League, Conference o Copa.
+- Copy de Game Over más arcade y explícito.
+- La pantalla entre temporadas reutiliza el motivo concreto del objetivo.
+- Documentada la validación jugable de Supercopa, recompensa, media/rating y Game Over.
+- Sin cambios en simulación, balance, rating efectivo, ascensos/descensos ni Supercopa.
+
 ## v0.22.0b — Career rating display fix
 
 - Añadida Media XI actual en la pantalla de temporada superada.

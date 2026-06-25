@@ -4,7 +4,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.22.0b_SUPERCOPA_BASIC`.
+Versión pública actual: `v0.22.0d_CAREER_QA_AND_COPY_POLISH`.
 
 Base jugable cerrada:
 
@@ -43,6 +43,7 @@ https://ikeritu.github.io/11Historico/
 - Flujo básico de carrera con copy de objetivo corregido y techo de media ajustado.
 - Flujo básico de una temporada de carrera conectado a Liga y Copa.
 - Supercopa básica en modo carrera con 1.º/2.º de Liga + finalistas de Copa.
+- Pantalla de carrera con Media XI, rating visible, recompensas explicadas y copy de objetivo/Game Over pulido.
 
 ## Cómo se juega
 
