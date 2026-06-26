@@ -47,10 +47,10 @@ function getCareerRewardProfile(
       title: "Premio mayor: campeón de Liga",
       label: "Recompensa superior",
       description:
-        "Has ganado la Liga. Además del refuerzo normal, puedes cambiar a una formación compatible antes de la próxima temporada.",
-      playerActionLabel: "Cambiar 1 jugador",
-      coachActionLabel: "Cambiar entrenador",
-      formationActionLabel: "Cambiar formación",
+        "Has ganado la Liga. Puedes elegir entre cambiar jugador + ajustar alineación, o renovar entrenador con +0.5 de media para la próxima temporada.",
+      playerActionLabel: "Jugador + alineación",
+      coachActionLabel: "Entrenador +0.5 media",
+      formationActionLabel: "Jugador + alineación",
       extraNote: "Premio táctico desbloqueado por ganar competición grande.",
     };
   }
@@ -60,10 +60,10 @@ function getCareerRewardProfile(
       title: "Premio copero: campeón de Copa",
       label: "Recompensa especial",
       description:
-        "Has ganado la Copa del Rey. La temporada queda salvada por título y puedes reforzar el proyecto con un cambio controlado o una formación compatible.",
-      playerActionLabel: "Cambiar 1 jugador",
-      coachActionLabel: "Cambiar entrenador",
-      formationActionLabel: "Cambiar formación",
+        "Has ganado la Copa del Rey. Puedes elegir entre cambiar jugador + ajustar alineación, o renovar entrenador con +0.5 de media para la próxima temporada.",
+      playerActionLabel: "Jugador + alineación",
+      coachActionLabel: "Entrenador +0.5 media",
+      formationActionLabel: "Jugador + alineación",
       extraNote: "La Copa suma palmarés, mantiene viva la carrera y desbloquea premio táctico.",
     };
   }
@@ -74,11 +74,11 @@ function getCareerRewardProfile(
       label: "Palmarés añadido",
       description:
         objectiveResult.qualifiedForEurope
-          ? "Has cumplido el objetivo europeo y además has ganado la Supercopa. Puedes elegir una mejora normal o cambiar a una formación compatible."
+          ? "Has cumplido el objetivo europeo y además has ganado la Supercopa. Puedes elegir jugador + alineación, o entrenador +0.5 de media."
           : "Has ganado la Supercopa, pero sin objetivo europeo la Supercopa no salva la temporada ni aumenta recompensa.",
-      playerActionLabel: "Cambiar 1 jugador",
-      coachActionLabel: "Cambiar entrenador",
-      formationActionLabel: objectiveResult.qualifiedForEurope ? "Cambiar formación" : undefined,
+      playerActionLabel: objectiveResult.qualifiedForEurope ? "Jugador + alineación" : "Cambiar 1 jugador",
+      coachActionLabel: objectiveResult.qualifiedForEurope ? "Entrenador +0.5 media" : "Cambiar entrenador",
+      formationActionLabel: objectiveResult.qualifiedForEurope ? "Jugador + alineación" : undefined,
       extraNote: objectiveResult.qualifiedForEurope
         ? "Supercopa + Europa desbloquea premio táctico."
         : "La Supercopa no salva la temporada: el objetivo sigue siendo Europa o Copa.",
@@ -204,7 +204,7 @@ export function CareerInterseasonReward({
         {canChangeFormation && (
           <div className="career-reward-bonus">
             <strong>Cambio de formación desbloqueado</strong>
-            <span>{formationUnlockReason} Solo se mostrarán sistemas compatibles con el once actual.</span>
+            <span>{formationUnlockReason} Primero eliges qué jugador sale y luego se muestran las alineaciones compatibles con el once restante.</span>
           </div>
         )}
 
@@ -224,17 +224,12 @@ export function CareerInterseasonReward({
         </div>
 
         <div className="career-reward-actions">
-          <button type="button" className="primary-home-button" onClick={onChoosePlayerChange}>
+          <button type="button" className="primary-home-button" onClick={canChangeFormation ? onChooseFormationChange : onChoosePlayerChange}>
             {rewardProfile.playerActionLabel}
           </button>
           <button type="button" className="secondary-home-button" onClick={onChooseCoachChange}>
             {rewardProfile.coachActionLabel}
           </button>
-          {canChangeFormation && (
-            <button type="button" className="secondary-home-button" onClick={onChooseFormationChange}>
-              {rewardProfile.formationActionLabel ?? "Cambiar formación"}
-            </button>
-          )}
           <button type="button" className="secondary-home-button" onClick={onRestart}>
             Salir al inicio
           </button>

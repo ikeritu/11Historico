@@ -179,3 +179,11 @@
 - Distingue recompensa estándar por Europa, premio copero, premio mayor por Liga y Supercopa como palmarés sin recompensa extra.
 - Mantiene estable la lógica: cambiar 1 jugador o cambiar entrenador.
 - No toca simulación, balance, calendario dinámico, Supercopa ni rating efectivo.
+
+## v0.22.2 - Career reward flow fix
+
+- Elimina el botón Volver al inicio de la pantalla final de temporada para evitar salidas accidentales.
+- Reordena los premios: sin título, jugador o entrenador; con título, jugador + alineación o entrenador +0.5.
+- El cambio de alineación se decide después de elegir el jugador que sale, evitando bloqueos como 3-3-4 sin opciones.
+- El premio de entrenador +0.5 permite cambiar entrenador o mantener el actual aplicando igualmente el bonus.
+- Cancelar una rama de recompensa ya iniciada avanza a la siguiente temporada conservando plantilla/formación actual; no vuelve a recompensas.

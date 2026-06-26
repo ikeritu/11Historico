@@ -209,3 +209,10 @@ La portada de escritorio se simplifica en dos columnas: presentación del juego 
 ### v0.22.0c — Career rewards polish
 
 Pulido de la pantalla entre temporadas del modo carrera: ahora explica mejor por qué el jugador recibe la recompensa y qué tipo de mérito ha conseguido. La lógica se mantiene controlada: cambiar un jugador o cambiar entrenador.
+
+### v0.22.2 - Career reward flow fix
+
+- Final de temporada sin botón directo de salida accidental.
+- Premios revisados: sin título, jugador o entrenador; con título, jugador + alineación o entrenador +0.5.
+- Cambio de alineación después de elegir jugador saliente.
+- Cancelar tras entrar en una rama de recompensa avanza a la siguiente temporada sin aplicar cambios.

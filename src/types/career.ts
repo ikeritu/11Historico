@@ -95,6 +95,12 @@ export interface CareerState {
 
 export type CareerRewardChoice = "player" | "coach";
 
+export type CareerRewardFlow =
+  | "standard_player"
+  | "standard_coach"
+  | "player_formation"
+  | "coach_bonus";
+
 export interface FormationLineCounts {
   goalkeeper: number;
   defense: number;

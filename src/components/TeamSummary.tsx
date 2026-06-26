@@ -24,6 +24,7 @@ interface TeamSummaryProps {
   onBackToCoach?: () => void;
   modeLabel?: string;
   startButtonLabel?: string;
+  careerRatingBonus?: number;
 }
 
 type SafeTeamRating = TeamRating & {
@@ -170,6 +171,7 @@ export function TeamSummary({
   onStartLeagueSimulation,
   modeLabel,
   startButtonLabel,
+  careerRatingBonus = 0,
 }: TeamSummaryProps) {
   const teamRating = useMemo(
     () => getSafeTeamRating(formation, selectedPlayers, selectedCoach),
@@ -231,6 +233,9 @@ export function TeamSummary({
                 ? "Athletic Club Histórico de nivel campeón"
                 : "Athletic Club Histórico competitivo"}
             </small>
+            {careerRatingBonus > 0 && (
+              <p>Premio entrenador: +{careerRatingBonus.toFixed(1)} media al iniciar la temporada.</p>
+            )}
           </article>
 
           <article className="team-summary-coach-card">

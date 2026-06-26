@@ -7,6 +7,7 @@ interface CareerPlayerReplacementPickerProps {
   formation: Formation;
   selectedPlayers: SelectedPlayer[];
   nextSeasonLabel: string;
+  mode?: "player" | "player_formation";
   onSelectPlayerToReplace: (selection: SelectedPlayer) => void;
   onCancel: () => void;
 }
@@ -15,6 +16,7 @@ export function CareerPlayerReplacementPicker({
   formation,
   selectedPlayers,
   nextSeasonLabel,
+  mode = "player",
   onSelectPlayerToReplace,
   onCancel,
 }: CareerPlayerReplacementPickerProps) {
@@ -26,11 +28,13 @@ export function CareerPlayerReplacementPicker({
             <p className="eyebrow">Modo carrera Athletic · {nextSeasonLabel}</p>
             <h1>Elige el jugador que quieres cambiar</h1>
             <p>
-              Saldrá un jugador del once actual. Después se sorteará una temporada histórica y elegirás un sustituto compatible.
+              {mode === "player_formation"
+                ? "Saldrá un jugador del once actual. Después elegirás una alineación compatible y se sorteará un sustituto para el hueco libre. Si cancelas, conservas el once actual y avanzas a la siguiente temporada."
+                : "Saldrá un jugador del once actual. Después se sorteará una temporada histórica y elegirás un sustituto compatible. Si cancelas, conservas el once actual y avanzas a la siguiente temporada."}
             </p>
           </div>
           <button type="button" className="secondary-home-button" onClick={onCancel}>
-            Volver
+            Cancelar y avanzar
           </button>
         </header>
 
@@ -49,7 +53,7 @@ export function CareerPlayerReplacementPicker({
                   </span>
                 </div>
                 <button type="button" onClick={() => onSelectPlayerToReplace(selection)}>
-                  Cambiar
+                  {mode === "player_formation" ? "Elegir y ver alineaciones" : "Cambiar"}
                 </button>
               </article>
             ))}

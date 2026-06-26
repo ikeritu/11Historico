@@ -21,7 +21,7 @@ import {
   getInitialCareerLeagueRivals,
   getInitialCareerSecondDivisionPool,
 } from "./simulation/leagueSimulator";
-import type { CareerObjectiveResult, CareerPromotionTransition, CareerSeasonResult, CareerSupercopaQualification, CareerSupercopaResult, CareerTrophyCounts } from "./types/career";
+import type { CareerObjectiveResult, CareerPromotionTransition, CareerRewardFlow, CareerSeasonResult, CareerSupercopaQualification, CareerSupercopaResult, CareerTrophyCounts } from "./types/career";
 
 import { getPlayerIdentityKey, resolvePlayerSlotPlacement } from "./domain/positionRules";
 
@@ -97,6 +97,27 @@ function addCareerTrophiesFromSeason(
     liga: trophyCounts.liga + (seasonResult.wonLeague ? 1 : 0),
     copa: trophyCounts.copa + (seasonResult.wonCopa ? 1 : 0),
     supercopa: trophyCounts.supercopa + (seasonResult.wonSupercopa ? 1 : 0),
+  };
+}
+
+function applyCareerRatingBonus(teamRating: TeamRating, bonus: number): TeamRating {
+  if (bonus <= 0) return teamRating;
+
+  const apply = (value: number) => Math.min(100, Math.round((value + bonus) * 10) / 10);
+
+  return {
+    ...teamRating,
+    overall: apply(teamRating.overall),
+    attack: apply(teamRating.attack),
+    defense: apply(teamRating.defense),
+    control: apply(teamRating.control),
+    physical: apply(teamRating.physical),
+    mentality: apply(teamRating.mentality),
+    goalkeeping: apply(teamRating.goalkeeping),
+    strengths: [
+      ...teamRating.strengths,
+      `Premio de entrenador: +${bonus.toFixed(1)} media`,
+    ],
   };
 }
 
@@ -306,8 +327,12 @@ export default function App() {
   const [careerPromotionTransition, setCareerPromotionTransition] = useState<CareerPromotionTransition | undefined>(() => savedGame?.careerPromotionTransition);
   const [careerPendingSupercopa, setCareerPendingSupercopa] = useState<CareerSupercopaQualification | undefined>(() => savedGame?.careerPendingSupercopa);
   const [careerCurrentSupercopaResult, setCareerCurrentSupercopaResult] = useState<CareerSupercopaResult | undefined>(() => savedGame?.careerCurrentSupercopaResult);
+  const [careerRewardFlow, setCareerRewardFlow] = useState<CareerRewardFlow | undefined>(() => savedGame?.careerRewardFlow);
+  const [careerSeasonRatingBonus, setCareerSeasonRatingBonus] = useState(() => savedGame?.careerSeasonRatingBonus ?? 0);
   const [replacementDraftSeason, setReplacementDraftSeason] = useState<SeasonId | undefined>();
   const [replacementRemovedPlayer, setReplacementRemovedPlayer] = useState<SelectedPlayer | undefined>();
+  const [replacementOriginalFormation, setReplacementOriginalFormation] = useState<Formation | undefined>();
+  const [coachBeforeReward, setCoachBeforeReward] = useState<SelectedCoach | undefined>();
 
   const [gameId, setGameId] = useState<string>(() => savedGame?.gameId ?? createGameId());
   const [phase, setPhase] = useState<GamePhase>(() => savedGame?.phase ?? "formation_selection");
@@ -374,6 +399,8 @@ export default function App() {
       careerPromotionTransition,
       careerPendingSupercopa,
       careerCurrentSupercopaResult,
+      careerRewardFlow,
+      careerSeasonRatingBonus,
     });
   }, [
     gameId,
@@ -400,6 +427,8 @@ export default function App() {
     careerPromotionTransition,
     careerPendingSupercopa,
     careerCurrentSupercopaResult,
+    careerRewardFlow,
+    careerSeasonRatingBonus,
   ]);
 
   function resetGameState() {
@@ -426,8 +455,12 @@ export default function App() {
     setCareerPromotionTransition(undefined);
     setCareerPendingSupercopa(undefined);
     setCareerCurrentSupercopaResult(undefined);
+    setCareerRewardFlow(undefined);
+    setCareerSeasonRatingBonus(0);
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
+    setReplacementOriginalFormation(undefined);
+    setCoachBeforeReward(undefined);
   }
 
   function handleNewGame() {
@@ -454,8 +487,12 @@ export default function App() {
     setCareerPromotionTransition(undefined);
     setCareerPendingSupercopa(undefined);
     setCareerCurrentSupercopaResult(undefined);
+    setCareerRewardFlow(undefined);
+    setCareerSeasonRatingBonus(0);
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
+    setReplacementOriginalFormation(undefined);
+    setCoachBeforeReward(undefined);
     setScreen("formation_selection");
   }
 
@@ -493,8 +530,12 @@ export default function App() {
     setCareerPromotionTransition(loadedGame.careerPromotionTransition);
     setCareerPendingSupercopa(loadedGame.careerPendingSupercopa);
     setCareerCurrentSupercopaResult(loadedGame.careerCurrentSupercopaResult);
+    setCareerRewardFlow(loadedGame.careerRewardFlow);
+    setCareerSeasonRatingBonus(loadedGame.careerSeasonRatingBonus ?? 0);
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
+    setReplacementOriginalFormation(undefined);
+    setCoachBeforeReward(undefined);
     setLastSelection(undefined);
     setScreen(loadedGame.phase);
   }
@@ -596,6 +637,13 @@ export default function App() {
 
     setTeamValidationErrors([]);
     setSelectedCoach(selection);
+
+    if (careerRewardFlow === "coach_bonus") {
+      setCareerSeasonRatingBonus((previous) => Math.max(previous, 0.5));
+      setCareerRewardFlow(undefined);
+      setCoachBeforeReward(undefined);
+    }
+
     setPhase("team_summary");
     setScreen("team_summary");
   }
@@ -614,7 +662,11 @@ export default function App() {
     }
 
     setTeamValidationErrors([]);
-    setTeamRating(nextTeamRating);
+    const ratingWithCareerBonus = isCareerMode
+      ? applyCareerRatingBonus(nextTeamRating, careerSeasonRatingBonus)
+      : nextTeamRating;
+    setTeamRating(ratingWithCareerBonus);
+    setCareerSeasonRatingBonus(0);
     setLeagueContext(undefined);
 
     if (isCareerMode && careerPendingSupercopa?.userQualified) {
@@ -707,6 +759,16 @@ export default function App() {
   }
 
   function handleChooseCareerCoachChange() {
+    const specialCoachBonus = Boolean(
+      careerSeasonResult &&
+      careerObjectiveResult &&
+      (careerSeasonResult.wonLeague ||
+        careerSeasonResult.wonCopa ||
+        (careerSeasonResult.wonSupercopa && careerObjectiveResult.qualifiedForEurope))
+    );
+
+    setCoachBeforeReward(selectedCoach);
+    setCareerRewardFlow(specialCoachBonus ? "coach_bonus" : "standard_coach");
     setSelectedCoach(undefined);
     setTeamRating(undefined);
     setLeagueContext(undefined);
@@ -716,18 +778,35 @@ export default function App() {
     setCareerPromotionTransition(undefined);
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
+    setReplacementOriginalFormation(undefined);
     setPhase("coach_selection");
     setScreen("coach_selection");
+  }
+
+  function handleKeepCurrentCoachWithBonus() {
+    if (!coachBeforeReward) return;
+
+    setSelectedCoach(coachBeforeReward);
+    setCareerSeasonRatingBonus((previous) => Math.max(previous, 0.5));
+    setCareerRewardFlow(undefined);
+    setCoachBeforeReward(undefined);
+    setTeamRating(undefined);
+    setLeagueContext(undefined);
+    setFinalSummary(undefined);
+    setPhase("team_summary");
+    setScreen("team_summary");
   }
 
   function handleChooseCareerPlayerChange() {
     if (!selectedFormation) return;
 
+    setCareerRewardFlow("standard_player");
     setTeamRating(undefined);
     setLeagueContext(undefined);
     setFinalSummary(undefined);
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
+    setReplacementOriginalFormation(undefined);
     setPhase("player_selection");
     setScreen("career_player_replacement_pick");
   }
@@ -735,16 +814,30 @@ export default function App() {
   function handleChooseCareerFormationChange() {
     if (!selectedFormation) return;
 
+    setCareerRewardFlow("player_formation");
     setTeamRating(undefined);
     setLeagueContext(undefined);
     setFinalSummary(undefined);
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
-    setPhase("team_summary");
-    setScreen("career_formation_change");
+    setReplacementOriginalFormation(selectedFormation);
+    setPhase("player_selection");
+    setScreen("career_player_replacement_pick");
   }
 
   function handleConfirmCareerFormationChange(formation: Formation, remappedPlayers: SelectedPlayer[]) {
+    if (careerRewardFlow === "player_formation") {
+      setSelectedFormation(formation);
+      setSelectedPlayers(remappedPlayers);
+      setReplacementDraftSeason(pickRandomSeason(currentDraftSeasonPool));
+      setCurrentRoundIndex(remappedPlayers.length);
+      setLastSelection(undefined);
+      setTeamValidationErrors([]);
+      setPhase("player_selection");
+      setScreen("career_player_replacement_draft");
+      return;
+    }
+
     const validation = validateSelectedTeam({
       formation,
       selectedPlayers: remappedPlayers,
@@ -764,6 +857,8 @@ export default function App() {
     setCareerObjectiveResult(undefined);
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
+    setReplacementOriginalFormation(undefined);
+    setCareerRewardFlow(undefined);
     setTeamValidationErrors([]);
     setPhase("team_summary");
     setScreen("team_summary");
@@ -776,15 +871,27 @@ export default function App() {
 
     setSelectedPlayers(nextPlayers);
     setReplacementRemovedPlayer(selection);
-    setReplacementDraftSeason(pickRandomSeason(currentDraftSeasonPool));
     setCurrentRoundIndex(nextPlayers.length);
     setLastSelection(undefined);
     setTeamValidationErrors([]);
+
+    if (careerRewardFlow === "player_formation") {
+      setReplacementDraftSeason(undefined);
+      setPhase("team_summary");
+      setScreen("career_formation_change");
+      return;
+    }
+
+    setReplacementDraftSeason(pickRandomSeason(currentDraftSeasonPool));
     setPhase("player_selection");
     setScreen("career_player_replacement_draft");
   }
 
   function handleCancelPlayerReplacement() {
+    if (replacementOriginalFormation) {
+      setSelectedFormation(replacementOriginalFormation);
+    }
+
     if (replacementRemovedPlayer) {
       setSelectedPlayers((previous) => {
         const alreadyRestored = previous.some(
@@ -798,8 +905,17 @@ export default function App() {
 
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
+    setReplacementOriginalFormation(undefined);
+    setCareerRewardFlow(undefined);
     setTeamValidationErrors([]);
-    setScreen("career_interseason_reward");
+    setTeamRating(undefined);
+    setLeagueContext(undefined);
+    setFinalSummary(undefined);
+    setCareerSeasonResult(undefined);
+    setCareerObjectiveResult(undefined);
+    setCareerPromotionTransition(undefined);
+    setPhase("team_summary");
+    setScreen("team_summary");
   }
 
   function handleSelectReplacementPlayer(selection: SelectedPlayer) {
@@ -820,6 +936,8 @@ export default function App() {
     setLastSelection(selection);
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
+    setReplacementOriginalFormation(undefined);
+    setCareerRewardFlow(undefined);
     setTeamValidationErrors([]);
     setCurrentRoundIndex(nextPlayers.length);
     setCareerSeasonResult(undefined);
@@ -987,6 +1105,15 @@ export default function App() {
         <CoachRound onSelectCoach={handleSelectCoach} />
       )}
 
+      {screen === "coach_selection" && careerRewardFlow === "coach_bonus" && coachBeforeReward && (
+        <div className="career-replacement-floating-actions">
+          <span>Premio especial: puedes mantener a {coachBeforeReward.coachSeason.name} y aplicar igualmente +0.5 media.</span>
+          <button type="button" onClick={handleKeepCurrentCoachWithBonus}>
+            Mantener entrenador actual +0.5
+          </button>
+        </div>
+      )}
+
       {screen === "team_summary" && selectedFormation && selectedCoach && (
         <TeamSummary
           formation={selectedFormation}
@@ -996,6 +1123,7 @@ export default function App() {
           onBackToCoach={() => setScreen("coach_selection")}
           modeLabel={isCareerMode ? `Carrera Athletic · ${careerSeasonLabel}` : undefined}
           startButtonLabel={isCareerMode ? (careerPendingSupercopa?.userQualified ? "Jugar Supercopa y temporada" : "Jugar temporada de carrera") : undefined}
+          careerRatingBonus={isCareerMode ? careerSeasonRatingBonus : 0}
         />
       )}
 
@@ -1065,7 +1193,8 @@ export default function App() {
           selectedPlayers={selectedPlayers}
           nextSeasonLabel={careerSeasonLabel}
           onConfirmFormationChange={handleConfirmCareerFormationChange}
-          onCancel={() => setScreen("career_interseason_reward")}
+          allowOpenSlot={careerRewardFlow === "player_formation"}
+          onCancel={handleCancelPlayerReplacement}
         />
       )}
 
@@ -1074,8 +1203,9 @@ export default function App() {
           formation={selectedFormation}
           selectedPlayers={selectedPlayers}
           nextSeasonLabel={careerSeasonLabel}
+          mode={careerRewardFlow === "player_formation" ? "player_formation" : "player"}
           onSelectPlayerToReplace={handleSelectPlayerToReplace}
-          onCancel={() => setScreen("career_interseason_reward")}
+          onCancel={handleCancelPlayerReplacement}
         />
       )}
 
@@ -1098,7 +1228,7 @@ export default function App() {
             Sustituyendo a {replacementRemovedPlayer.playerSeason.name} ({replacementRemovedPlayer.position})
           </span>
           <button type="button" onClick={handleCancelPlayerReplacement}>
-            Cancelar cambio
+            Cancelar y avanzar
           </button>
         </div>
       )}

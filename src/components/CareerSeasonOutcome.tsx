@@ -8,7 +8,7 @@ interface CareerSeasonOutcomeProps {
   seasonResult: CareerSeasonResult;
   objectiveResult: CareerObjectiveResult;
   onViewFullSummary: () => void;
-  onRestart: () => void;
+  onRestart?: () => void;
   onContinueCareer?: () => void;
   selectedPlayers?: SelectedPlayer[];
   teamRating?: TeamRating;
@@ -51,7 +51,6 @@ export function CareerSeasonOutcome({
   seasonResult,
   objectiveResult,
   onViewFullSummary,
-  onRestart,
   onContinueCareer,
   selectedPlayers = [],
   teamRating,
@@ -114,9 +113,6 @@ export function CareerSeasonOutcome({
           )}
           <button type="button" className={survived ? "secondary-home-button" : "primary-home-button"} onClick={onViewFullSummary}>
             Ver resumen completo
-          </button>
-          <button type="button" className="secondary-home-button" onClick={onRestart}>
-            Volver al inicio
           </button>
         </div>
       </section>

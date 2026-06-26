@@ -12,6 +12,7 @@ interface CareerFormationChangePickerProps {
   selectedPlayers: SelectedPlayer[];
   nextSeasonLabel: string;
   onConfirmFormationChange: (formation: Formation, remappedPlayers: SelectedPlayer[]) => void;
+  allowOpenSlot?: boolean;
   onCancel: () => void;
 }
 
@@ -38,6 +39,7 @@ function buildMovementLabel(result: ReturnType<typeof canChangeFormationWithOneP
 function remapPlayersToFormation(
   selectedPlayers: SelectedPlayer[],
   formation: Formation,
+  allowOpenSlot = false,
 ): SelectedPlayer[] | undefined {
   const slots = [...formation.slots].sort((a, b) => {
     const order: Record<FormationSlot["line"], number> = {
@@ -58,12 +60,19 @@ function remapPlayersToFormation(
     slotIndex: number,
     remainingPlayers: SelectedPlayer[],
     placedPlayers: SelectedPlayer[],
+    skippedSlot: boolean,
   ): SelectedPlayer[] | undefined {
     if (slotIndex >= slots.length) {
       return remainingPlayers.length === 0 ? placedPlayers : undefined;
     }
 
     const slot = slots[slotIndex];
+
+    if (allowOpenSlot && !skippedSlot && remainingPlayers.length < slots.length - slotIndex) {
+      const skippedResult = search(slotIndex + 1, remainingPlayers, placedPlayers, true);
+      if (skippedResult) return skippedResult;
+    }
+
     const candidates = remainingPlayers
       .map((player, index) => ({
         player,
@@ -84,14 +93,14 @@ function remapPlayersToFormation(
         },
       ];
 
-      const result = search(slotIndex + 1, nextRemaining, nextPlaced);
+      const result = search(slotIndex + 1, nextRemaining, nextPlaced, skippedSlot);
       if (result) return result;
     }
 
     return undefined;
   }
 
-  return search(0, players, []);
+  return search(0, players, [], false);
 }
 
 export function CareerFormationChangePicker({
@@ -99,6 +108,7 @@ export function CareerFormationChangePicker({
   selectedPlayers,
   nextSeasonLabel,
   onConfirmFormationChange,
+  allowOpenSlot = false,
   onCancel,
 }: CareerFormationChangePickerProps) {
   const [selectedFormationId, setSelectedFormationId] = useState<string | undefined>();
@@ -110,7 +120,7 @@ export function CareerFormationChangePicker({
         const compatibility = canChangeFormationWithOnePlayer(currentFormation, formation);
         if (!compatibility.canChange) return undefined;
 
-        const remappedPlayers = remapPlayersToFormation(selectedPlayers, formation);
+        const remappedPlayers = remapPlayersToFormation(selectedPlayers, formation, allowOpenSlot);
         if (!remappedPlayers) return undefined;
 
         return {
@@ -121,7 +131,7 @@ export function CareerFormationChangePicker({
         } satisfies FormationOption;
       })
       .filter((item): item is FormationOption => Boolean(item));
-  }, [currentFormation, selectedPlayers]);
+  }, [allowOpenSlot, currentFormation, selectedPlayers]);
 
   const selectedOption = options.find((option) => option.formation.id === selectedFormationId);
 
@@ -131,20 +141,20 @@ export function CareerFormationChangePicker({
         <p className="eyebrow">Modo carrera Athletic · premio especial</p>
         <h1>Cambiar formación compatible</h1>
         <p className="career-formation-change-lead">
-          Has desbloqueado un ajuste táctico para la temporada {nextSeasonLabel}. Solo aparecen sistemas que mueven como máximo un jugador entre líneas y mantienen tu once válido.
+          Has desbloqueado un ajuste táctico para la temporada {nextSeasonLabel}. Primero has elegido el jugador que sale; ahora solo aparecen sistemas compatibles con los jugadores restantes y el hueco del próximo draft.
         </p>
 
         <section className="career-formation-change-current" aria-label="Formación actual">
           <span>Formación actual</span>
           <strong>{currentFormation.name}</strong>
-          <small>{selectedPlayers.length}/11 jugadores conservados</small>
+          <small>{selectedPlayers.length}/{allowOpenSlot ? "10" : "11"} jugadores conservados</small>
         </section>
 
         {options.length === 0 ? (
           <section className="career-formation-change-empty">
             <strong>No hay formaciones compatibles para este once.</strong>
             <p>
-              Tu plantilla actual no encaja de forma segura en otra formación con un único movimiento entre líneas. Puedes volver y elegir otra recompensa.
+              Los jugadores que quedan no encajan de forma segura en otra formación con este cambio. Puedes cancelar y avanzar a la siguiente temporada sin gastar más tiempo en este premio, o volver a probar cambiando otro jugador en una futura recompensa.
             </p>
           </section>
         ) : (
@@ -174,7 +184,7 @@ export function CareerFormationChangePicker({
             <div>
               <span>Cambio seleccionado</span>
               <strong>{currentFormation.name} → {selectedOption.formation.name}</strong>
-              <small>Se recolocan automáticamente los 11 jugadores actuales en puestos válidos.</small>
+              <small>Se recolocan automáticamente los jugadores actuales y el próximo draft cubrirá el hueco libre. Si cancelas, conservarás tu plantilla y formación actuales y avanzarás a la siguiente temporada.</small>
             </div>
           </section>
         )}
@@ -189,10 +199,10 @@ export function CareerFormationChangePicker({
               onConfirmFormationChange(selectedOption.formation, selectedOption.remappedPlayers);
             }}
           >
-            Confirmar formación
+            Confirmar alineación
           </button>
           <button type="button" className="secondary-home-button" onClick={onCancel}>
-            Volver a recompensas
+            Cancelar y avanzar
           </button>
         </div>
       </section>
