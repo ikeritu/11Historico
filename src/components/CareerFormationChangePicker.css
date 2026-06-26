@@ -1,0 +1,148 @@
+.career-formation-change-screen {
+  min-height: 100vh;
+  padding: 32px 16px 56px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.career-formation-change-card {
+  width: min(1100px, 100%);
+  background: rgba(9, 18, 36, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 28px;
+  padding: 28px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.3);
+}
+
+.career-formation-change-card h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.3rem);
+}
+
+.career-formation-change-lead {
+  max-width: 780px;
+  color: rgba(255, 255, 255, 0.76);
+  line-height: 1.6;
+}
+
+.career-formation-change-current,
+.career-formation-change-empty,
+.career-formation-change-confirm {
+  margin-top: 18px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  padding: 16px;
+}
+
+.career-formation-change-current span,
+.career-formation-change-confirm span {
+  display: block;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+}
+
+.career-formation-change-current strong,
+.career-formation-change-confirm strong,
+.career-formation-change-empty strong {
+  display: block;
+  margin-top: 6px;
+  color: #ffe08a;
+  font-size: 1.25rem;
+}
+
+.career-formation-change-current small,
+.career-formation-change-confirm small,
+.career-formation-change-empty p {
+  display: block;
+  margin: 8px 0 0;
+  color: rgba(255, 255, 255, 0.66);
+  line-height: 1.45;
+}
+
+.career-formation-change-grid {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.career-formation-option {
+  text-align: left;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 18px;
+  padding: 16px;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+}
+
+.career-formation-option:hover,
+.career-formation-option-selected {
+  transform: translateY(-2px);
+  border-color: rgba(255, 224, 138, 0.65);
+  background: rgba(255, 224, 138, 0.1);
+}
+
+.career-formation-option span {
+  display: block;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+}
+
+.career-formation-option strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 1.35rem;
+  color: #ffe08a;
+}
+
+.career-formation-option small,
+.career-formation-option em {
+  display: block;
+  margin-top: 8px;
+  color: rgba(255, 255, 255, 0.68);
+  line-height: 1.35;
+  font-style: normal;
+}
+
+.career-formation-change-actions {
+  margin-top: 26px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.career-formation-change-actions button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+@media (max-width: 900px) {
+  .career-formation-change-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .career-formation-change-card {
+    padding: 20px;
+    border-radius: 22px;
+  }
+
+  .career-formation-change-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .career-formation-change-actions > button {
+    width: 100%;
+  }
+}

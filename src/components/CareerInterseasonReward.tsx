@@ -1,6 +1,6 @@
 import type { Formation, SelectedCoach, SelectedPlayer } from "../types/game";
 import type { CareerObjectiveResult, CareerPromotionTransition, CareerSeasonResult, CareerSupercopaQualification, CareerTrophyCounts } from "../types/career";
-import { calculatePalmaresScore } from "../career/careerRules";
+import { calculatePalmaresScore, canUnlockCareerFormationChange, getCareerFormationChangeUnlockReason } from "../career/careerRules";
 
 import "./CareerInterseasonReward.css";
 
@@ -17,6 +17,7 @@ interface CareerInterseasonRewardProps {
   pendingSupercopa?: CareerSupercopaQualification;
   onChoosePlayerChange: () => void;
   onChooseCoachChange: () => void;
+  onChooseFormationChange: () => void;
   onRestart: () => void;
 }
 
@@ -34,6 +35,7 @@ interface CareerRewardProfile {
   playerActionLabel: string;
   coachActionLabel: string;
   extraNote: string;
+  formationActionLabel?: string;
 }
 
 function getCareerRewardProfile(
@@ -45,10 +47,11 @@ function getCareerRewardProfile(
       title: "Premio mayor: campeón de Liga",
       label: "Recompensa superior",
       description:
-        "Has ganado la Liga. Mantienes la recompensa estable de esta fase y queda marcada como premio mayor para activar el cambio de formación compatible en la siguiente subfase.",
+        "Has ganado la Liga. Además del refuerzo normal, puedes cambiar a una formación compatible antes de la próxima temporada.",
       playerActionLabel: "Cambiar 1 jugador",
       coachActionLabel: "Cambiar entrenador",
-      extraNote: "Próximo paso previsto: permitir cambio de formación compatible si ganas Liga.",
+      formationActionLabel: "Cambiar formación",
+      extraNote: "Premio táctico desbloqueado por ganar competición grande.",
     };
   }
 
@@ -57,10 +60,11 @@ function getCareerRewardProfile(
       title: "Premio copero: campeón de Copa",
       label: "Recompensa especial",
       description:
-        "Has ganado la Copa del Rey. La temporada queda salvada por título y puedes reforzar el proyecto con un cambio controlado.",
+        "Has ganado la Copa del Rey. La temporada queda salvada por título y puedes reforzar el proyecto con un cambio controlado o una formación compatible.",
       playerActionLabel: "Cambiar 1 jugador",
       coachActionLabel: "Cambiar entrenador",
-      extraNote: "La Copa suma palmarés y mantiene vivo el modo carrera aunque no haya plaza europea por Liga.",
+      formationActionLabel: "Cambiar formación",
+      extraNote: "La Copa suma palmarés, mantiene viva la carrera y desbloquea premio táctico.",
     };
   }
 
@@ -69,10 +73,15 @@ function getCareerRewardProfile(
       title: "Premio estándar + Supercopa",
       label: "Palmarés añadido",
       description:
-        "Has cumplido el objetivo principal y además has ganado la Supercopa. La Supercopa suma palmarés, pero no aumenta la recompensa entre temporadas.",
+        objectiveResult.qualifiedForEurope
+          ? "Has cumplido el objetivo europeo y además has ganado la Supercopa. Puedes elegir una mejora normal o cambiar a una formación compatible."
+          : "Has ganado la Supercopa, pero sin objetivo europeo la Supercopa no salva la temporada ni aumenta recompensa.",
       playerActionLabel: "Cambiar 1 jugador",
       coachActionLabel: "Cambiar entrenador",
-      extraNote: "La Supercopa no salva la temporada: el objetivo sigue siendo Europa o Copa.",
+      formationActionLabel: objectiveResult.qualifiedForEurope ? "Cambiar formación" : undefined,
+      extraNote: objectiveResult.qualifiedForEurope
+        ? "Supercopa + Europa desbloquea premio táctico."
+        : "La Supercopa no salva la temporada: el objetivo sigue siendo Europa o Copa.",
     };
   }
 
@@ -112,11 +121,13 @@ export function CareerInterseasonReward({
   pendingSupercopa,
   onChoosePlayerChange,
   onChooseCoachChange,
+  onChooseFormationChange,
   onRestart,
 }: CareerInterseasonRewardProps) {
   const palmaresScore = calculatePalmaresScore(trophyCounts);
   const rewardProfile = getCareerRewardProfile(seasonResult, objectiveResult);
-  const leagueChampionBonus = seasonResult.wonLeague;
+  const canChangeFormation = canUnlockCareerFormationChange(seasonResult, objectiveResult);
+  const formationUnlockReason = getCareerFormationChangeUnlockReason(seasonResult, objectiveResult);
 
   return (
     <main className="career-reward-screen">
@@ -190,13 +201,10 @@ export function CareerInterseasonReward({
           </section>
         )}
 
-        {leagueChampionBonus && (
+        {canChangeFormation && (
           <div className="career-reward-bonus">
-            <strong>Premio extra por ganar Liga</strong>
-            <span>
-              Premio marcado como superior, sin tocar todavía la lógica estable.
-              En la siguiente subfase se podrá convertir en cambio de formación compatible.
-            </span>
+            <strong>Cambio de formación desbloqueado</strong>
+            <span>{formationUnlockReason} Solo se mostrarán sistemas compatibles con el once actual.</span>
           </div>
         )}
 
@@ -222,6 +230,11 @@ export function CareerInterseasonReward({
           <button type="button" className="secondary-home-button" onClick={onChooseCoachChange}>
             {rewardProfile.coachActionLabel}
           </button>
+          {canChangeFormation && (
+            <button type="button" className="secondary-home-button" onClick={onChooseFormationChange}>
+              {rewardProfile.formationActionLabel ?? "Cambiar formación"}
+            </button>
+          )}
           <button type="button" className="secondary-home-button" onClick={onRestart}>
             Salir al inicio
           </button>

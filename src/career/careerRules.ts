@@ -107,6 +107,31 @@ export function calculatePalmaresScore(trophies: CareerTrophyCounts): number {
   );
 }
 
+
+export function canUnlockCareerFormationChange(
+  seasonResult: CareerSeasonResult,
+  objectiveResult: CareerObjectiveResult,
+): boolean {
+  return (
+    seasonResult.wonLeague ||
+    seasonResult.wonCopa ||
+    (seasonResult.wonSupercopa && objectiveResult.qualifiedForEurope)
+  );
+}
+
+export function getCareerFormationChangeUnlockReason(
+  seasonResult: CareerSeasonResult,
+  objectiveResult: CareerObjectiveResult,
+): string {
+  if (seasonResult.wonLeague) return "Desbloqueado por ganar Liga.";
+  if (seasonResult.wonCopa) return "Desbloqueado por ganar Copa del Rey.";
+  if (seasonResult.wonSupercopa && objectiveResult.qualifiedForEurope) {
+    return "Desbloqueado por ganar Supercopa y clasificarse para Europa.";
+  }
+
+  return "Solo se desbloquea ganando Liga, Copa, o Supercopa + clasificación europea.";
+}
+
 export function getFormationLineCounts(formation: Formation): FormationLineCounts {
   return formation.slots.reduce<FormationLineCounts>(
     (counts, slot) => ({

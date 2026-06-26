@@ -44,6 +44,7 @@ import CareerSeasonOutcome from "./components/CareerSeasonOutcome";
 import CareerInterseasonReward from "./components/CareerInterseasonReward";
 import CareerPlayerReplacementPicker from "./components/CareerPlayerReplacementPicker";
 import CareerSupercopa from "./components/CareerSupercopa";
+import CareerFormationChangePicker from "./components/CareerFormationChangePicker";
 
 import {
   clearSavedGameState,
@@ -108,6 +109,7 @@ type AppScreen =
   | "career_supercopa"
   | "career_player_replacement_pick"
   | "career_player_replacement_draft"
+  | "career_formation_change"
   | "season_reveal"
   | GamePhase;
 
@@ -730,6 +732,43 @@ export default function App() {
     setScreen("career_player_replacement_pick");
   }
 
+  function handleChooseCareerFormationChange() {
+    if (!selectedFormation) return;
+
+    setTeamRating(undefined);
+    setLeagueContext(undefined);
+    setFinalSummary(undefined);
+    setReplacementDraftSeason(undefined);
+    setReplacementRemovedPlayer(undefined);
+    setPhase("team_summary");
+    setScreen("career_formation_change");
+  }
+
+  function handleConfirmCareerFormationChange(formation: Formation, remappedPlayers: SelectedPlayer[]) {
+    const validation = validateSelectedTeam({
+      formation,
+      selectedPlayers: remappedPlayers,
+    });
+
+    if (!validation.valid) {
+      setTeamValidationErrors(validation.errors);
+      return;
+    }
+
+    setSelectedFormation(formation);
+    setSelectedPlayers(remappedPlayers);
+    setTeamRating(undefined);
+    setLeagueContext(undefined);
+    setFinalSummary(undefined);
+    setCareerSeasonResult(undefined);
+    setCareerObjectiveResult(undefined);
+    setReplacementDraftSeason(undefined);
+    setReplacementRemovedPlayer(undefined);
+    setTeamValidationErrors([]);
+    setPhase("team_summary");
+    setScreen("team_summary");
+  }
+
   function handleSelectPlayerToReplace(selection: SelectedPlayer) {
     const nextPlayers = selectedPlayers.filter(
       (item) => !(item.slotId === selection.slotId && item.playerSeason.id === selection.playerSeason.id)
@@ -811,6 +850,7 @@ export default function App() {
     "career_interseason_reward",
     "career_supercopa",
     "career_player_replacement_pick",
+    "career_formation_change",
   ].includes(screen);
 
   return (
@@ -1013,7 +1053,19 @@ export default function App() {
           pendingSupercopa={careerPendingSupercopa}
           onChoosePlayerChange={handleChooseCareerPlayerChange}
           onChooseCoachChange={handleChooseCareerCoachChange}
+          onChooseFormationChange={handleChooseCareerFormationChange}
           onRestart={handleRestart}
+        />
+      )}
+
+
+      {screen === "career_formation_change" && selectedFormation && (
+        <CareerFormationChangePicker
+          currentFormation={selectedFormation}
+          selectedPlayers={selectedPlayers}
+          nextSeasonLabel={careerSeasonLabel}
+          onConfirmFormationChange={handleConfirmCareerFormationChange}
+          onCancel={() => setScreen("career_interseason_reward")}
         />
       )}
 

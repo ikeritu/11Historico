@@ -1,3 +1,12 @@
+## v0.22.1 — Formation change reward
+
+- Añadido cambio de formación compatible como recompensa especial entre temporadas.
+- Se desbloquea si Athletic gana Liga, gana Copa, o gana Supercopa y además se clasifica para Europa.
+- La Supercopa por sí sola no salva la temporada ni desbloquea formación si no hay objetivo europeo.
+- Solo se muestran formaciones que mueven como máximo un jugador entre defensa, medio y ataque.
+- El once actual se recoloca automáticamente en puestos válidos antes de continuar.
+- No toca simulación, balance, rating efectivo, ascensos/descensos ni reglas de Supercopa.
+
 ## v0.22.0d — Career QA and copy polish
 
 - Objetivo cumplido más concreto en modo carrera: Champions, Europa League, Conference o Copa.
