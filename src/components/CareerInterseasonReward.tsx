@@ -231,7 +231,7 @@ export function CareerInterseasonReward({
             {rewardProfile.coachActionLabel}
           </button>
           <button type="button" className="secondary-home-button" onClick={onRestart}>
-            Salir al inicio
+            Salir
           </button>
         </div>
       </section>

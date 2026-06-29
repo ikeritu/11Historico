@@ -4,7 +4,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.22.1_FORMATION_CHANGE_REWARD`.
+Versión pública actual: `v0.22.3_CAREER_REWARD_LOCK_AND_RECALC_FIX`.
 
 Base jugable cerrada:
 
@@ -216,3 +216,9 @@ Pulido de la pantalla entre temporadas del modo carrera: ahora explica mejor por
 - Premios revisados: sin título, jugador o entrenador; con título, jugador + alineación o entrenador +0.5.
 - Cambio de alineación después de elegir jugador saliente.
 - Cancelar tras entrar en una rama de recompensa avanza a la siguiente temporada sin aplicar cambios.
+
+### v0.22.3 - Career reward lock and recalc fix
+
+- Botones de salida de carrera renombrados a "Salir".
+- Cancelar una recompensa ya elegida avanza a la siguiente temporada y evita rerolls infinitos.
+- Recalcula media/rating visible después de cambios de jugador, formación o entrenador.

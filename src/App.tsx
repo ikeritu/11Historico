@@ -16,6 +16,7 @@ import type {
 } from "./types/game";
 
 import type { UserLeagueSimulationContext } from "./simulation/leagueSimulator";
+import { calculateTeamRating } from "./simulation/teamRating";
 import {
   createNextCareerLeagueTransition,
   getInitialCareerLeagueRivals,
@@ -431,6 +432,28 @@ export default function App() {
     careerSeasonRatingBonus,
   ]);
 
+  function recalculateVisibleTeamRating(params: {
+    formation?: Formation;
+    selectedPlayers: SelectedPlayer[];
+    selectedCoach?: SelectedCoach;
+  }) {
+    if (!params.formation || !params.selectedCoach || params.selectedPlayers.length !== TOTAL_PLAYER_ROUNDS) {
+      setTeamRating(undefined);
+      return;
+    }
+
+    try {
+      setTeamRating(calculateTeamRating({
+        formation: params.formation,
+        selectedPlayers: params.selectedPlayers,
+        selectedCoach: params.selectedCoach,
+      }));
+    } catch (error) {
+      console.warn("No se pudo recalcular la media visible del equipo.", error);
+      setTeamRating(undefined);
+    }
+  }
+
   function resetGameState() {
     setGameId(createGameId());
     setPhase("formation_selection");
@@ -637,6 +660,11 @@ export default function App() {
 
     setTeamValidationErrors([]);
     setSelectedCoach(selection);
+    recalculateVisibleTeamRating({
+      formation: selectedFormation,
+      selectedPlayers,
+      selectedCoach: selection,
+    });
 
     if (careerRewardFlow === "coach_bonus") {
       setCareerSeasonRatingBonus((previous) => Math.max(previous, 0.5));
@@ -787,10 +815,14 @@ export default function App() {
     if (!coachBeforeReward) return;
 
     setSelectedCoach(coachBeforeReward);
+    recalculateVisibleTeamRating({
+      formation: selectedFormation,
+      selectedPlayers,
+      selectedCoach: coachBeforeReward,
+    });
     setCareerSeasonRatingBonus((previous) => Math.max(previous, 0.5));
     setCareerRewardFlow(undefined);
     setCoachBeforeReward(undefined);
-    setTeamRating(undefined);
     setLeagueContext(undefined);
     setFinalSummary(undefined);
     setPhase("team_summary");
@@ -850,7 +882,11 @@ export default function App() {
 
     setSelectedFormation(formation);
     setSelectedPlayers(remappedPlayers);
-    setTeamRating(undefined);
+    recalculateVisibleTeamRating({
+      formation,
+      selectedPlayers: remappedPlayers,
+      selectedCoach,
+    });
     setLeagueContext(undefined);
     setFinalSummary(undefined);
     setCareerSeasonResult(undefined);
@@ -933,6 +969,11 @@ export default function App() {
     }
 
     setSelectedPlayers(nextPlayers);
+    recalculateVisibleTeamRating({
+      formation: selectedFormation,
+      selectedPlayers: nextPlayers,
+      selectedCoach,
+    });
     setLastSelection(selection);
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
@@ -1046,7 +1087,7 @@ export default function App() {
               </article>
               <article>
                 <strong>Entre temporadas</strong>
-                <span>Cambiar un jugador o cambiar entrenador. Si ganas Liga, podrás ajustar formación compatible.</span>
+                <span>Cambiar un jugador o cambiar entrenador. Si ganas título o Supercopa + Europa, podrás ajustar formación compatible.</span>
               </article>
               <article>
                 <strong>Progresión</strong>

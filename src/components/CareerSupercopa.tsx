@@ -49,7 +49,7 @@ export function CareerSupercopa({
               Simular Supercopa
             </button>
             <button type="button" className="secondary-home-button" onClick={onRestart}>
-              Volver al inicio
+              Salir
             </button>
           </div>
         )}
@@ -77,7 +77,7 @@ export function CareerSupercopa({
                 Jugar Liga {qualification.seasonLabel}
               </button>
               <button type="button" className="secondary-home-button" onClick={onRestart}>
-                Volver al inicio
+                Salir
               </button>
             </div>
           </section>

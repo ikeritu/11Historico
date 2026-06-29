@@ -1,3 +1,3 @@
-export const APP_VERSION = "v0.22.2";
-export const APP_VERSION_NAME = "Career reward flow fix";
-export const APP_STATUS = "Premios de carrera revisados: jugador + alineación o entrenador +0.5";
+export const APP_VERSION = "v0.22.3";
+export const APP_VERSION_NAME = "Career reward lock and recalc fix";
+export const APP_STATUS = "Bloqueo de recompensas, salida clara y recálculo tras cambios";

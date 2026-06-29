@@ -813,7 +813,7 @@ export function FinalSummary({
             )}
             {onRestart && (
               <button type="button" className="secondary-final-button" onClick={onRestart}>
-                Volver al inicio
+                Salir
               </button>
             )}
           </div>
@@ -943,7 +943,7 @@ export function FinalSummary({
 
                 {onRestart && (
                   <button type="button" className="secondary-final-button" onClick={onRestart}>
-                    Volver al inicio
+                    Salir
                   </button>
                 )}
               </div>

@@ -187,3 +187,10 @@
 - El cambio de alineación se decide después de elegir el jugador que sale, evitando bloqueos como 3-3-4 sin opciones.
 - El premio de entrenador +0.5 permite cambiar entrenador o mantener el actual aplicando igualmente el bonus.
 - Cancelar una rama de recompensa ya iniciada avanza a la siguiente temporada conservando plantilla/formación actual; no vuelve a recompensas.
+
+## v0.22.3 - Career reward lock and recalc fix
+
+- Cambia los botones de salida de carrera de "Volver al inicio" a "Salir" para reducir abandonos accidentales.
+- Refuerza el bloqueo de ramas de recompensa: cancelar tras elegir una mejora avanza a la siguiente temporada y no vuelve a "Toca decidir".
+- Recalcula la media/rating visible tras cambiar jugador, formación o entrenador.
+- Mantiene intactos simulación, balance, Supercopa, ascensos/descensos y ratings históricos.
