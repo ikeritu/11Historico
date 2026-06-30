@@ -1,4 +1,11 @@
 
+## v0.22.6 — Formation line strict fix
+
+- Fix: el premio Jugador + alineación ya no recoloca jugadores conservados fuera de su línea natural.
+- Fix: el hueco reservado para el draft corresponde a la línea que debe cubrir el sustituto.
+- Fix: ganar Liga se comunica como premio especial en la pantalla de temporada.
+
+
 ## v0.22.5 — Formation reward replacement slot fix
 
 - Corrige el flujo de premio Jugador + alineación: elegir jugador saliente → elegir formación compatible → draft del sustituto → aplicar o cancelar y avanzar.

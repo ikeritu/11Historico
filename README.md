@@ -1,3 +1,10 @@
+
+## v0.22.6 — Formation line strict fix
+
+- Fix: el premio Jugador + alineación ya no recoloca jugadores conservados fuera de su línea natural.
+- Fix: el hueco reservado para el draft corresponde a la línea que debe cubrir el sustituto.
+- Fix: ganar Liga se comunica como premio especial en la pantalla de temporada.
+
 # Futbol11 — Once histórico Zurigorri
 
 Juego web en React + TypeScript para construir un once histórico del Athletic Club, elegir entrenador y simular LaLiga 25/26 + Copa del Rey.

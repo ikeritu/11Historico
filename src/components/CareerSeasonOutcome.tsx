@@ -32,8 +32,16 @@ function getCareerOutcomeNote(seasonResult: CareerSeasonResult, objectiveResult:
     return "Carrera terminada: te quedaste fuera de Europa y no ganaste la Copa del Rey.";
   }
 
+  if (seasonResult.wonLeague) {
+    return "Temporada histórica: campeón de Liga. Premio especial desbloqueado.";
+  }
+
   if (seasonResult.wonCopa) {
-    return "Temporada salvada por Copa. Elige una mejora controlada antes de seguir.";
+    return "Temporada salvada por Copa. Premio especial desbloqueado.";
+  }
+
+  if (seasonResult.wonSupercopa && objectiveResult.qualifiedForEurope) {
+    return "Temporada salvada por Europa y Supercopa ganada. Premio especial desbloqueado.";
   }
 
   return "Temporada salvada por Europa. Elige cambiar 1 jugador o cambiar entrenador antes de seguir.";

@@ -37,11 +37,16 @@ function buildMovementLabel(result: ReturnType<typeof canChangeFormationWithOneP
   return `Mueve 1 jugador: ${LINE_LABELS[result.removedLine]} → ${LINE_LABELS[result.addedLine]}`;
 }
 
+function getOriginalSlotLine(formation: Formation, selectedPlayer: SelectedPlayer): FormationSlot["line"] | undefined {
+  return formation.slots.find((slot) => slot.id === selectedPlayer.slotId)?.line;
+}
+
 function remapPlayersToFormation(
   selectedPlayers: SelectedPlayer[],
   formation: Formation,
+  currentFormation: Formation,
   allowOpenSlot = false,
-  removedPlayer?: SelectedPlayer,
+  requiredOpenSlotLine?: FormationSlot["line"],
 ): SelectedPlayer[] | undefined {
   const slots = [...formation.slots].sort((a, b) => {
     const order: Record<FormationSlot["line"], number> = {
@@ -70,23 +75,19 @@ function remapPlayersToFormation(
 
     const slot = slots[slotIndex];
 
-    if (allowOpenSlot && !skippedSlot && remainingPlayers.length < slots.length - slotIndex) {
-      const canReserveSlotForReplacement = !removedPlayer ||
-        resolvePlayerSlotPlacement(removedPlayer.playerSeason, slot).canPlace;
-
-      if (canReserveSlotForReplacement) {
-        const skippedResult = search(slotIndex + 1, remainingPlayers, placedPlayers, true);
-        if (skippedResult) return skippedResult;
-      }
+    if (allowOpenSlot && !skippedSlot && slot.line === requiredOpenSlotLine) {
+      const skippedResult = search(slotIndex + 1, remainingPlayers, placedPlayers, true);
+      if (skippedResult) return skippedResult;
     }
 
     const candidates = remainingPlayers
       .map((player, index) => ({
         player,
         index,
+        originalLine: getOriginalSlotLine(currentFormation, player),
         placement: resolvePlayerSlotPlacement(player.playerSeason, slot),
       }))
-      .filter((item) => item.placement.canPlace)
+      .filter((item) => item.originalLine === slot.line && item.placement.canPlace)
       .sort((a, b) => b.player.playerSeason.overall - a.player.playerSeason.overall);
 
     for (const candidate of candidates) {
@@ -128,7 +129,25 @@ export function CareerFormationChangePicker({
         const compatibility = canChangeFormationWithOnePlayer(currentFormation, formation);
         if (!compatibility.canChange) return undefined;
 
-        const remappedPlayers = remapPlayersToFormation(selectedPlayers, formation, allowOpenSlot, removedPlayer);
+        const removedPlayerOriginalLine = removedPlayer
+          ? getOriginalSlotLine(currentFormation, removedPlayer)
+          : undefined;
+        const requiredOpenSlotLine = compatibility.addedLine ?? removedPlayerOriginalLine;
+
+        if (allowOpenSlot) {
+          if (!removedPlayerOriginalLine || !requiredOpenSlotLine) return undefined;
+          if (compatibility.removedLine && compatibility.removedLine !== removedPlayerOriginalLine) {
+            return undefined;
+          }
+        }
+
+        const remappedPlayers = remapPlayersToFormation(
+          selectedPlayers,
+          formation,
+          currentFormation,
+          allowOpenSlot,
+          requiredOpenSlotLine,
+        );
         if (!remappedPlayers) return undefined;
 
         return {
@@ -149,7 +168,7 @@ export function CareerFormationChangePicker({
         <p className="eyebrow">Modo carrera Athletic · premio especial</p>
         <h1>Cambiar formación compatible</h1>
         <p className="career-formation-change-lead">
-          Has desbloqueado un ajuste táctico para la temporada {nextSeasonLabel}. Primero has elegido el jugador que sale; ahora solo aparecen sistemas compatibles con los jugadores restantes y con un hueco válido para el sustituto.
+          Has desbloqueado un ajuste táctico para la temporada {nextSeasonLabel}. Primero has elegido el jugador que sale; ahora solo aparecen sistemas compatibles con los jugadores restantes, sin moverlos de su línea natural, y con un hueco válido para el sustituto.
         </p>
 
         <section className="career-formation-change-current" aria-label="Formación actual">

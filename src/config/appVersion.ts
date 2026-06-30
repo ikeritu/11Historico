@@ -1,3 +1,3 @@
-export const APP_VERSION = "v0.22.5";
-export const APP_VERSION_NAME = "Formation reward replacement slot fix";
-export const APP_STATUS = "Cambio de formación ligado a jugador saliente y sustituto natural";
+export const APP_VERSION = "v0.22.6";
+export const APP_VERSION_NAME = "Formation line strict fix";
+export const APP_STATUS = "Cambio de formación estricto por línea natural y premio de Liga corregido";
