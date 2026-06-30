@@ -1,7 +1,7 @@
 {
   "name": "futbol11",
   "private": true,
-  "version": "0.22.6",
+  "version": "0.22.7",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,7 +11,8 @@
     "audit:balance": "vite build --ssr scripts/balanceAuditCli.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/balanceAuditCli.js",
     "audit:balance:100": "vite build --ssr scripts/balanceAuditCli.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/balanceAuditCli.js --sims=100 --profile=balanced --difficulty=normal --range=all",
     "audit:balance:json": "vite build --ssr scripts/balanceAuditCli.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/balanceAuditCli.js --json --out=reports/balance_cli_latest.json --csv=reports/balance_cli_latest.csv",
-    "audit:copa:100": "vite build --ssr scripts/balanceAuditCli.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/balanceAuditCli.js --sims=100 --profile=balanced --difficulty=normal --range=all --cup-report"
+    "audit:copa:100": "vite build --ssr scripts/balanceAuditCli.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/balanceAuditCli.js --sims=100 --profile=balanced --difficulty=normal --range=all --cup-report",
+    "qa:formation-reward": "vite build --ssr scripts/qaFormationReward.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/qaFormationReward.js"
   },
   "dependencies": {
     "react": "^19.2.6",

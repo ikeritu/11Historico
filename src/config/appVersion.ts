@@ -1,3 +1,3 @@
-export const APP_VERSION = "v0.22.6";
-export const APP_VERSION_NAME = "Formation line strict fix";
-export const APP_STATUS = "Cambio de formación estricto por línea natural y premio de Liga corregido";
+export const APP_VERSION = "v0.22.7";
+export const APP_VERSION_NAME = "QA formation reward script";
+export const APP_STATUS = "Script QA para validar desbloqueo y líneas estrictas del cambio de formación";

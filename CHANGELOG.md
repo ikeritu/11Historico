@@ -1,3 +1,10 @@
+## v0.22.7 — QA formation reward script
+
+- Añade `npm run qa:formation-reward` para validar automáticamente el premio de cambio de formación.
+- Cubre desbloqueo por Liga, Copa y Supercopa + Europa, y bloqueo de Supercopa sin Europa.
+- Comprueba que 4-3-3 → 4-2-4 no recoloca jugadores conservados fuera de su línea natural.
+- No toca gameplay público, simulación, balance ni ratings.
+
 
 ## v0.22.6 — Formation line strict fix
 
