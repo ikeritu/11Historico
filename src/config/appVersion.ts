@@ -1,3 +1,3 @@
-export const APP_VERSION = "v0.22.3";
-export const APP_VERSION_NAME = "Career reward lock and recalc fix";
-export const APP_STATUS = "Bloqueo de recompensas, salida clara y recálculo tras cambios";
+export const APP_VERSION = "v0.22.5";
+export const APP_VERSION_NAME = "Formation reward replacement slot fix";
+export const APP_STATUS = "Cambio de formación ligado a jugador saliente y sustituto natural";

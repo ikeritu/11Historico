@@ -1449,6 +1449,23 @@
   align-items: center;
 }
 
+.final-coach-card-polished > div {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.final-coach-card-polished strong,
+.final-coach-card-polished span,
+.final-coach-card-polished small {
+  display: block;
+  line-height: 1.22;
+}
+
+.final-coach-card-polished strong {
+  overflow-wrap: anywhere;
+}
+
 .final-coach-avatar {
   display: grid;
   place-items: center;

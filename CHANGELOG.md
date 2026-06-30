@@ -1,3 +1,11 @@
+
+## v0.22.5 — Formation reward replacement slot fix
+
+- Corrige el flujo de premio Jugador + alineación: elegir jugador saliente → elegir formación compatible → draft del sustituto → aplicar o cancelar y avanzar.
+- Las formaciones compatibles reservan un hueco válido para el jugador eliminado.
+- El draft posterior exige un sustituto natural de la línea abierta para evitar recolocaciones forzadas fuera de rol.
+- Sin cambios en simulación ni balance.
+
 ## v0.22.1 — Formation change reward
 
 - Añadido cambio de formación compatible como recompensa especial entre temporadas.
@@ -62,6 +70,13 @@
 - No se toca la lógica de simulación, carrera, ascensos/descensos ni rating efectivo.
 
 # Changelog
+
+## v0.22.4 — Career exit copy and coach layout fix
+
+- Refuerza el copy de salida de carrera como `Salir`.
+- Corrige el layout de la ficha de entrenador en el resumen completo para separar nombre, temporada, media/bonus y especialidad.
+- No toca simulación, balance, Supercopa ni recompensas.
+
 
 ## v0.21.0h — Career dynamic calendar fix
 

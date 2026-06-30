@@ -29,6 +29,7 @@ interface PlayerRoundProps {
   formation: Formation;
   selectedPlayers: SelectedPlayer[];
   lastSelection?: SelectedPlayer;
+  strictOpenSlotLine?: FormationSlot["line"];
   onSelectPlayer: (selection: SelectedPlayer) => void;
 
   // Se mantiene como opcional para no romper App.tsx si todavía lo pasa,
@@ -103,6 +104,25 @@ function playerMatchesLineFilter(
   if (filter === "ALL") return true;
 
   return player.positions.some((position) => getSlotLineForPosition(position) === filter);
+}
+
+function playerHasNaturalPositionInLine(
+  player: PlayerSeason,
+  line: FormationSlot["line"]
+): boolean {
+  return player.positions.some((position) => getSlotLineForPosition(position) === line);
+}
+
+function filterSlotsByStrictLine(
+  player: PlayerSeason,
+  slots: FormationSlot[],
+  strictOpenSlotLine?: FormationSlot["line"]
+): FormationSlot[] {
+  if (!strictOpenSlotLine) return slots;
+
+  if (!playerHasNaturalPositionInLine(player, strictOpenSlotLine)) return [];
+
+  return slots.filter((slot) => slot.line === strictOpenSlotLine);
 }
 
 function getSortValue(player: PlayerSeason, sortKey: SortKey): number {
@@ -363,18 +383,23 @@ function canPlayerBeDraftedNow(params: {
   player: PlayerSeason;
   formation: Formation;
   selectedPlayers: SelectedPlayer[];
+  strictOpenSlotLine?: FormationSlot["line"];
 }): boolean {
-  const { player, formation, selectedPlayers } = params;
+  const { player, formation, selectedPlayers, strictOpenSlotLine } = params;
 
   if (isPlayerAlreadySelected(player, selectedPlayers)) {
     return false;
   }
 
-  return getAvailableSlotsForPlayer({
+  return filterSlotsByStrictLine(
     player,
-    formation,
-    selectedPlayers,
-  }).length > 0;
+    getAvailableSlotsForPlayer({
+      player,
+      formation,
+      selectedPlayers,
+    }),
+    strictOpenSlotLine,
+  ).length > 0;
 }
 
 export function PlayerRound({
@@ -384,6 +409,7 @@ export function PlayerRound({
   formation,
   selectedPlayers,
   lastSelection,
+  strictOpenSlotLine,
   onSelectPlayer,
 }: PlayerRoundProps) {
   const [search, setSearch] = useState("");
@@ -408,6 +434,7 @@ export function PlayerRound({
         player,
         formation,
         selectedPlayers,
+        strictOpenSlotLine,
       })
     );
 
@@ -423,6 +450,7 @@ export function PlayerRound({
             player,
             formation,
             selectedPlayers,
+            strictOpenSlotLine,
           })
         )
       );
@@ -434,7 +462,7 @@ export function PlayerRound({
     const randomIndex = Math.floor(Math.random() * compatibleSeasonIds.length);
 
     return compatibleSeasonIds[randomIndex];
-  }, [formation, season, seasonPlayers, selectedPlayers]);
+  }, [formation, season, seasonPlayers, selectedPlayers, strictOpenSlotLine]);
 
   const effectiveDraftSeason = fallbackDraftSeason ?? season;
 
@@ -470,6 +498,7 @@ export function PlayerRound({
               player,
               formation,
               selectedPlayers,
+              strictOpenSlotLine,
             })) {
           return false;
         }
@@ -483,7 +512,7 @@ export function PlayerRound({
 
         return a.name.localeCompare(b.name);
       });
-  }, [compatibleOnly, draftPlayerPool, formation, lineFilter, search, selectedPlayers, sortKey]);
+  }, [compatibleOnly, draftPlayerPool, formation, lineFilter, search, selectedPlayers, sortKey, strictOpenSlotLine]);
 
   const selectedPlayer = useMemo(() => {
     const player = draftPlayerPool.find((item) => item.id === selectedPlayerId);
@@ -500,12 +529,16 @@ export function PlayerRound({
   const availableSlotsForSelectedPlayer = useMemo(() => {
     if (!selectedPlayer) return [];
 
-    return getAvailableSlotsForPlayer({
-      player: selectedPlayer,
-      formation,
-      selectedPlayers,
-    });
-  }, [formation, selectedPlayer, selectedPlayers]);
+    return filterSlotsByStrictLine(
+      selectedPlayer,
+      getAvailableSlotsForPlayer({
+        player: selectedPlayer,
+        formation,
+        selectedPlayers,
+      }),
+      strictOpenSlotLine,
+    );
+  }, [formation, selectedPlayer, selectedPlayers, strictOpenSlotLine]);
 
   const highlightedSlotIds = useMemo(
     () => availableSlotsForSelectedPlayer.map((slot) => slot.id),
@@ -517,11 +550,15 @@ export function PlayerRound({
   }
 
   function handleSelectPlayer(player: PlayerSeason) {
-    const availableSlots = getAvailableSlotsForPlayer({
+    const availableSlots = filterSlotsByStrictLine(
       player,
-      formation,
-      selectedPlayers,
-    });
+      getAvailableSlotsForPlayer({
+        player,
+        formation,
+        selectedPlayers,
+      }),
+      strictOpenSlotLine,
+    );
 
     if (availableSlots.length === 0) {
       setSelectedPlayerId(undefined);
@@ -537,12 +574,16 @@ export function PlayerRound({
   const selectedPlayerValidityGuard = useMemo(() => {
     if (!selectedPlayer) return true;
 
-    return getAvailableSlotsForPlayer({
-      player: selectedPlayer,
-      formation,
-      selectedPlayers,
-    }).length > 0;
-  }, [formation, selectedPlayer, selectedPlayers]);
+    return filterSlotsByStrictLine(
+      selectedPlayer,
+      getAvailableSlotsForPlayer({
+        player: selectedPlayer,
+        formation,
+        selectedPlayers,
+      }),
+      strictOpenSlotLine,
+    ).length > 0;
+  }, [formation, selectedPlayer, selectedPlayers, strictOpenSlotLine]);
 
   useEffect(() => {
     if (!selectedPlayerValidityGuard) {
@@ -602,8 +643,9 @@ export function PlayerRound({
           <p className="eyebrow">Ronda {roundNumber}/{totalRounds}</p>
           <h1>Temporada {effectiveDraftSeason}</h1>
           <p>
-            Elige un jugador y colócalo directamente en una de las posiciones iluminadas
-            del campo.
+            {strictOpenSlotLine
+              ? "Elige un sustituto natural para el hueco generado por el cambio de formación."
+              : "Elige un jugador y colócalo directamente en una de las posiciones iluminadas del campo."}
           </p>
         </div>
 
@@ -690,7 +732,9 @@ export function PlayerRound({
                   <span>Draft interactivo</span>
                   <strong>Elige un jugador y colócalo en el campo</strong>
                   <small>
-                    Las posiciones compatibles se iluminarán automáticamente.
+                    {strictOpenSlotLine
+                      ? "Para este premio solo se muestran puestos naturales del hueco que has abierto."
+                      : "Las posiciones compatibles se iluminarán automáticamente."}
                   </small>
                 </div>
               </>
@@ -748,11 +792,15 @@ export function PlayerRound({
               const alreadySelected =
                 isPlayerAlreadySelected(player, selectedPlayers) ||
                 isPlayerNameAlreadySelected(player, selectedPlayers);
-              const availableSlots = getAvailableSlotsForPlayer({
+              const availableSlots = filterSlotsByStrictLine(
                 player,
-                formation,
-                selectedPlayers,
-              });
+                getAvailableSlotsForPlayer({
+                  player,
+                  formation,
+                  selectedPlayers,
+                }),
+                strictOpenSlotLine,
+              );
               const hasAvailableSlot = availableSlots.length > 0;
 
               const selectable = !alreadySelected && hasAvailableSlot;

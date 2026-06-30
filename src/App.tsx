@@ -6,6 +6,7 @@ import type {
   EasyModeSeasonRangeId,
   FinalGameSummary,
   Formation,
+  FormationSlot,
   GameDifficulty,
   GamePhase,
   SelectedCoach,
@@ -120,6 +121,19 @@ function applyCareerRatingBonus(teamRating: TeamRating, bonus: number): TeamRati
       `Premio de entrenador: +${bonus.toFixed(1)} media`,
     ],
   };
+}
+
+function getSingleOpenSlotLine(params: {
+  formation?: Formation;
+  selectedPlayers: SelectedPlayer[];
+}): FormationSlot["line"] | undefined {
+  const { formation, selectedPlayers } = params;
+  if (!formation) return undefined;
+
+  const occupiedSlotIds = new Set(selectedPlayers.map((player) => player.slotId));
+  const openSlots = formation.slots.filter((slot) => !occupiedSlotIds.has(slot.id));
+
+  return openSlots.length === 1 ? openSlots[0].line : undefined;
 }
 
 type AppScreen =
@@ -1235,6 +1249,7 @@ export default function App() {
           nextSeasonLabel={careerSeasonLabel}
           onConfirmFormationChange={handleConfirmCareerFormationChange}
           allowOpenSlot={careerRewardFlow === "player_formation"}
+          removedPlayer={replacementRemovedPlayer}
           onCancel={handleCancelPlayerReplacement}
         />
       )}
@@ -1258,6 +1273,7 @@ export default function App() {
           formation={selectedFormation}
           selectedPlayers={selectedPlayers}
           lastSelection={lastSelection}
+          strictOpenSlotLine={careerRewardFlow === "player_formation" ? getSingleOpenSlotLine({ formation: selectedFormation, selectedPlayers }) : undefined}
           onSelectPlayer={handleSelectReplacementPlayer}
           onSkipRound={() => setReplacementDraftSeason(pickRandomSeason(currentDraftSeasonPool))}
         />
