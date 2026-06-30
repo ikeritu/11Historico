@@ -1,5 +1,6 @@
 import type { FinalGameSummary, SelectedPlayer, TeamRating } from "../types/game";
-import type { CareerObjectiveResult, CareerSeasonResult } from "../types/career";
+import type { CareerObjectiveResult, CareerSeasonResult, CareerTrophyCounts } from "../types/career";
+import { calculatePalmaresScore } from "../career/careerRules";
 
 import "./CareerSeasonOutcome.css";
 
@@ -12,6 +13,8 @@ interface CareerSeasonOutcomeProps {
   onContinueCareer?: () => void;
   selectedPlayers?: SelectedPlayer[];
   teamRating?: TeamRating;
+  completedSeasons?: number;
+  trophyCounts?: CareerTrophyCounts;
 }
 
 function getSelectedPlayersAverage(selectedPlayers: SelectedPlayer[] = []): number | undefined {
@@ -47,6 +50,85 @@ function getCareerOutcomeNote(seasonResult: CareerSeasonResult, objectiveResult:
   return "Temporada salvada por Europa. Elige cambiar 1 jugador o cambiar entrenador antes de seguir.";
 }
 
+
+function getGameOverTrophyCounts(
+  trophyCounts: CareerTrophyCounts | undefined,
+  seasonResult: CareerSeasonResult,
+): CareerTrophyCounts {
+  const base = trophyCounts ?? {
+    champions: 0,
+    liga: 0,
+    europaLeague: 0,
+    copa: 0,
+    conference: 0,
+    supercopa: 0,
+  };
+
+  return {
+    ...base,
+    liga: base.liga + (seasonResult.wonLeague ? 1 : 0),
+    copa: base.copa + (seasonResult.wonCopa ? 1 : 0),
+    supercopa: base.supercopa + (seasonResult.wonSupercopa ? 1 : 0),
+  };
+}
+
+function CareerGameOverArcadeSummary({
+  seasonResult,
+  objectiveResult,
+  completedSeasons = 0,
+  trophyCounts,
+}: {
+  seasonResult: CareerSeasonResult;
+  objectiveResult: CareerObjectiveResult;
+  completedSeasons?: number;
+  trophyCounts?: CareerTrophyCounts;
+}) {
+  const finalTrophies = getGameOverTrophyCounts(trophyCounts, seasonResult);
+  const palmaresScore = calculatePalmaresScore(finalTrophies);
+  const survivalScore = completedSeasons * 10;
+  const arcadeScore = survivalScore + palmaresScore;
+  const mainCause = seasonResult.isRelegated
+    ? "Descenso"
+    : objectiveResult.qualifiedForEurope
+      ? "Objetivo fallido por Copa/descenso"
+      : "Sin plaza europea ni Copa";
+
+  return (
+    <section className="career-arcade-summary" aria-label="Resumen arcade de carrera">
+      <div className="career-arcade-summary-header">
+        <span>Resumen de carrera</span>
+        <strong>{arcadeScore}</strong>
+        <small>puntos arcade</small>
+      </div>
+
+      <div className="career-arcade-grid">
+        <article>
+          <span>Temporadas superadas</span>
+          <strong>{completedSeasons}</strong>
+          <small>+{survivalScore} pts</small>
+        </article>
+        <article>
+          <span>Última Liga</span>
+          <strong>{seasonResult.leaguePosition}.º</strong>
+          <small>{mainCause}</small>
+        </article>
+        <article>
+          <span>Palmarés</span>
+          <strong>{palmaresScore}</strong>
+          <small>pts por títulos</small>
+        </article>
+      </div>
+
+      <div className="career-arcade-trophy-row">
+        <span>Ligas {finalTrophies.liga}</span>
+        <span>Copas {finalTrophies.copa}</span>
+        <span>Supercopas {finalTrophies.supercopa}</span>
+        <span>Europa {finalTrophies.europaLeague + finalTrophies.conference + finalTrophies.champions}</span>
+      </div>
+    </section>
+  );
+}
+
 function getEuropeanLabel(result: CareerSeasonResult): string {
   if (result.europeanQualification === "champions") return "Champions League";
   if (result.europeanQualification === "europa_league") return "Europa League";
@@ -62,6 +144,8 @@ export function CareerSeasonOutcome({
   onContinueCareer,
   selectedPlayers = [],
   teamRating,
+  completedSeasons = 0,
+  trophyCounts,
 }: CareerSeasonOutcomeProps) {
   const survived = objectiveResult.survives;
   const xiAverage = getSelectedPlayersAverage(selectedPlayers);
@@ -112,6 +196,15 @@ export function CareerSeasonOutcome({
         <p className="career-outcome-note">
           {getCareerOutcomeNote(seasonResult, objectiveResult)}
         </p>
+
+        {!survived && (
+          <CareerGameOverArcadeSummary
+            seasonResult={seasonResult}
+            objectiveResult={objectiveResult}
+            completedSeasons={completedSeasons}
+            trophyCounts={trophyCounts}
+          />
+        )}
 
         <div className="career-outcome-actions">
           {survived && onContinueCareer && (

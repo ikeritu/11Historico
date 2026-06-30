@@ -1,3 +1,9 @@
+## v0.22.8 — Game Over arcade summary
+
+- Añade resumen arcade en Game Over con temporadas superadas, palmarés y puntuación.
+- Corrige mojibake visible en textos de estado y radar de draft.
+- No toca simulación, balance, Supercopa ni ratings históricos.
+
 ## v0.22.7 — QA formation reward script
 
 - Añade `npm run qa:formation-reward` para validar automáticamente el premio de cambio de formación.

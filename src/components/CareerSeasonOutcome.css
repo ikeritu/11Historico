@@ -102,3 +102,82 @@
 .career-outcome-team-rating-note strong {
   color: #ffe66d;
 }
+
+
+.career-arcade-summary {
+  margin: 22px 0 0;
+  padding: 18px;
+  border-radius: 24px;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(255, 224, 138, 0.22);
+}
+
+.career-arcade-summary-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 12px;
+  align-items: end;
+  margin-bottom: 14px;
+}
+
+.career-arcade-summary-header span,
+.career-arcade-summary-header small {
+  color: #f2d2d7;
+  font-weight: 850;
+}
+
+.career-arcade-summary-header strong {
+  grid-row: span 2;
+  color: #ffe08a;
+  font-size: clamp(2.6rem, 8vw, 4.2rem);
+  line-height: 0.9;
+}
+
+.career-arcade-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.career-arcade-grid article {
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.career-arcade-grid span,
+.career-arcade-grid small {
+  display: block;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.career-arcade-grid strong {
+  display: block;
+  margin: 6px 0 3px;
+  color: #ffffff;
+  font-size: 1.55rem;
+}
+
+.career-arcade-trophy-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.career-arcade-trophy-row span {
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffeef1;
+  font-size: 0.8rem;
+  font-weight: 900;
+}
+
+@media (max-width: 720px) {
+  .career-arcade-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -371,8 +371,8 @@ function SkillsDashboard({
         </div>
       ) : (
         <div className="skills-dashboard-summary">
-          <strong>Sin datos todavÃ­a</strong>
-          <span>El radar se activarÃ¡ con tu primera elecciÃ³n.</span>
+          <strong>Sin datos todavía</strong>
+          <span>El radar se activará con tu primera elección.</span>
         </div>
       )}
     </section>

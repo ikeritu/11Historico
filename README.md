@@ -1,3 +1,7 @@
+### v0.22.8 — Game Over arcade summary
+
+Game Over muestra resumen arcade de carrera: temporadas superadas, causa de eliminación, palmarés y puntos. También corrige mojibake visible.
+
 ## v0.22.7 — QA formation reward script
 
 - Añade `npm run qa:formation-reward` para validar automáticamente el premio de cambio de formación.

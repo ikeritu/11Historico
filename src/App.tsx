@@ -1219,6 +1219,8 @@ export default function App() {
           onRestart={handleRestart}
           selectedPlayers={selectedPlayers}
           teamRating={teamRating}
+          completedSeasons={careerCompletedSeasons}
+          trophyCounts={careerTrophyCounts}
         />
       )}
 
