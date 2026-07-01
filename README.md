@@ -1,3 +1,7 @@
+### v0.22.9a — Local ranking UX QA
+
+El Top local muestra el rango de temporadas de cada carrera (`2025/26–2027/28`), se adapta a móvil con tarjetas apiladas y amplía `npm run qa:career-ranking` con QA de persistencia, desempates, datos corruptos, borrado y separación del guardado normal de partida.
+
 ### v0.22.9 — Local ranking basic
 
 Modo carrera guarda automáticamente el Game Over en un ranking local del navegador. El Top local ordena por puntos arcade, temporadas superadas y palmarés; incluye botones de nueva carrera, ver ranking local y borrar ranking local. Sin backend ni ranking global todavía.
@@ -26,7 +30,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.22.9_LOCAL_RANKING_BASIC`.
+Versión pública actual: `v0.22.9a_LOCAL_RANKING_UX_QA`.
 
 Base jugable cerrada:
 

@@ -58,6 +58,21 @@ export function getBestCareerLeaguePosition(
   return Math.min(previousBestPosition, nextPosition);
 }
 
+export function formatCareerRangeLabel(params: {
+  lastSeasonLabel: string;
+  completedSeasons: number;
+}): string {
+  const match = /^(\d{4})\/(\d{2})$/.exec(params.lastSeasonLabel);
+  const seasonsBefore = Math.max(0, Math.floor(params.completedSeasons));
+
+  if (!match || seasonsBefore === 0) return params.lastSeasonLabel;
+
+  const firstStartYear = Number(match[1]) - seasonsBefore;
+  const firstEndYear = String((firstStartYear + 1) % 100).padStart(2, "0");
+
+  return `${firstStartYear}/${firstEndYear}–${params.lastSeasonLabel}`;
+}
+
 export function sortCareerLocalRanking(entries: CareerLocalRankingEntry[]): CareerLocalRankingEntry[] {
   return [...entries].sort((left, right) => {
     if (right.arcadeScore !== left.arcadeScore) return right.arcadeScore - left.arcadeScore;

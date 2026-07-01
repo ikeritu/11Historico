@@ -1,3 +1,11 @@
+## v0.22.9a — Local ranking UX QA
+
+- Muestra el rango de temporadas de cada carrera en el Top local (ejemplo `2025/26–2027/28`).
+- Vista móvil del ranking en tarjetas apiladas con etiquetas, sin scroll horizontal.
+- Amplía `npm run qa:career-ranking` con persistencia tras recarga simulada, desempates por mejor posición y fecha, datos corruptos, borrado y rango de temporadas.
+- Verifica automáticamente que guardar/borrar ranking no toca el guardado normal de partida (claves de `localStorage` separadas).
+- Sin backend, sin ranking global, sin cambios de balance ni de simulación.
+
 ## v0.22.9 — Local ranking basic
 
 - Guarda automáticamente la carrera al llegar a Game Over.

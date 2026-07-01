@@ -1,3 +1,4 @@
+import { formatCareerRangeLabel } from "../career/careerRanking";
 import type { CareerLocalRankingEntry } from "../types/career";
 
 import "./CareerLocalRanking.css";
@@ -75,19 +76,19 @@ export function CareerLocalRanking({
               <tbody>
                 {topEntries.map((entry, index) => (
                   <tr key={entry.id}>
-                    <td><strong>{index + 1}</strong></td>
-                    <td>
-                      <span>{entry.lastSeasonLabel}</span>
+                    <td data-label="#"><strong>{index + 1}</strong></td>
+                    <td data-label="Carrera">
+                      <span>{formatCareerRangeLabel(entry)}</span>
                       <small>Última Liga: {entry.lastLeaguePosition}.º · {entry.gameVersion}</small>
                     </td>
-                    <td><strong>{entry.arcadeScore}</strong></td>
-                    <td>{entry.completedSeasons}</td>
-                    <td>
+                    <td data-label="Puntos"><strong>{entry.arcadeScore}</strong></td>
+                    <td data-label="Temp.">{entry.completedSeasons}</td>
+                    <td data-label="Palmarés">
                       <span>{entry.palmaresScore} pts</span>
                       <small>{getTrophySummary(entry)}</small>
                     </td>
-                    <td>{entry.bestLeaguePosition}.º</td>
-                    <td>{formatRankingDate(entry.createdAt)}</td>
+                    <td data-label="Mejor Liga">{entry.bestLeaguePosition}.º</td>
+                    <td data-label="Fecha">{formatRankingDate(entry.createdAt)}</td>
                   </tr>
                 ))}
               </tbody>
