@@ -1,0 +1,130 @@
+.career-ranking-screen {
+  min-height: 100vh;
+  padding: 34px 18px;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.1), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(255, 224, 138, 0.14), transparent 32%),
+    linear-gradient(135deg, #16070b 0%, #2b0710 44%, #080808 100%);
+  color: #ffffff;
+}
+
+.career-ranking-card {
+  width: min(1100px, 100%);
+  padding: 30px;
+  border-radius: 32px;
+  background: rgba(255, 255, 255, 0.085);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
+}
+
+.career-ranking-card h1 {
+  margin: 0 0 10px;
+  font-size: clamp(2.2rem, 5vw, 4.4rem);
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+}
+
+.career-ranking-intro {
+  max-width: 760px;
+  margin: 0 0 20px;
+  color: #f2d2d7;
+  line-height: 1.5;
+}
+
+.career-ranking-empty {
+  display: grid;
+  gap: 7px;
+  padding: 22px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+}
+
+.career-ranking-empty strong {
+  color: #ffe08a;
+  font-size: 1.05rem;
+}
+
+.career-ranking-empty span {
+  color: #f2d2d7;
+}
+
+.career-ranking-table-wrap {
+  overflow-x: auto;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.career-ranking-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 840px;
+}
+
+.career-ranking-table th,
+.career-ranking-table td {
+  padding: 14px 13px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  vertical-align: top;
+}
+
+.career-ranking-table th {
+  color: #ffe08a;
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.career-ranking-table td {
+  color: #fff3f5;
+  font-weight: 800;
+}
+
+.career-ranking-table td span,
+.career-ranking-table td small {
+  display: block;
+}
+
+.career-ranking-table td small {
+  margin-top: 4px;
+  color: #f2c7cf;
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+.career-ranking-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.career-ranking-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.career-ranking-danger-button {
+  min-height: 52px;
+  border: 0;
+  border-radius: 14px;
+  padding: 14px 18px;
+  background: rgba(255, 255, 255, 0.13);
+  color: #ffd7de;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.career-ranking-danger-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+@media (max-width: 720px) {
+  .career-ranking-screen { padding: 22px 12px; }
+  .career-ranking-card { padding: 24px 16px; }
+  .career-ranking-actions { display: grid; }
+}

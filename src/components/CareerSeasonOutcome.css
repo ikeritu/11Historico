@@ -181,3 +181,14 @@
     grid-template-columns: 1fr;
   }
 }
+
+.career-local-ranking-button {
+  min-height: 52px;
+  border: 0;
+  border-radius: 14px;
+  padding: 14px 18px;
+  background: #ffe08a;
+  color: #6f0014;
+  font-weight: 950;
+  cursor: pointer;
+}

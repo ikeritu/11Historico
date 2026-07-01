@@ -1,6 +1,6 @@
 import type { FinalGameSummary, SelectedPlayer, TeamRating } from "../types/game";
 import type { CareerObjectiveResult, CareerSeasonResult, CareerTrophyCounts } from "../types/career";
-import { calculatePalmaresScore } from "../career/careerRules";
+import { calculateCareerArcadeScore, getFinalCareerTrophyCounts } from "../career/careerRanking";
 
 import "./CareerSeasonOutcome.css";
 
@@ -11,6 +11,7 @@ interface CareerSeasonOutcomeProps {
   onViewFullSummary: () => void;
   onRestart?: () => void;
   onContinueCareer?: () => void;
+  onViewLocalRanking?: () => void;
   selectedPlayers?: SelectedPlayer[];
   teamRating?: TeamRating;
   completedSeasons?: number;
@@ -51,26 +52,6 @@ function getCareerOutcomeNote(seasonResult: CareerSeasonResult, objectiveResult:
 }
 
 
-function getGameOverTrophyCounts(
-  trophyCounts: CareerTrophyCounts | undefined,
-  seasonResult: CareerSeasonResult,
-): CareerTrophyCounts {
-  const base = trophyCounts ?? {
-    champions: 0,
-    liga: 0,
-    europaLeague: 0,
-    copa: 0,
-    conference: 0,
-    supercopa: 0,
-  };
-
-  return {
-    ...base,
-    liga: base.liga + (seasonResult.wonLeague ? 1 : 0),
-    copa: base.copa + (seasonResult.wonCopa ? 1 : 0),
-    supercopa: base.supercopa + (seasonResult.wonSupercopa ? 1 : 0),
-  };
-}
 
 function CareerGameOverArcadeSummary({
   seasonResult,
@@ -83,10 +64,11 @@ function CareerGameOverArcadeSummary({
   completedSeasons?: number;
   trophyCounts?: CareerTrophyCounts;
 }) {
-  const finalTrophies = getGameOverTrophyCounts(trophyCounts, seasonResult);
-  const palmaresScore = calculatePalmaresScore(finalTrophies);
-  const survivalScore = completedSeasons * 10;
-  const arcadeScore = survivalScore + palmaresScore;
+  const finalTrophies = getFinalCareerTrophyCounts(trophyCounts, seasonResult);
+  const { arcadeScore, palmaresScore, survivalScore } = calculateCareerArcadeScore({
+    completedSeasons,
+    trophyCounts: finalTrophies,
+  });
   const mainCause = seasonResult.isRelegated
     ? "Descenso"
     : objectiveResult.qualifiedForEurope
@@ -142,6 +124,8 @@ export function CareerSeasonOutcome({
   objectiveResult,
   onViewFullSummary,
   onContinueCareer,
+  onRestart,
+  onViewLocalRanking,
   selectedPlayers = [],
   teamRating,
   completedSeasons = 0,
@@ -212,7 +196,17 @@ export function CareerSeasonOutcome({
               Continuar carrera
             </button>
           )}
-          <button type="button" className={survived ? "secondary-home-button" : "primary-home-button"} onClick={onViewFullSummary}>
+          {!survived && onRestart && (
+            <button type="button" className="primary-home-button" onClick={onRestart}>
+              Nueva carrera
+            </button>
+          )}
+          {!survived && onViewLocalRanking && (
+            <button type="button" className="career-local-ranking-button" onClick={onViewLocalRanking}>
+              Ver ranking local
+            </button>
+          )}
+          <button type="button" className={survived ? "secondary-home-button" : "secondary-home-button"} onClick={onViewFullSummary}>
             Ver resumen completo
           </button>
         </div>

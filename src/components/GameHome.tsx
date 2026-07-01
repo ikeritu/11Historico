@@ -17,6 +17,7 @@ interface GameHomeProps {
   onNewGame: () => void;
   onContinueGame: () => void;
   onCareerPreview: () => void;
+  onViewLocalRanking: () => void;
 }
 
 const DIFFICULTY_OPTIONS: Array<{
@@ -54,6 +55,7 @@ export function GameHome({
   onNewGame,
   onContinueGame,
   onCareerPreview,
+  onViewLocalRanking,
 }: GameHomeProps) {
   const [shareStatus, setShareStatus] = useState("");
 
@@ -185,6 +187,14 @@ export function GameHome({
                   onClick={onCareerPreview}
                 >
                   Modo carrera
+                </button>
+
+                <button
+                  type="button"
+                  className="secondary-home-button"
+                  onClick={onViewLocalRanking}
+                >
+                  Ranking local
                 </button>
               </div>
 

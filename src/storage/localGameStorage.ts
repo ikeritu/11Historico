@@ -38,6 +38,7 @@ export interface SavedGameState {
   careerSeasonResult?: CareerSeasonResult;
   careerObjectiveResult?: CareerObjectiveResult;
   careerCompletedSeasons?: number;
+  careerBestLeaguePosition?: number;
   careerSeasonLabel?: string;
   careerTrophyCounts?: CareerTrophyCounts;
   careerLeagueRivals?: RivalTeam[];
@@ -86,6 +87,7 @@ export function loadGameState(): SavedGameState | undefined {
       selectedPlayers: parsed.selectedPlayers ?? [],
       isCareerMode: parsed.isCareerMode ?? false,
       careerCompletedSeasons: parsed.careerCompletedSeasons ?? 0,
+      careerBestLeaguePosition: parsed.careerBestLeaguePosition,
       savedAt: parsed.savedAt ?? new Date().toISOString(),
     } as SavedGameState;
   } catch (error) {

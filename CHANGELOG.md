@@ -1,3 +1,12 @@
+## v0.22.9 — Local ranking basic
+
+- Guarda automáticamente la carrera al llegar a Game Over.
+- Persiste en `localStorage` temporadas superadas, puntos arcade, palmarés, mejor posición, última temporada, versión del juego y fecha.
+- Añade pantalla Top local ordenada por puntos arcade, temporadas superadas y palmarés.
+- Añade botones `Nueva carrera`, `Ver ranking local` y `Borrar ranking local`.
+- Añade `npm run qa:career-ranking` para validar cálculo, orden, límite Top 100 y campos obligatorios.
+- Sin backend, sin ranking global, sin tocar balance, ratings históricos ni plantillas.
+
 ## v0.22.8a — Career reward cancel snapshot fix
 
 - Guarda snapshot completo al entrar en recompensa de carrera.

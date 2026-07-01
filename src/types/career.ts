@@ -103,6 +103,21 @@ export interface CareerRewardSnapshot {
   savedAt: string;
 }
 
+
+export interface CareerLocalRankingEntry {
+  id: string;
+  completedSeasons: number;
+  arcadeScore: number;
+  palmaresScore: number;
+  survivalScore: number;
+  trophyCounts: CareerTrophyCounts;
+  bestLeaguePosition: number;
+  lastSeasonLabel: string;
+  lastLeaguePosition: number;
+  gameVersion: string;
+  createdAt: string;
+}
+
 export interface CareerState {
   currentSeasonIndex: number;
   currentSeasonLabel: string;

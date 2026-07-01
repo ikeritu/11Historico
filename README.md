@@ -1,3 +1,7 @@
+### v0.22.9 — Local ranking basic
+
+Modo carrera guarda automáticamente el Game Over en un ranking local del navegador. El Top local ordena por puntos arcade, temporadas superadas y palmarés; incluye botones de nueva carrera, ver ranking local y borrar ranking local. Sin backend ni ranking global todavía.
+
 ### v0.22.8 — Game Over arcade summary
 
 Game Over muestra resumen arcade de carrera: temporadas superadas, causa de eliminación, palmarés y puntos. También corrige mojibake visible.
@@ -22,7 +26,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.22.8a_CAREER_REWARD_CANCEL_SNAPSHOT_FIX`.
+Versión pública actual: `v0.22.9_LOCAL_RANKING_BASIC`.
 
 Base jugable cerrada:
 
@@ -58,6 +62,7 @@ https://ikeritu.github.io/11Historico/
 - Botón para compartir el juego.
 - Entrada informativa de Modo carrera Athletic en preparación.
 - Reglas puras del modo carrera preparadas para el MVP jugable.
+- Ranking local de mejores carreras guardado en el navegador, sin backend.
 - Flujo básico de carrera con copy de objetivo corregido y techo de media ajustado.
 - Flujo básico de una temporada de carrera conectado a Liga y Copa.
 - Supercopa básica en modo carrera con 1.º/2.º de Liga + finalistas de Copa.
