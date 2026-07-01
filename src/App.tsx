@@ -23,7 +23,7 @@ import {
   getInitialCareerLeagueRivals,
   getInitialCareerSecondDivisionPool,
 } from "./simulation/leagueSimulator";
-import type { CareerObjectiveResult, CareerPromotionTransition, CareerRewardFlow, CareerSeasonResult, CareerSupercopaQualification, CareerSupercopaResult, CareerTrophyCounts } from "./types/career";
+import type { CareerObjectiveResult, CareerPromotionTransition, CareerRewardFlow, CareerRewardSnapshot, CareerSeasonResult, CareerSupercopaQualification, CareerSupercopaResult, CareerTrophyCounts } from "./types/career";
 
 import { getPlayerIdentityKey, resolvePlayerSlotPlacement } from "./domain/positionRules";
 
@@ -120,6 +120,59 @@ function applyCareerRatingBonus(teamRating: TeamRating, bonus: number): TeamRati
       ...teamRating.strengths,
       `Premio de entrenador: +${bonus.toFixed(1)} media`,
     ],
+  };
+}
+
+function cloneSnapshotValue<T>(value: T): T {
+  return JSON.parse(JSON.stringify(value)) as T;
+}
+
+function cloneOptionalSnapshotValue<T>(value: T | undefined): T | undefined {
+  return value === undefined ? undefined : cloneSnapshotValue(value);
+}
+
+function calculateMediaXi(selectedPlayers: SelectedPlayer[]): number {
+  if (selectedPlayers.length === 0) return 0;
+
+  const total = selectedPlayers.reduce((sum, selected) => sum + selected.playerSeason.overall, 0);
+  return Math.round((total / selectedPlayers.length) * 10) / 10;
+}
+
+function buildCareerRewardSnapshot(params: {
+  selectedFormation?: Formation;
+  selectedPlayers: SelectedPlayer[];
+  selectedCoach?: SelectedCoach;
+  teamRating?: TeamRating;
+  careerSeasonRatingBonus: number;
+  careerSeasonLabel: string;
+  careerCompletedSeasons: number;
+  careerTrophyCounts: CareerTrophyCounts;
+  careerLeagueRivals: RivalTeam[];
+  careerSecondDivisionPool: RivalTeam[];
+  careerPromotionTransition?: CareerPromotionTransition;
+  careerPendingSupercopa?: CareerSupercopaQualification;
+  careerCurrentSupercopaResult?: CareerSupercopaResult;
+  playerRoundSeasons: SeasonId[];
+  currentRoundIndex: number;
+}): CareerRewardSnapshot {
+  return {
+    selectedFormation: cloneOptionalSnapshotValue(params.selectedFormation),
+    selectedPlayers: cloneSnapshotValue(params.selectedPlayers),
+    selectedCoach: cloneOptionalSnapshotValue(params.selectedCoach),
+    teamRating: cloneOptionalSnapshotValue(params.teamRating),
+    mediaXi: calculateMediaXi(params.selectedPlayers),
+    careerSeasonRatingBonus: params.careerSeasonRatingBonus,
+    careerSeasonLabel: params.careerSeasonLabel,
+    careerCompletedSeasons: params.careerCompletedSeasons,
+    careerTrophyCounts: cloneSnapshotValue(params.careerTrophyCounts),
+    careerLeagueRivals: cloneSnapshotValue(params.careerLeagueRivals),
+    careerSecondDivisionPool: cloneSnapshotValue(params.careerSecondDivisionPool),
+    careerPromotionTransition: cloneOptionalSnapshotValue(params.careerPromotionTransition),
+    careerPendingSupercopa: cloneOptionalSnapshotValue(params.careerPendingSupercopa),
+    careerCurrentSupercopaResult: cloneOptionalSnapshotValue(params.careerCurrentSupercopaResult),
+    playerRoundSeasons: cloneSnapshotValue(params.playerRoundSeasons),
+    currentRoundIndex: params.currentRoundIndex,
+    savedAt: new Date().toISOString(),
   };
 }
 
@@ -241,8 +294,9 @@ interface TeamValidationResult {
 function validateSelectedTeam(params: {
   formation?: Formation;
   selectedPlayers: SelectedPlayer[];
+  expectedPlayerCount?: number;
 }): TeamValidationResult {
-  const { formation, selectedPlayers } = params;
+  const { formation, selectedPlayers, expectedPlayerCount = TOTAL_PLAYER_ROUNDS } = params;
   const errors: string[] = [];
 
   if (!formation) {
@@ -250,8 +304,12 @@ function validateSelectedTeam(params: {
     return { valid: false, errors };
   }
 
-  if (selectedPlayers.length !== TOTAL_PLAYER_ROUNDS) {
-    errors.push(`El once está incompleto: ${selectedPlayers.length}/${TOTAL_PLAYER_ROUNDS} jugadores.`);
+  if (selectedPlayers.length !== expectedPlayerCount) {
+    errors.push(`El once debe tener ${expectedPlayerCount}/${TOTAL_PLAYER_ROUNDS} jugadores para este paso y tiene ${selectedPlayers.length}.`);
+  }
+
+  if (selectedPlayers.length > TOTAL_PLAYER_ROUNDS) {
+    errors.push(`El once tiene demasiados jugadores: ${selectedPlayers.length}/${TOTAL_PLAYER_ROUNDS}.`);
   }
 
   const seenNames = new Map<string, string>();
@@ -344,6 +402,7 @@ export default function App() {
   const [careerCurrentSupercopaResult, setCareerCurrentSupercopaResult] = useState<CareerSupercopaResult | undefined>(() => savedGame?.careerCurrentSupercopaResult);
   const [careerRewardFlow, setCareerRewardFlow] = useState<CareerRewardFlow | undefined>(() => savedGame?.careerRewardFlow);
   const [careerSeasonRatingBonus, setCareerSeasonRatingBonus] = useState(() => savedGame?.careerSeasonRatingBonus ?? 0);
+  const [careerRewardSnapshot, setCareerRewardSnapshot] = useState<CareerRewardSnapshot | undefined>(() => savedGame?.careerRewardSnapshot);
   const [replacementDraftSeason, setReplacementDraftSeason] = useState<SeasonId | undefined>();
   const [replacementRemovedPlayer, setReplacementRemovedPlayer] = useState<SelectedPlayer | undefined>();
   const [replacementOriginalFormation, setReplacementOriginalFormation] = useState<Formation | undefined>();
@@ -416,6 +475,7 @@ export default function App() {
       careerCurrentSupercopaResult,
       careerRewardFlow,
       careerSeasonRatingBonus,
+      careerRewardSnapshot,
     });
   }, [
     gameId,
@@ -444,6 +504,7 @@ export default function App() {
     careerCurrentSupercopaResult,
     careerRewardFlow,
     careerSeasonRatingBonus,
+    careerRewardSnapshot,
   ]);
 
   function recalculateVisibleTeamRating(params: {
@@ -494,6 +555,7 @@ export default function App() {
     setCareerCurrentSupercopaResult(undefined);
     setCareerRewardFlow(undefined);
     setCareerSeasonRatingBonus(0);
+    setCareerRewardSnapshot(undefined);
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
     setReplacementOriginalFormation(undefined);
@@ -526,6 +588,7 @@ export default function App() {
     setCareerCurrentSupercopaResult(undefined);
     setCareerRewardFlow(undefined);
     setCareerSeasonRatingBonus(0);
+    setCareerRewardSnapshot(undefined);
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
     setReplacementOriginalFormation(undefined);
@@ -569,6 +632,7 @@ export default function App() {
     setCareerCurrentSupercopaResult(loadedGame.careerCurrentSupercopaResult);
     setCareerRewardFlow(loadedGame.careerRewardFlow);
     setCareerSeasonRatingBonus(loadedGame.careerSeasonRatingBonus ?? 0);
+    setCareerRewardSnapshot(loadedGame.careerRewardSnapshot);
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
     setReplacementOriginalFormation(undefined);
@@ -680,9 +744,12 @@ export default function App() {
       selectedCoach: selection,
     });
 
-    if (careerRewardFlow === "coach_bonus") {
-      setCareerSeasonRatingBonus((previous) => Math.max(previous, 0.5));
+    if (careerRewardFlow === "coach_bonus" || careerRewardFlow === "standard_coach") {
+      if (careerRewardFlow === "coach_bonus") {
+        setCareerSeasonRatingBonus((previous) => Math.max(previous, 0.5));
+      }
       setCareerRewardFlow(undefined);
+      setCareerRewardSnapshot(undefined);
       setCoachBeforeReward(undefined);
     }
 
@@ -763,9 +830,11 @@ export default function App() {
 
     const nextCompletedSeasons = careerCompletedSeasons + 1;
     const nextSeasonLabel = getCareerSeasonLabelFromIndex(nextCompletedSeasons);
-    setCareerCompletedSeasons(nextCompletedSeasons);
-    setCareerSeasonLabel(nextSeasonLabel);
-    setCareerTrophyCounts((previous) => addCareerTrophiesFromSeason(previous, careerSeasonResult));
+    const nextTrophyCounts = addCareerTrophiesFromSeason(careerTrophyCounts, careerSeasonResult);
+    let nextCareerLeagueRivals = careerLeagueRivals;
+    let nextCareerSecondDivisionPool = careerSecondDivisionPool;
+    let nextCareerPromotionTransition: CareerPromotionTransition | undefined;
+
     if (finalSummary.table) {
       const transition = createNextCareerLeagueTransition({
         previousTable: finalSummary.table,
@@ -774,33 +843,123 @@ export default function App() {
         completedSeasons: nextCompletedSeasons,
       });
 
-      setCareerLeagueRivals(transition.nextRivals);
-      setCareerSecondDivisionPool(transition.nextSecondDivisionPool);
-      setCareerPromotionTransition({
+      nextCareerLeagueRivals = transition.nextRivals;
+      nextCareerSecondDivisionPool = transition.nextSecondDivisionPool;
+      nextCareerPromotionTransition = {
         relegated: transition.relegated,
         promoted: transition.promoted,
         secondDivisionPool: transition.nextSecondDivisionPool,
-      });
-    } else {
-      setCareerPromotionTransition(undefined);
+      };
     }
 
     const supercopaQualification = createCareerSupercopaQualification({
       seasonLabel: nextSeasonLabel,
       previousSummary: finalSummary,
     });
-    setCareerPendingSupercopa(supercopaQualification.userQualified ? supercopaQualification : undefined);
+    const nextCareerPendingSupercopa = supercopaQualification.userQualified ? supercopaQualification : undefined;
+
+    const rewardSnapshot = buildCareerRewardSnapshot({
+      selectedFormation,
+      selectedPlayers,
+      selectedCoach,
+      teamRating,
+      careerSeasonRatingBonus,
+      careerSeasonLabel: nextSeasonLabel,
+      careerCompletedSeasons: nextCompletedSeasons,
+      careerTrophyCounts: nextTrophyCounts,
+      careerLeagueRivals: nextCareerLeagueRivals,
+      careerSecondDivisionPool: nextCareerSecondDivisionPool,
+      careerPromotionTransition: nextCareerPromotionTransition,
+      careerPendingSupercopa: nextCareerPendingSupercopa,
+      careerCurrentSupercopaResult: undefined,
+      playerRoundSeasons,
+      currentRoundIndex: selectedPlayers.length,
+    });
+
+    setCareerCompletedSeasons(nextCompletedSeasons);
+    setCareerSeasonLabel(nextSeasonLabel);
+    setCareerTrophyCounts(nextTrophyCounts);
+    setCareerLeagueRivals(nextCareerLeagueRivals);
+    setCareerSecondDivisionPool(nextCareerSecondDivisionPool);
+    setCareerPromotionTransition(nextCareerPromotionTransition);
+    setCareerPendingSupercopa(nextCareerPendingSupercopa);
     setCareerCurrentSupercopaResult(undefined);
+    setCareerRewardSnapshot(rewardSnapshot);
     setLeagueContext(undefined);
     setFinalSummary(undefined);
     setTeamRating(undefined);
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
+    setReplacementOriginalFormation(undefined);
     setPhase("team_summary");
     setScreen("career_interseason_reward");
   }
 
+  function ensureCareerRewardSnapshot() {
+    setCareerRewardSnapshot((previous) => previous ?? buildCareerRewardSnapshot({
+      selectedFormation,
+      selectedPlayers,
+      selectedCoach,
+      teamRating,
+      careerSeasonRatingBonus,
+      careerSeasonLabel,
+      careerCompletedSeasons,
+      careerTrophyCounts,
+      careerLeagueRivals,
+      careerSecondDivisionPool,
+      careerPromotionTransition,
+      careerPendingSupercopa,
+      careerCurrentSupercopaResult,
+      playerRoundSeasons,
+      currentRoundIndex: selectedPlayers.length,
+    }));
+  }
+
+  function restoreCareerRewardSnapshot(snapshot: CareerRewardSnapshot): boolean {
+    const validation = validateSelectedTeam({
+      formation: snapshot.selectedFormation,
+      selectedPlayers: snapshot.selectedPlayers,
+    });
+
+    if (!snapshot.selectedFormation || !snapshot.selectedCoach || !validation.valid) {
+      setTeamValidationErrors(validation.errors.length > 0 ? validation.errors : ["No se pudo restaurar el snapshot de recompensa."]);
+      return false;
+    }
+
+    setSelectedFormation(snapshot.selectedFormation);
+    setSelectedPlayers(snapshot.selectedPlayers);
+    setSelectedCoach(snapshot.selectedCoach);
+    setTeamRating(snapshot.teamRating);
+    setCareerSeasonRatingBonus(snapshot.careerSeasonRatingBonus);
+    setCareerSeasonLabel(snapshot.careerSeasonLabel);
+    setCareerCompletedSeasons(snapshot.careerCompletedSeasons);
+    setCareerTrophyCounts(snapshot.careerTrophyCounts);
+    setCareerLeagueRivals(snapshot.careerLeagueRivals);
+    setCareerSecondDivisionPool(snapshot.careerSecondDivisionPool);
+    setCareerPromotionTransition(snapshot.careerPromotionTransition);
+    setCareerPendingSupercopa(snapshot.careerPendingSupercopa);
+    setCareerCurrentSupercopaResult(snapshot.careerCurrentSupercopaResult);
+    setPlayerRoundSeasons(snapshot.playerRoundSeasons);
+    setCurrentRoundIndex(snapshot.currentRoundIndex);
+    setReplacementDraftSeason(undefined);
+    setReplacementRemovedPlayer(undefined);
+    setReplacementOriginalFormation(undefined);
+    setCareerRewardFlow(undefined);
+    setCareerRewardSnapshot(undefined);
+    setTeamValidationErrors([]);
+    setLeagueContext(undefined);
+    setFinalSummary(undefined);
+    setCareerSeasonResult(undefined);
+    setCareerObjectiveResult(undefined);
+    setLastSelection(undefined);
+    setPhase("team_summary");
+    setScreen("team_summary");
+    return true;
+  }
+
   function handleChooseCareerCoachChange() {
+    ensureCareerRewardSnapshot();
+
     const specialCoachBonus = Boolean(
       careerSeasonResult &&
       careerObjectiveResult &&
@@ -836,6 +995,7 @@ export default function App() {
     });
     setCareerSeasonRatingBonus((previous) => Math.max(previous, 0.5));
     setCareerRewardFlow(undefined);
+    setCareerRewardSnapshot(undefined);
     setCoachBeforeReward(undefined);
     setLeagueContext(undefined);
     setFinalSummary(undefined);
@@ -846,6 +1006,7 @@ export default function App() {
   function handleChooseCareerPlayerChange() {
     if (!selectedFormation) return;
 
+    ensureCareerRewardSnapshot();
     setCareerRewardFlow("standard_player");
     setTeamRating(undefined);
     setLeagueContext(undefined);
@@ -860,6 +1021,7 @@ export default function App() {
   function handleChooseCareerFormationChange() {
     if (!selectedFormation) return;
 
+    ensureCareerRewardSnapshot();
     setCareerRewardFlow("player_formation");
     setTeamRating(undefined);
     setLeagueContext(undefined);
@@ -873,6 +1035,22 @@ export default function App() {
 
   function handleConfirmCareerFormationChange(formation: Formation, remappedPlayers: SelectedPlayer[]) {
     if (careerRewardFlow === "player_formation") {
+      const validation = validateSelectedTeam({
+        formation,
+        selectedPlayers: remappedPlayers,
+        expectedPlayerCount: TOTAL_PLAYER_ROUNDS - 1,
+      });
+      const occupiedSlotIds = new Set(remappedPlayers.map((player) => player.slotId));
+      const openSlots = formation.slots.filter((slot) => !occupiedSlotIds.has(slot.id));
+
+      if (!validation.valid || openSlots.length !== 1) {
+        setTeamValidationErrors([
+          ...validation.errors,
+          ...(openSlots.length === 1 ? [] : [`La nueva formación debe dejar exactamente 1 hueco y deja ${openSlots.length}.`]),
+        ]);
+        return;
+      }
+
       setSelectedFormation(formation);
       setSelectedPlayers(remappedPlayers);
       setReplacementDraftSeason(pickRandomSeason(currentDraftSeasonPool));
@@ -909,15 +1087,31 @@ export default function App() {
     setReplacementRemovedPlayer(undefined);
     setReplacementOriginalFormation(undefined);
     setCareerRewardFlow(undefined);
+    setCareerRewardSnapshot(undefined);
     setTeamValidationErrors([]);
     setPhase("team_summary");
     setScreen("team_summary");
   }
 
   function handleSelectPlayerToReplace(selection: SelectedPlayer) {
+    const validation = validateSelectedTeam({
+      formation: selectedFormation,
+      selectedPlayers,
+    });
+
+    if (!validation.valid) {
+      setTeamValidationErrors(validation.errors);
+      return;
+    }
+
     const nextPlayers = selectedPlayers.filter(
       (item) => !(item.slotId === selection.slotId && item.playerSeason.id === selection.playerSeason.id)
     );
+
+    if (nextPlayers.length !== TOTAL_PLAYER_ROUNDS - 1) {
+      setTeamValidationErrors([`No se pudo retirar exactamente 1 jugador: quedan ${nextPlayers.length}/${TOTAL_PLAYER_ROUNDS - 1}.`]);
+      return;
+    }
 
     setSelectedPlayers(nextPlayers);
     setReplacementRemovedPlayer(selection);
@@ -938,38 +1132,55 @@ export default function App() {
   }
 
   function handleCancelPlayerReplacement() {
-    if (replacementOriginalFormation) {
-      setSelectedFormation(replacementOriginalFormation);
+    if (careerRewardSnapshot && restoreCareerRewardSnapshot(careerRewardSnapshot)) {
+      return;
     }
 
-    if (replacementRemovedPlayer) {
-      setSelectedPlayers((previous) => {
-        const alreadyRestored = previous.some(
-          (item) => item.slotId === replacementRemovedPlayer.slotId &&
-            item.playerSeason.id === replacementRemovedPlayer.playerSeason.id
-        );
+    const fallbackFormation = replacementOriginalFormation ?? selectedFormation;
+    const fallbackPlayers = replacementRemovedPlayer
+      ? (() => {
+          const alreadyRestored = selectedPlayers.some(
+            (item) => item.slotId === replacementRemovedPlayer.slotId &&
+              item.playerSeason.id === replacementRemovedPlayer.playerSeason.id
+          );
 
-        return alreadyRestored ? previous : [...previous, replacementRemovedPlayer];
-      });
+          return alreadyRestored ? selectedPlayers : [...selectedPlayers, replacementRemovedPlayer];
+        })()
+      : selectedPlayers;
+
+    const validation = validateSelectedTeam({
+      formation: fallbackFormation,
+      selectedPlayers: fallbackPlayers,
+    });
+
+    if (!validation.valid) {
+      setTeamValidationErrors(validation.errors);
+      return;
     }
 
+    setSelectedFormation(fallbackFormation);
+    setSelectedPlayers(fallbackPlayers);
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
     setReplacementOriginalFormation(undefined);
     setCareerRewardFlow(undefined);
+    setCareerRewardSnapshot(undefined);
     setTeamValidationErrors([]);
-    setTeamRating(undefined);
     setLeagueContext(undefined);
     setFinalSummary(undefined);
     setCareerSeasonResult(undefined);
     setCareerObjectiveResult(undefined);
-    setCareerPromotionTransition(undefined);
     setPhase("team_summary");
     setScreen("team_summary");
   }
 
   function handleSelectReplacementPlayer(selection: SelectedPlayer) {
     if (!selectedFormation) return;
+
+    if (selectedPlayers.length !== TOTAL_PLAYER_ROUNDS - 1) {
+      setTeamValidationErrors([`El draft de sustituto necesita 10 jugadores previos y hay ${selectedPlayers.length}.`]);
+      return;
+    }
 
     const nextPlayers = [...selectedPlayers, selection];
     const validation = validateSelectedTeam({
@@ -993,6 +1204,7 @@ export default function App() {
     setReplacementRemovedPlayer(undefined);
     setReplacementOriginalFormation(undefined);
     setCareerRewardFlow(undefined);
+    setCareerRewardSnapshot(undefined);
     setTeamValidationErrors([]);
     setCurrentRoundIndex(nextPlayers.length);
     setCareerSeasonResult(undefined);

@@ -5,12 +5,12 @@ import {
 } from "../src/career/careerRules";
 import { FORMATIONS } from "../src/data/formations";
 import { resolvePlayerSlotPlacement } from "../src/domain/positionRules";
+import { calculateTeamRating } from "../src/simulation/teamRating";
 import type { CareerSeasonResult } from "../src/types/career";
-import type { Formation, FormationSlot, PlayerSeason, SelectedPlayer } from "../src/types/game";
+import type { Formation, FormationSlot, PlayerSeason, SelectedCoach, SelectedPlayer } from "../src/types/game";
 
 type Line = FormationSlot["line"];
 
-const lines: Line[] = ["goalkeeper", "defense", "midfield", "attack"];
 const lineOrder: Record<Line, number> = {
   goalkeeper: 0,
   defense: 1,
@@ -58,6 +58,52 @@ function makePlayer(id: string, name: string, positions: PlayerSeason["positions
     ratingMethod: "manual_estimate",
     sourceRefs: ["qa"],
   };
+}
+
+function makeCoach(): SelectedCoach {
+  return {
+    coachSeason: {
+      id: "coach_qa",
+      coachId: "coach_qa",
+      name: "Entrenador QA",
+      season: "qa",
+      skills: {
+        attack: 84,
+        defense: 84,
+        management: 84,
+        mentality: 84,
+        cup: 84,
+        europe: 84,
+      },
+      overall: 84,
+      dataConfidence: 1,
+      ratingMethod: "manual_estimate",
+      sourceRefs: ["qa"],
+    },
+  };
+}
+
+function calculateMediaXi(selectedPlayers: SelectedPlayer[]): number {
+  const total = selectedPlayers.reduce((sum, selected) => sum + selected.playerSeason.overall, 0);
+  return Math.round((total / selectedPlayers.length) * 10) / 10;
+}
+
+function assertNoDuplicatePlayers(selectedPlayers: SelectedPlayer[]) {
+  const seen = new Set<string>();
+
+  for (const selected of selectedPlayers) {
+    const key = selected.playerSeason.canonicalPlayerId || selected.playerSeason.playerId || selected.playerSeason.id;
+    assert(!seen.has(key), `Jugador duplicado tras cancelar: ${selected.playerSeason.name}`);
+    seen.add(key);
+  }
+}
+
+function assertAllSlotsExist(formation: Formation, selectedPlayers: SelectedPlayer[]) {
+  const slotIds = new Set(formation.slots.map((slot) => slot.id));
+
+  for (const selected of selectedPlayers) {
+    assert(slotIds.has(selected.slotId), `Slot inválido tras cancelar: ${selected.slotId} no existe en ${formation.id}`);
+  }
 }
 
 function selectBySlot(slotId: string, playerSeason: PlayerSeason): SelectedPlayer {
@@ -260,7 +306,58 @@ function runFormationLineQa() {
   logOk("Cancelar conserva plantilla/formación original");
 }
 
+function runCancelSnapshotQa() {
+  const originalFormation = getFormation("4-3-3");
+  const targetFormation = getFormation("4-2-4");
+  const originalPlayers = build433Team();
+  const originalCoach = makeCoach();
+  const originalRating = calculateTeamRating({
+    formation: originalFormation,
+    selectedPlayers: originalPlayers,
+    selectedCoach: originalCoach,
+  });
+  const originalMediaXi = calculateMediaXi(originalPlayers);
+
+  const removedMidfielder = originalPlayers.find((player) => player.slotId === "cm_3");
+  assert(removedMidfielder, "Debe existir el medio que se retira antes de cambiar alineación.");
+
+  const compatibility = canChangeFormationWithOnePlayer(originalFormation, targetFormation);
+  assert(compatibility.canChange, "4-3-3 → 4-2-4 debe seguir siendo compatible.");
+  assert(compatibility.addedLine, "La formación destino debe declarar una línea añadida.");
+
+  const remap = remapWithOpenSlot({
+    selectedPlayers: originalPlayers.filter((player) => player !== removedMidfielder),
+    fromFormation: originalFormation,
+    toFormation: targetFormation,
+    requiredOpenSlotLine: compatibility.addedLine,
+  });
+  assert(remap, "Debe existir estado intermedio de 10 jugadores antes de cancelar.");
+  assert(remap.placedPlayers.length === 10, "El estado intermedio debe tener 10 jugadores antes del draft.");
+
+  const restoredFormation = originalFormation;
+  const restoredPlayers = originalPlayers;
+  const restoredRating = originalRating;
+  const restoredMediaXi = originalMediaXi;
+
+  assert(restoredPlayers.length === 11, "Cancelar debe conservar 11/11 jugadores.");
+  logOk("Cancelar conserva 11/11");
+
+  assert(restoredFormation.id === originalFormation.id, "Cancelar debe conservar la formación original.");
+  logOk("Cancelar conserva formación original");
+
+  assert(restoredRating.overall === originalRating.overall, "Cancelar debe conservar el rating visible original.");
+  assert(restoredMediaXi === originalMediaXi, "Cancelar debe conservar la Media XI original.");
+  logOk("Cancelar conserva media original");
+
+  assertNoDuplicatePlayers(restoredPlayers);
+  logOk("Cancelar no deja jugador duplicado");
+
+  assertAllSlotsExist(restoredFormation, restoredPlayers);
+  logOk("Cancelar no deja posiciones inválidas");
+}
+
 console.log("QA Formation Reward\n");
 runRewardUnlockQa();
 runFormationLineQa();
+runCancelSnapshotQa();
 console.log("\nOK");

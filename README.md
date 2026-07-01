@@ -22,7 +22,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.22.4_CAREER_REWARD_LOCK_AND_RECALC_FIX`.
+Versión pública actual: `v0.22.8a_CAREER_REWARD_CANCEL_SNAPSHOT_FIX`.
 
 Base jugable cerrada:
 
@@ -63,6 +63,7 @@ https://ikeritu.github.io/11Historico/
 - Supercopa básica en modo carrera con 1.º/2.º de Liga + finalistas de Copa.
 - Pantalla de carrera con Media XI, rating visible, recompensas explicadas y copy de objetivo/Game Over pulido.
 - Cambio de formación compatible como premio por ganar Liga, Copa, o Supercopa + clasificación europea.
+- Cancelación segura de `Jugador + alineación` mediante snapshot completo de recompensa.
 
 ## Cómo se juega
 

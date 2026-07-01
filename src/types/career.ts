@@ -1,4 +1,4 @@
-import type { Formation, FormationSlot, MatchResult, RivalTeam } from "./game";
+import type { Formation, FormationSlot, MatchResult, RivalTeam, SelectedCoach, SelectedPlayer, SeasonId, TeamRating } from "./game";
 
 export type EuropeanCompetition =
   | "champions"
@@ -81,6 +81,26 @@ export interface CareerPromotionTransition {
   relegated: RivalTeam[];
   promoted: RivalTeam[];
   secondDivisionPool: RivalTeam[];
+}
+
+export interface CareerRewardSnapshot {
+  selectedFormation?: Formation;
+  selectedPlayers: SelectedPlayer[];
+  selectedCoach?: SelectedCoach;
+  teamRating?: TeamRating;
+  mediaXi: number;
+  careerSeasonRatingBonus: number;
+  careerSeasonLabel: string;
+  careerCompletedSeasons: number;
+  careerTrophyCounts: CareerTrophyCounts;
+  careerLeagueRivals: RivalTeam[];
+  careerSecondDivisionPool: RivalTeam[];
+  careerPromotionTransition?: CareerPromotionTransition;
+  careerPendingSupercopa?: CareerSupercopaQualification;
+  careerCurrentSupercopaResult?: CareerSupercopaResult;
+  playerRoundSeasons: SeasonId[];
+  currentRoundIndex: number;
+  savedAt: string;
 }
 
 export interface CareerState {

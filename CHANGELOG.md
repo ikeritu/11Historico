@@ -1,3 +1,11 @@
+## v0.22.8a — Career reward cancel snapshot fix
+
+- Guarda snapshot completo al entrar en recompensa de carrera.
+- Cancelar `Jugador + alineación` restaura formación, once, entrenador, rating visible, Media XI y estado de carrera ya avanzado.
+- Bloquea estados 12/11, duplicados y slots inexistentes en el flujo de recompensa.
+- Amplía `npm run qa:formation-reward` con pruebas automáticas de cancelación segura.
+- No toca balance, ratings históricos, plantillas ni ranking local.
+
 ## v0.22.8 — Game Over arcade summary
 
 - Añade resumen arcade en Game Over con temporadas superadas, palmarés y puntuación.
