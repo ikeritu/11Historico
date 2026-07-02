@@ -1,0 +1,72 @@
+# Setup — Ranking global con Google Sheets + Apps Script
+
+## 1. Crear Google Sheet
+
+1. Crea una hoja de cálculo nueva.
+2. Ponle un nombre reconocible, por ejemplo `Futbol11 Global Ranking`.
+3. No hace falta crear columnas manualmente: el script crea la pestaña `RankingGlobal` y sus cabeceras.
+
+## 2. Abrir Apps Script
+
+1. En la hoja, abre `Extensiones` → `Apps Script`.
+2. Borra el contenido inicial.
+3. Copia el contenido de:
+
+```text
+apps-script/globalRankingBackend.gs
+```
+
+4. Guarda el proyecto.
+
+## 3. Desplegar como Web App
+
+1. Pulsa `Implementar` → `Nueva implementación`.
+2. Tipo: `Aplicación web`.
+3. Ejecutar como: `Yo`.
+4. Acceso: `Cualquier usuario`.
+5. Copia la URL terminada en `/exec`.
+
+## 4. Configurar Futbol11
+
+En la raíz del proyecto local crea `.env.local`:
+
+```env
+VITE_GLOBAL_RANKING_ENDPOINT=https://script.google.com/macros/s/TU_DEPLOYMENT_ID/exec
+```
+
+Reinicia el servidor local o reconstruye:
+
+```powershell
+cmd /c "npm run dev"
+```
+
+Para producción, la variable debe existir antes de ejecutar:
+
+```powershell
+cmd /c "npm run build"
+```
+
+## 5. Prueba rápida
+
+En el navegador:
+
+1. Llega a Game Over.
+2. Introduce nick válido.
+3. Pulsa `Enviar al ranking global`.
+4. Abre `Ranking global`.
+5. Comprueba que aparece la carrera.
+6. Reintenta enviar la misma carrera: debe aparecer aviso de duplicado.
+
+## 6. Endpoints útiles
+
+Health check:
+
+```text
+https://script.google.com/macros/s/TU_DEPLOYMENT_ID/exec?action=health
+```
+
+Top 100:
+
+```text
+https://script.google.com/macros/s/TU_DEPLOYMENT_ID/exec?action=top&limit=100
+```

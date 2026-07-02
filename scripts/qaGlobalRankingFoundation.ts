@@ -6,6 +6,7 @@ import {
   sanitizeGlobalRankingNick,
   sortCareerGlobalRanking,
   submitGlobalRankingEntry,
+  getGlobalRankingBackendLabel,
   validateGlobalRankingNick,
   validateGlobalRankingPayload,
 } from "../src/services/globalRankingService";
@@ -59,7 +60,7 @@ function createSampleLocalEntry(overrides: Partial<CareerLocalRankingEntry> = {}
     bestLeaguePosition: 4,
     lastSeasonLabel: "2027/28",
     lastLeaguePosition: 8,
-    gameVersion: "v0.23.0a",
+    gameVersion: "v0.23.0b",
     createdAt: "2026-07-02T10:00:00.000Z",
     ...overrides,
   };
@@ -109,6 +110,15 @@ function testPayloadContract(): void {
   logOk("Contrato de envío global contiene campos requeridos");
 }
 
+function testAppsScriptBackendLabel(): void {
+  assert((awaitedBackendLabel()) === "Backend pendiente", "Sin endpoint debe indicar backend pendiente.");
+  logOk("Backend global pendiente queda identificado");
+}
+
+function awaitedBackendLabel(): string {
+  return getGlobalRankingBackendLabel("");
+}
+
 function testInvalidPayloadIsRejected(): void {
   const payload = buildCareerGlobalRankingPayload({ nick: "AB", entry: createSampleLocalEntry() });
   const errors = validateGlobalRankingPayload(payload);
@@ -142,6 +152,43 @@ async function testSubmitSuccessWithMockFetcher(): Promise<void> {
   assert(result.entry?.nick === "Itu", "La entrada devuelta debe conservar nick.");
   assert(capturedBody.includes("arcadeScore"), "El POST debe enviar el contrato JSON.");
   logOk("Envío global correcto con fetch mock");
+}
+
+async function testSubmitAppsScriptEnvelope(): Promise<void> {
+  const payload = buildCareerGlobalRankingPayload({ nick: "Itu", entry: createSampleLocalEntry() });
+
+  const result = await submitGlobalRankingEntry(payload, {
+    endpoint: "https://script.google.com/macros/s/example/exec",
+    fetcher: async () => createJsonResponse({
+      ok: true,
+      status: "submitted",
+      message: "Apps Script OK",
+      entry: { ...payload, id: payload.careerId },
+    }),
+  });
+
+  assert(result.ok, "La respuesta envoltorio de Apps Script debe ser OK.");
+  assert(result.message === "Apps Script OK", "Debe respetar el mensaje del backend.");
+  assert(result.entry?.careerId === payload.careerId, "Debe parsear entry desde el envoltorio.");
+  logOk("Respuesta Apps Script de envío se interpreta correctamente");
+}
+
+async function testSubmitAppsScriptDuplicate(): Promise<void> {
+  const payload = buildCareerGlobalRankingPayload({ nick: "Itu", entry: createSampleLocalEntry() });
+
+  const result = await submitGlobalRankingEntry(payload, {
+    endpoint: "https://script.google.com/macros/s/example/exec",
+    fetcher: async () => createJsonResponse({
+      ok: false,
+      status: "duplicate",
+      message: "Carrera duplicada",
+    }),
+  });
+
+  assert(!result.ok, "Un duplicado de Apps Script no debe devolver OK.");
+  assert(result.status === "duplicate", "Debe clasificar duplicados del backend.");
+  assert(result.message === "Carrera duplicada", "Debe mostrar mensaje del backend.");
+  logOk("Duplicado Apps Script se clasifica sin romper la carrera");
 }
 
 async function testSubmitNetworkError(): Promise<void> {
@@ -190,6 +237,23 @@ async function testLoadSortsAndLimitsGlobalRanking(): Promise<void> {
   logOk("Carga global ordena y limita Top 100");
 }
 
+async function testLoadAppsScriptEnvelope(): Promise<void> {
+  const entry = createSampleGlobalEntry({ arcadeScore: 99 });
+  const result = await loadGlobalRanking({
+    endpoint: "https://script.google.com/macros/s/example/exec",
+    fetcher: async (input) => {
+      assert(String(input).includes("action=top"), "Debe pedir action=top a Apps Script.");
+      assert(String(input).includes("limit=100"), "Debe pedir límite Top 100.");
+      return createJsonResponse({ ok: true, status: "loaded", message: "Top global", entries: [entry] });
+    },
+  });
+
+  assert(result.ok, "La carga desde envoltorio Apps Script debe ser OK.");
+  assert(result.entries.length === 1, "Debe leer entries desde el envoltorio.");
+  assert(result.message === "Top global", "Debe respetar mensaje de carga del backend.");
+  logOk("Respuesta Apps Script de Top global se interpreta correctamente");
+}
+
 function testGlobalRankingParserDropsInvalidRows(): void {
   const parsed = parseCareerGlobalRanking({
     entries: [createSampleGlobalEntry(), { nick: "Roto" }, null],
@@ -232,19 +296,23 @@ function testGlobalRankingStorageIgnoresCorruptData(): void {
   logOk("Storage global tolera datos corruptos");
 }
 
-console.log("QA Global Ranking Foundation");
+console.log("QA Global Ranking Apps Script Backend");
 
 testNickSanitization();
 testPayloadContract();
+testAppsScriptBackendLabel();
 testInvalidPayloadIsRejected();
 await testSubmitWithoutBackendDoesNotThrow();
 await testSubmitSuccessWithMockFetcher();
+await testSubmitAppsScriptEnvelope();
+await testSubmitAppsScriptDuplicate();
 await testSubmitNetworkError();
 await testLoadWithoutBackend();
 await testLoadSortsAndLimitsGlobalRanking();
+await testLoadAppsScriptEnvelope();
 testGlobalRankingParserDropsInvalidRows();
 testTieBreaks();
 testGlobalRankingStorage();
 testGlobalRankingStorageIgnoresCorruptData();
 
-console.log("QA global ranking foundation OK");
+console.log("QA global ranking backend OK");

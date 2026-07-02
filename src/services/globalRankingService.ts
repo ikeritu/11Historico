@@ -1,6 +1,7 @@
 import type { CareerGlobalRankingEntry, CareerGlobalRankingSubmitPayload, CareerLocalRankingEntry } from "../types/career";
 
-export const GLOBAL_RANKING_ENDPOINT = "";
+export const GLOBAL_RANKING_ENDPOINT = (import.meta.env.VITE_GLOBAL_RANKING_ENDPOINT ?? "").trim();
+export const GLOBAL_RANKING_BACKEND = "google_apps_script";
 export const GLOBAL_RANKING_TIMEOUT_MS = 6000;
 export const GLOBAL_RANKING_LIMIT = 100;
 
@@ -9,6 +10,7 @@ export type GlobalRankingStatus =
   | "loaded"
   | "not_configured"
   | "invalid_payload"
+  | "duplicate"
   | "network_error"
   | "server_error";
 
@@ -34,12 +36,24 @@ interface GlobalRankingRequestOptions {
   fetcher?: FetchLike;
 }
 
+type AppsScriptRankingResponse = {
+  ok?: boolean;
+  status?: string;
+  message?: string;
+  entry?: unknown;
+  entries?: unknown[];
+};
+
 function getEndpoint(endpoint?: string): string {
   return (endpoint ?? GLOBAL_RANKING_ENDPOINT).trim();
 }
 
 export function isGlobalRankingConfigured(endpoint?: string): boolean {
   return getEndpoint(endpoint).length > 0;
+}
+
+export function getGlobalRankingBackendLabel(endpoint?: string): string {
+  return isGlobalRankingConfigured(endpoint) ? "Google Sheets + Apps Script" : "Backend pendiente";
 }
 
 export function sanitizeGlobalRankingNick(value: string): string {
@@ -125,6 +139,16 @@ export function toCareerGlobalRankingEntry(payload: CareerGlobalRankingSubmitPay
   };
 }
 
+function normalizeStatus(value: unknown): GlobalRankingStatus | undefined {
+  if (value === "duplicate") return "duplicate";
+  if (value === "invalid_payload") return "invalid_payload";
+  if (value === "submitted") return "submitted";
+  if (value === "loaded") return "loaded";
+  if (value === "server_error") return "server_error";
+  if (value === "network_error") return "network_error";
+  return undefined;
+}
+
 function parseGlobalRankingEntry(candidate: unknown): CareerGlobalRankingEntry | undefined {
   if (!candidate || typeof candidate !== "object") return undefined;
 
@@ -168,15 +192,17 @@ export function sortCareerGlobalRanking(entries: CareerGlobalRankingEntry[]): Ca
   });
 }
 
-export function parseCareerGlobalRanking(raw: unknown): CareerGlobalRankingEntry[] {
-  const rawEntries = Array.isArray(raw)
-    ? raw
-    : raw && typeof raw === "object" && Array.isArray((raw as { entries?: unknown[] }).entries)
-      ? (raw as { entries: unknown[] }).entries
-      : [];
+function getResponseEntries(raw: unknown): unknown[] {
+  if (Array.isArray(raw)) return raw;
+  if (raw && typeof raw === "object" && Array.isArray((raw as AppsScriptRankingResponse).entries)) {
+    return (raw as { entries: unknown[] }).entries;
+  }
+  return [];
+}
 
+export function parseCareerGlobalRanking(raw: unknown): CareerGlobalRankingEntry[] {
   return sortCareerGlobalRanking(
-    rawEntries
+    getResponseEntries(raw)
       .map(parseGlobalRankingEntry)
       .filter((entry): entry is CareerGlobalRankingEntry => Boolean(entry)),
   ).slice(0, GLOBAL_RANKING_LIMIT);
@@ -193,6 +219,14 @@ async function readJsonSafely(response: Response): Promise<unknown> {
   } catch {
     return undefined;
   }
+}
+
+function getAppsScriptResponse(raw: unknown): AppsScriptRankingResponse | undefined {
+  return raw && typeof raw === "object" ? raw as AppsScriptRankingResponse : undefined;
+}
+
+function getResponseMessage(data: AppsScriptRankingResponse | undefined, fallback: string): string {
+  return typeof data?.message === "string" && data.message.trim().length > 0 ? data.message : fallback;
 }
 
 export async function submitGlobalRankingEntry(
@@ -215,7 +249,7 @@ export async function submitGlobalRankingEntry(
     return {
       ok: false,
       status: "not_configured",
-      message: "Ranking global preparado, pero el backend todavía no está configurado.",
+      message: "Ranking global preparado, pero el endpoint de Apps Script todavía no está configurado.",
     };
   }
 
@@ -226,7 +260,7 @@ export async function submitGlobalRankingEntry(
     const fetcher = options.fetcher ?? fetch;
     const response = await fetcher(endpoint, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify(payload),
       signal: controller.signal,
     });
@@ -239,13 +273,26 @@ export async function submitGlobalRankingEntry(
       };
     }
 
-    const data = await readJsonSafely(response);
-    const returnedEntry = parseGlobalRankingEntry(data) ?? toCareerGlobalRankingEntry(payload);
+    const data = getAppsScriptResponse(await readJsonSafely(response));
+
+    if (data?.ok === false) {
+      const status = normalizeStatus(data.status) ?? "server_error";
+
+      return {
+        ok: false,
+        status,
+        message: getResponseMessage(data, status === "duplicate"
+          ? "Esta carrera ya estaba enviada al ranking global."
+          : "El ranking global rechazó el envío."),
+      };
+    }
+
+    const returnedEntry = parseGlobalRankingEntry(data?.entry) ?? parseGlobalRankingEntry(data) ?? toCareerGlobalRankingEntry(payload);
 
     return {
       ok: true,
       status: "submitted",
-      message: "Carrera enviada al ranking global.",
+      message: getResponseMessage(data, "Carrera enviada al ranking global."),
       entry: returnedEntry,
     };
   } catch {
@@ -268,7 +315,7 @@ export async function loadGlobalRanking(
     return {
       ok: false,
       status: "not_configured",
-      message: "Ranking global pendiente de conectar a backend.",
+      message: "Ranking global pendiente de configurar con Apps Script.",
       entries: [],
     };
   }
@@ -293,12 +340,23 @@ export async function loadGlobalRanking(
     }
 
     const data = await readJsonSafely(response);
+    const appsScriptResponse = getAppsScriptResponse(data);
+
+    if (appsScriptResponse?.ok === false) {
+      return {
+        ok: false,
+        status: normalizeStatus(appsScriptResponse.status) ?? "server_error",
+        message: getResponseMessage(appsScriptResponse, "El ranking global no pudo cargar el Top 100."),
+        entries: [],
+      };
+    }
+
     const entries = parseCareerGlobalRanking(data);
 
     return {
       ok: true,
       status: "loaded",
-      message: entries.length > 0 ? "Ranking global cargado." : "Ranking global sin entradas todavía.",
+      message: getResponseMessage(appsScriptResponse, entries.length > 0 ? "Ranking global cargado." : "Ranking global sin entradas todavía."),
       entries,
     };
   } catch {

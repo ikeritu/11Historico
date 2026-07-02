@@ -1,3 +1,7 @@
+### v0.23.0b — Global ranking backend Apps Script
+
+Conecta el ranking global a un backend real mínimo con Google Sheets + Apps Script. Añade el script `apps-script/globalRankingBackend.gs`, configuración por `VITE_GLOBAL_RANKING_ENDPOINT`, envío real desde Game Over, carga Top 100, manejo de duplicados y QA ampliada.
+
 ### v0.23.0a — Global ranking foundation
 
 Base frontend del futuro ranking global: contrato de envío/carga, validación de nick, pantalla Top global pendiente de backend, panel de Game Over para enviar carrera, storage separado de último nick/carreras enviadas y `npm run qa:global-ranking`. Todavía sin Apps Script/Supabase/Firebase real.
@@ -47,7 +51,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.23.0a_GLOBAL_RANKING_FOUNDATION`.
+Versión pública actual: `v0.23.0b_GLOBAL_RANKING_BACKEND_APPS_SCRIPT`.
 
 Base jugable cerrada:
 
@@ -83,7 +87,8 @@ https://ikeritu.github.io/11Historico/
 - Botón para compartir el juego.
 - Entrada informativa de Modo carrera Athletic en preparación.
 - Reglas puras del modo carrera preparadas para el MVP jugable.
-- Ranking local de mejores carreras guardado en el navegador, sin backend.
+- Ranking local de mejores carreras guardado en el navegador.
+- Ranking global preparado para Google Sheets + Apps Script mediante `VITE_GLOBAL_RANKING_ENDPOINT`.
 - Flujo básico de carrera con copy de objetivo corregido y techo de media ajustado.
 - Flujo básico de una temporada de carrera conectado a Liga y Copa.
 - Supercopa básica en modo carrera con 1.º/2.º de Liga + finalistas de Copa.
@@ -119,6 +124,27 @@ npm.cmd install
 ```powershell
 npm.cmd run dev
 ```
+
+## Ranking global con Apps Script
+
+Para activar el ranking global real, crea `.env.local` en la raíz del proyecto:
+
+```env
+VITE_GLOBAL_RANKING_ENDPOINT=https://script.google.com/macros/s/TU_DEPLOYMENT_ID/exec
+```
+
+El backend copiables está en:
+
+```text
+apps-script/globalRankingBackend.gs
+```
+
+Guía completa:
+
+```text
+docs/GLOBAL_RANKING_APPS_SCRIPT_SETUP.md
+```
+
 
 Abre la URL que indique Vite, normalmente:
 

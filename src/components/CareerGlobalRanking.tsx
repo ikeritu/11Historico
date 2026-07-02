@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { formatCareerRangeLabel } from "../career/careerRanking";
-import { loadGlobalRanking } from "../services/globalRankingService";
+import { getGlobalRankingBackendLabel, loadGlobalRanking } from "../services/globalRankingService";
 import type { CareerGlobalRankingEntry } from "../types/career";
 
 import "./CareerGlobalRanking.css";
@@ -54,10 +54,10 @@ export function CareerGlobalRanking({ onNewCareer, onViewLocalRanking, onBack }:
   return (
     <main className="career-global-ranking-screen">
       <section className="career-global-ranking-card">
-        <p className="eyebrow">Top 100 online</p>
+        <p className="eyebrow">Top 100 online · {getGlobalRankingBackendLabel()}</p>
         <h1>Ranking global</h1>
         <p className="career-global-ranking-intro">
-          Pantalla preparada para el ranking global. En esta fase todavía no hay backend conectado: el siguiente paso será enlazar Apps Script/Supabase/Firebase.
+          Top global conectado a Google Sheets + Apps Script cuando `VITE_GLOBAL_RANKING_ENDPOINT` esté configurado. Sin endpoint, se muestra un estado seguro pendiente de backend.
         </p>
 
         {isLoading && (

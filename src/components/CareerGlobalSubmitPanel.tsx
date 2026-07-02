@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import type { CareerLocalRankingEntry } from "../types/career";
 import {
   buildCareerGlobalRankingPayload,
+  getGlobalRankingBackendLabel,
   isGlobalRankingConfigured,
   submitGlobalRankingEntry,
   validateGlobalRankingNick,
@@ -25,11 +26,12 @@ export function CareerGlobalSubmitPanel({ entry, onViewGlobalRanking }: CareerGl
   const [submitted, setSubmitted] = useState(() => hasSubmittedCareerGlobalRankingEntry(entry.id));
   const [message, setMessage] = useState(() => isGlobalRankingConfigured()
     ? "Introduce nick para enviar esta carrera al futuro Top global."
-    : "Ranking global preparado. Falta conectar backend en v0.23.0B.");
+    : "Configura VITE_GLOBAL_RANKING_ENDPOINT para activar el envío real a Apps Script.");
   const [isSending, setIsSending] = useState(false);
 
   const nickError = useMemo(() => nick ? validateGlobalRankingNick(nick) : undefined, [nick]);
   const configured = isGlobalRankingConfigured();
+  const backendLabel = getGlobalRankingBackendLabel();
 
   async function handleSubmit() {
     const error = validateGlobalRankingNick(nick);
@@ -62,10 +64,10 @@ export function CareerGlobalSubmitPanel({ entry, onViewGlobalRanking }: CareerGl
   return (
     <section className="career-global-submit-panel" aria-label="Enviar carrera al ranking global">
       <div>
-        <span className="career-global-submit-kicker">Ranking global</span>
+        <span className="career-global-submit-kicker">Ranking global · {backendLabel}</span>
         <h2>Comparte esta carrera</h2>
         <p>
-          Base preparada para enviar tu puntuación a un Top global. El envío real se activará cuando conectemos Apps Script/Supabase/Firebase.
+          Envía tu puntuación al Top global conectado a Google Sheets + Apps Script. Si el endpoint no está configurado, el panel queda en modo seguro pendiente.
         </p>
       </div>
 

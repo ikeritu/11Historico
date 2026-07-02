@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.23.0b — Global ranking backend Apps Script
+
+- Añade backend mínimo copiables a Apps Script en `apps-script/globalRankingBackend.gs`.
+- Conecta el frontend a `VITE_GLOBAL_RANKING_ENDPOINT` para envío real y carga Top 100 desde Google Sheets + Apps Script.
+- Interpreta respuestas de Apps Script con `ok/status/message/entry/entries` y clasifica duplicados sin romper Game Over.
+- Mantiene ranking local y guardado normal separados.
+- Amplía `npm run qa:global-ranking` con casos de envoltorio Apps Script, duplicados y carga de Top 100.
+- Actualiza versionado a `v0.23.0b` / `0.23.0-b.0`.
+- No toca balance, ratings históricos, plantillas, simulación ni reglas de recompensa.
+
 ## v0.23.0a — Global ranking foundation
 
 - Prepara el contrato frontend del ranking global sin conectar todavía backend real.

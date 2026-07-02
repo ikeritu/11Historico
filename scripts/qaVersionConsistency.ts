@@ -60,7 +60,7 @@ function testPackageLockMatchesPackageJson(): void {
 }
 
 function testAppVersionMetadata(): void {
-  assert(APP_VERSION === "v0.23.0a", `APP_VERSION debe ser v0.23.0a, pero es ${APP_VERSION}`);
+  assert(APP_VERSION === "v0.23.0b", `APP_VERSION debe ser v0.23.0b, pero es ${APP_VERSION}`);
   assert(APP_VERSION_NAME.trim().length > 0, "APP_VERSION_NAME no puede estar vacío.");
   assert(APP_STATUS.trim().length > 0, "APP_STATUS no puede estar vacío.");
   assertNoMojibake("APP_VERSION_NAME", APP_VERSION_NAME);
@@ -71,12 +71,12 @@ function testAppVersionMetadata(): void {
 function testDocsMentionCurrentVersion(): void {
   const changelog = readFileSync(join(ROOT, "CHANGELOG.md"), "utf8");
   const readme = readFileSync(join(ROOT, "README.md"), "utf8");
-  const releaseDocPath = join(ROOT, "docs", "v0_23_0a_GLOBAL_RANKING_FOUNDATION.md");
+  const releaseDocPath = join(ROOT, "docs", "v0_23_0b_GLOBAL_RANKING_BACKEND_APPS_SCRIPT.md");
 
-  assert(changelog.startsWith("# Changelog\n\n## v0.23.0a"), "CHANGELOG debe empezar por v0.23.0a.");
-  assert(readme.includes("Versión pública actual: `v0.23.0a_GLOBAL_RANKING_FOUNDATION`."), "README debe apuntar a v0.23.0a_GLOBAL_RANKING_FOUNDATION.");
-  assert(existsSync(releaseDocPath), "Debe existir docs/v0_23_0a_GLOBAL_RANKING_FOUNDATION.md.");
-  logOk("README, CHANGELOG y doc de fase apuntan a v0.23.0a");
+  assert(changelog.startsWith("# Changelog\n\n## v0.23.0b"), "CHANGELOG debe empezar por v0.23.0b.");
+  assert(readme.includes("Versión pública actual: `v0.23.0b_GLOBAL_RANKING_BACKEND_APPS_SCRIPT`."), "README debe apuntar a v0.23.0b_GLOBAL_RANKING_BACKEND_APPS_SCRIPT.");
+  assert(existsSync(releaseDocPath), "Debe existir docs/v0_23_0b_GLOBAL_RANKING_BACKEND_APPS_SCRIPT.md.");
+  logOk("README, CHANGELOG y doc de fase apuntan a v0.23.0b");
 }
 
 function testQaScriptsAreRegistered(): void {
