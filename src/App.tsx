@@ -48,6 +48,7 @@ import CareerPlayerReplacementPicker from "./components/CareerPlayerReplacementP
 import CareerSupercopa from "./components/CareerSupercopa";
 import CareerFormationChangePicker from "./components/CareerFormationChangePicker";
 import CareerLocalRanking from "./components/CareerLocalRanking";
+import CareerGlobalRanking from "./components/CareerGlobalRanking";
 
 import {
   clearSavedGameState,
@@ -208,6 +209,7 @@ type AppScreen =
   | "career_season_result"
   | "career_game_over"
   | "career_local_ranking"
+  | "career_global_ranking"
   | "career_interseason_reward"
   | "career_supercopa"
   | "career_player_replacement_pick"
@@ -423,6 +425,7 @@ export default function App() {
   const [replacementOriginalFormation, setReplacementOriginalFormation] = useState<Formation | undefined>();
   const [coachBeforeReward, setCoachBeforeReward] = useState<SelectedCoach | undefined>();
   const [careerLocalRanking, setCareerLocalRanking] = useState<CareerLocalRankingEntry[]>(() => loadCareerLocalRanking());
+  const [careerCurrentRankingEntry, setCareerCurrentRankingEntry] = useState<CareerLocalRankingEntry | undefined>(() => savedGame?.careerCurrentRankingEntry);
 
   const [gameId, setGameId] = useState<string>(() => savedGame?.gameId ?? createGameId());
   const [phase, setPhase] = useState<GamePhase>(() => savedGame?.phase ?? "formation_selection");
@@ -493,6 +496,7 @@ export default function App() {
       careerRewardFlow,
       careerSeasonRatingBonus,
       careerRewardSnapshot,
+      careerCurrentRankingEntry,
     });
   }, [
     gameId,
@@ -523,6 +527,7 @@ export default function App() {
     careerRewardFlow,
     careerSeasonRatingBonus,
     careerRewardSnapshot,
+    careerCurrentRankingEntry,
   ]);
 
   function recalculateVisibleTeamRating(params: {
@@ -575,6 +580,7 @@ export default function App() {
     setCareerRewardFlow(undefined);
     setCareerSeasonRatingBonus(0);
     setCareerRewardSnapshot(undefined);
+    setCareerCurrentRankingEntry(undefined);
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
     setReplacementOriginalFormation(undefined);
@@ -609,6 +615,7 @@ export default function App() {
     setCareerRewardFlow(undefined);
     setCareerSeasonRatingBonus(0);
     setCareerRewardSnapshot(undefined);
+    setCareerCurrentRankingEntry(undefined);
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
     setReplacementOriginalFormation(undefined);
@@ -849,7 +856,11 @@ export default function App() {
           seasonResult,
           bestLeaguePosition: nextBestLeaguePosition,
         });
+
+        setCareerCurrentRankingEntry(rankingEntry);
         setCareerLocalRanking(saveCareerLocalRankingEntry(rankingEntry));
+      } else {
+        setCareerCurrentRankingEntry(undefined);
       }
 
       setScreen(objectiveResult.survives ? "career_season_result" : "career_game_over");
@@ -1258,6 +1269,10 @@ export default function App() {
     setScreen("career_local_ranking");
   }
 
+  function handleOpenGlobalRanking() {
+    setScreen("career_global_ranking");
+  }
+
   function handleClearLocalRanking() {
     const shouldClear = typeof window === "undefined"
       ? true
@@ -1283,6 +1298,7 @@ export default function App() {
     "career_season_result",
     "career_game_over",
     "career_local_ranking",
+    "career_global_ranking",
     "career_interseason_reward",
     "career_supercopa",
     "career_player_replacement_pick",
@@ -1343,6 +1359,14 @@ export default function App() {
         />
       )}
 
+      {screen === "career_global_ranking" && (
+        <CareerGlobalRanking
+          onNewCareer={handleStartCareer}
+          onViewLocalRanking={handleOpenLocalRanking}
+          onBack={() => setScreen("home")}
+        />
+      )}
+
       {screen === "home" && (
         <GameHome
           hasSavedGame={hasSavedGameState()}
@@ -1354,6 +1378,7 @@ export default function App() {
           onContinueGame={handleContinueGame}
           onCareerPreview={handleOpenCareerPreview}
           onViewLocalRanking={handleOpenLocalRanking}
+          onViewGlobalRanking={handleOpenGlobalRanking}
         />
       )}
 
@@ -1494,6 +1519,8 @@ export default function App() {
           onContinueCareer={careerObjectiveResult.survives ? handleContinueCareerAfterSeason : undefined}
           onRestart={handleStartCareer}
           onViewLocalRanking={handleOpenLocalRanking}
+          onViewGlobalRanking={handleOpenGlobalRanking}
+          rankingEntry={careerCurrentRankingEntry}
           selectedPlayers={selectedPlayers}
           teamRating={teamRating}
           completedSeasons={careerCompletedSeasons}

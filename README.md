@@ -1,3 +1,7 @@
+### v0.23.0a — Global ranking foundation
+
+Base frontend del futuro ranking global: contrato de envío/carga, validación de nick, pantalla Top global pendiente de backend, panel de Game Over para enviar carrera, storage separado de último nick/carreras enviadas y `npm run qa:global-ranking`. Todavía sin Apps Script/Supabase/Firebase real.
+
 ### v0.22.9c — Tech debt version cleanup
 
 - Versión visible y versión npm alineadas antes de abrir ranking global.
@@ -43,7 +47,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.22.9c_TECH_DEBT_VERSION_CLEANUP`.
+Versión pública actual: `v0.23.0a_GLOBAL_RANKING_FOUNDATION`.
 
 Base jugable cerrada:
 

@@ -1,0 +1,91 @@
+.career-global-submit-panel {
+  display: grid;
+  gap: 16px;
+  margin-top: 20px;
+  padding: 18px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.085);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.career-global-submit-kicker {
+  display: inline-flex;
+  margin-bottom: 6px;
+  color: #ffe08a;
+  font-size: 0.76rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.career-global-submit-panel h2 {
+  margin: 0 0 6px;
+  font-size: 1.35rem;
+}
+
+.career-global-submit-panel p {
+  margin: 0;
+  color: #f2d2d7;
+  line-height: 1.45;
+}
+
+.career-global-submit-form {
+  display: grid;
+  gap: 7px;
+}
+
+.career-global-submit-form label {
+  color: #ffe08a;
+  font-size: 0.78rem;
+  font-weight: 950;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.career-global-submit-form input {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 48px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: rgba(0, 0, 0, 0.2);
+  color: #ffffff;
+  font: inherit;
+  font-weight: 800;
+}
+
+.career-global-submit-form small,
+.career-global-submit-message {
+  color: #ffd7de;
+  font-size: 0.82rem;
+  font-weight: 750;
+}
+
+.career-global-submit-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.career-global-submit-button {
+  min-height: 52px;
+  border: 0;
+  border-radius: 14px;
+  padding: 14px 18px;
+  background: #ffe08a;
+  color: #3b1018;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.career-global-submit-button:disabled {
+  opacity: 0.52;
+  cursor: not-allowed;
+}
+
+@media (max-width: 720px) {
+  .career-global-submit-actions {
+    display: grid;
+  }
+}

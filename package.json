@@ -1,7 +1,7 @@
 {
   "name": "futbol11",
   "private": true,
-  "version": "0.22.9-c.0",
+  "version": "0.23.0-a.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -15,7 +15,8 @@
     "qa:formation-reward": "vite build --ssr scripts/qaFormationReward.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/qaFormationReward.js",
     "qa:career-ranking": "vite build --ssr scripts/qaCareerLocalRanking.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/qaCareerLocalRanking.js",
     "qa:version": "vite build --ssr scripts/qaVersionConsistency.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/qaVersionConsistency.js",
-    "qa:tech-debt": "npm run qa:version && npm run qa:formation-reward && npm run qa:career-ranking"
+    "qa:tech-debt": "npm run qa:version && npm run qa:formation-reward && npm run qa:career-ranking && npm run qa:global-ranking",
+    "qa:global-ranking": "vite build --ssr scripts/qaGlobalRankingFoundation.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/qaGlobalRankingFoundation.js"
   },
   "dependencies": {
     "react": "^19.2.6",

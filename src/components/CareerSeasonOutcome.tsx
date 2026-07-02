@@ -1,6 +1,8 @@
 import type { FinalGameSummary, SelectedPlayer, TeamRating } from "../types/game";
-import type { CareerObjectiveResult, CareerSeasonResult, CareerTrophyCounts } from "../types/career";
+import type { CareerLocalRankingEntry, CareerObjectiveResult, CareerSeasonResult, CareerTrophyCounts } from "../types/career";
 import { calculateCareerArcadeScore, getFinalCareerTrophyCounts } from "../career/careerRanking";
+
+import CareerGlobalSubmitPanel from "./CareerGlobalSubmitPanel";
 
 import "./CareerSeasonOutcome.css";
 
@@ -12,6 +14,8 @@ interface CareerSeasonOutcomeProps {
   onRestart?: () => void;
   onContinueCareer?: () => void;
   onViewLocalRanking?: () => void;
+  onViewGlobalRanking?: () => void;
+  rankingEntry?: CareerLocalRankingEntry;
   selectedPlayers?: SelectedPlayer[];
   teamRating?: TeamRating;
   completedSeasons?: number;
@@ -126,6 +130,8 @@ export function CareerSeasonOutcome({
   onContinueCareer,
   onRestart,
   onViewLocalRanking,
+  onViewGlobalRanking,
+  rankingEntry,
   selectedPlayers = [],
   teamRating,
   completedSeasons = 0,
@@ -190,6 +196,13 @@ export function CareerSeasonOutcome({
           />
         )}
 
+        {!survived && rankingEntry && onViewGlobalRanking && (
+          <CareerGlobalSubmitPanel
+            entry={rankingEntry}
+            onViewGlobalRanking={onViewGlobalRanking}
+          />
+        )}
+
         <div className="career-outcome-actions">
           {survived && onContinueCareer && (
             <button type="button" className="primary-home-button" onClick={onContinueCareer}>
@@ -204,6 +217,11 @@ export function CareerSeasonOutcome({
           {!survived && onViewLocalRanking && (
             <button type="button" className="career-local-ranking-button" onClick={onViewLocalRanking}>
               Ver ranking local
+            </button>
+          )}
+          {!survived && onViewGlobalRanking && (
+            <button type="button" className="secondary-home-button" onClick={onViewGlobalRanking}>
+              Ver ranking global
             </button>
           )}
           <button type="button" className={survived ? "secondary-home-button" : "secondary-home-button"} onClick={onViewFullSummary}>

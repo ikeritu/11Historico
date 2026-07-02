@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.23.0a — Global ranking foundation
+
+- Prepara el contrato frontend del ranking global sin conectar todavía backend real.
+- Añade servicio `globalRankingService` con submit/load, validación de payload, orden Top 100, timeout y manejo de errores.
+- Añade almacenamiento separado para último nick y carreras ya enviadas desde este navegador.
+- Añade panel de envío en Game Over y pantalla `Ranking global` en estado preparado/pendiente de backend.
+- Añade `npm run qa:global-ranking` y lo integra en `npm run qa:tech-debt`.
+- No toca balance, ratings históricos, plantillas, simulación, ranking local ni reglas de recompensa.
+
 ## v0.22.9c — Tech debt version cleanup
 
 - Alinea la versión visible del juego con `appVersion.ts`: `v0.22.9c`.

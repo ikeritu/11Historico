@@ -1,3 +1,3 @@
-export const APP_VERSION = "v0.22.9c";
-export const APP_VERSION_NAME = "Tech debt version cleanup";
-export const APP_STATUS = "Versionado alineado, QA de consistencia y documentacion limpia antes de ranking global";
+export const APP_VERSION = "v0.23.0a";
+export const APP_VERSION_NAME = "Global ranking foundation";
+export const APP_STATUS = "Contrato, pantallas y QA base del ranking global sin backend real todavia";

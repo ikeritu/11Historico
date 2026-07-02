@@ -118,6 +118,28 @@ export interface CareerLocalRankingEntry {
   createdAt: string;
 }
 
+export interface CareerGlobalRankingSubmitPayload {
+  careerId: string;
+  nick: string;
+  completedSeasons: number;
+  arcadeScore: number;
+  palmaresScore: number;
+  survivalScore: number;
+  trophyCounts: CareerTrophyCounts;
+  bestLeaguePosition: number;
+  lastSeasonLabel: string;
+  lastLeaguePosition: number;
+  gameVersion: string;
+  createdAt: string;
+  submittedAt: string;
+}
+
+export interface CareerGlobalRankingEntry extends CareerLocalRankingEntry {
+  careerId: string;
+  nick: string;
+  submittedAt: string;
+}
+
 export interface CareerState {
   currentSeasonIndex: number;
   currentSeasonLabel: string;
