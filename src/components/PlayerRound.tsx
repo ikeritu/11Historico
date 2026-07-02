@@ -1,6 +1,6 @@
 // src/components/PlayerRound.tsx
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import type {
   Formation,
@@ -12,7 +12,9 @@ import type {
 } from "../types/game";
 
 import {
+  canPlayerFillSlotInNaturalLine,
   getAvailableSlotsForPlayer,
+  getFormationLineForPlayerPosition,
   isPlayerAlreadySelected,
   resolvePlayerSlotPlacement,
 } from "../domain/positionRules";
@@ -72,29 +74,7 @@ const SORT_OPTIONS: Array<{ label: string; value: SortKey }> = [
 ];
 
 function getSlotLineForPosition(position: PlayerPosition): FormationSlot["line"] {
-  if (position === "POR") return "goalkeeper";
-
-  if (
-    position === "LD" ||
-    position === "DFC" ||
-    position === "LI" ||
-    position === "CAD" ||
-    position === "CAI"
-  ) {
-    return "defense";
-  }
-
-  if (
-    position === "MCD" ||
-    position === "MC" ||
-    position === "MP" ||
-    position === "MI" ||
-    position === "MD"
-  ) {
-    return "midfield";
-  }
-
-  return "attack";
+  return getFormationLineForPlayerPosition(position);
 }
 
 function playerMatchesLineFilter(
@@ -106,13 +86,6 @@ function playerMatchesLineFilter(
   return player.positions.some((position) => getSlotLineForPosition(position) === filter);
 }
 
-function playerHasNaturalPositionInLine(
-  player: PlayerSeason,
-  line: FormationSlot["line"]
-): boolean {
-  return player.positions.some((position) => getSlotLineForPosition(position) === line);
-}
-
 function filterSlotsByStrictLine(
   player: PlayerSeason,
   slots: FormationSlot[],
@@ -120,9 +93,19 @@ function filterSlotsByStrictLine(
 ): FormationSlot[] {
   if (!strictOpenSlotLine) return slots;
 
-  if (!playerHasNaturalPositionInLine(player, strictOpenSlotLine)) return [];
+  return slots.filter((slot) =>
+    canPlayerFillSlotInNaturalLine(player, slot, strictOpenSlotLine),
+  );
+}
 
-  return slots.filter((slot) => slot.line === strictOpenSlotLine);
+function isValidStrictLineSlot(
+  player: PlayerSeason,
+  slot: FormationSlot,
+  strictOpenSlotLine?: FormationSlot["line"],
+): boolean {
+  if (!strictOpenSlotLine) return true;
+
+  return canPlayerFillSlotInNaturalLine(player, slot, strictOpenSlotLine);
 }
 
 function getSortValue(player: PlayerSeason, sortKey: SortKey): number {
@@ -166,6 +149,16 @@ function isPlayerNameAlreadySelected(
     (selected) =>
       normalizePlayerIdentity(selected.playerSeason.name) === normalizedPlayerName
   );
+}
+
+function getDeterministicIndex(seed: string, total: number): number {
+  if (total <= 1) return 0;
+
+  const hash = seed.split("").reduce((value, char) => {
+    return ((value << 5) - value + char.charCodeAt(0)) | 0;
+  }, 0);
+
+  return Math.abs(hash) % total;
 }
 
 function getSkillLabel(skill: SortKey): string {
@@ -459,9 +452,12 @@ export function PlayerRound({
       return undefined;
     }
 
-    const randomIndex = Math.floor(Math.random() * compatibleSeasonIds.length);
+    const deterministicIndex = getDeterministicIndex(
+      `${season}-${formation.id}-${selectedPlayers.map((player) => player.slotId).join("|")}`,
+      compatibleSeasonIds.length,
+    );
 
-    return compatibleSeasonIds[randomIndex];
+    return compatibleSeasonIds[deterministicIndex];
   }, [formation, season, seasonPlayers, selectedPlayers, strictOpenSlotLine]);
 
   const effectiveDraftSeason = fallbackDraftSeason ?? season;
@@ -523,8 +519,18 @@ export function PlayerRound({
       return undefined;
     }
 
-    return player;
-  }, [draftPlayerPool, selectedPlayerId, selectedPlayers]);
+    const availableSlots = filterSlotsByStrictLine(
+      player,
+      getAvailableSlotsForPlayer({
+        player,
+        formation,
+        selectedPlayers,
+      }),
+      strictOpenSlotLine,
+    );
+
+    return availableSlots.length > 0 ? player : undefined;
+  }, [draftPlayerPool, formation, selectedPlayerId, selectedPlayers, strictOpenSlotLine]);
 
   const availableSlotsForSelectedPlayer = useMemo(() => {
     if (!selectedPlayer) return [];
@@ -571,26 +577,6 @@ export function PlayerRound({
   }
 
 
-  const selectedPlayerValidityGuard = useMemo(() => {
-    if (!selectedPlayer) return true;
-
-    return filterSlotsByStrictLine(
-      selectedPlayer,
-      getAvailableSlotsForPlayer({
-        player: selectedPlayer,
-        formation,
-        selectedPlayers,
-      }),
-      strictOpenSlotLine,
-    ).length > 0;
-  }, [formation, selectedPlayer, selectedPlayers, strictOpenSlotLine]);
-
-  useEffect(() => {
-    if (!selectedPlayerValidityGuard) {
-      setSelectedPlayerId(undefined);
-    }
-  }, [selectedPlayerValidityGuard]);
-
   function handleSlotClick(slot: FormationSlot) {
     if (!selectedPlayer) return;
 
@@ -598,6 +584,8 @@ export function PlayerRound({
       setSelectedPlayerId(undefined);
       return;
     }
+
+    if (!isValidStrictLineSlot(selectedPlayer, slot, strictOpenSlotLine)) return;
 
     const placement = resolvePlayerSlotPlacement(selectedPlayer, slot);
 
@@ -619,6 +607,8 @@ export function PlayerRound({
     if (isPlayerAlreadySelected(player, selectedPlayers) || isPlayerNameAlreadySelected(player, selectedPlayers)) {
       return;
     }
+
+    if (!isValidStrictLineSlot(player, slot, strictOpenSlotLine)) return;
 
     const placement = resolvePlayerSlotPlacement(player, slot);
 
@@ -804,7 +794,7 @@ export function PlayerRound({
               const hasAvailableSlot = availableSlots.length > 0;
 
               const selectable = !alreadySelected && hasAvailableSlot;
-              const active = selectedPlayerId === player.id;
+              const active = selectedPlayer?.id === player.id;
 
               return (
                 <article

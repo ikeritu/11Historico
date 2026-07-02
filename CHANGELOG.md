@@ -1,3 +1,14 @@
+# Changelog
+
+## v0.22.9b — Special reward player-only fix
+
+- El premio especial de Jugador + alineación ya permite mantener la formación actual y cambiar solo el jugador.
+- La pantalla de cambio compatible incluye una opción explícita `Mantener formación`.
+- El draft posterior al cambio de formación bloquea colocaciones falsas de línea: un MP puro ya no puede cubrir un hueco de delantero.
+- La asignación de posición prioriza la posición natural de la línea del slot antes que comodines tácticos.
+- QA de recompensa ampliada: mantener formación, hueco exacto del jugador retirado y bloqueo de MP puro como delantero.
+- No toca balance, ratings históricos, plantillas ni simulación de Liga/Copa.
+
 ## v0.22.9a — Local ranking UX QA
 
 - Muestra el rango de temporadas de cada carrera en el Top local (ejemplo `2025/26–2027/28`).

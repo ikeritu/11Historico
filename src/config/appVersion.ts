@@ -1,3 +1,3 @@
-export const APP_VERSION = "v0.22.9a";
-export const APP_VERSION_NAME = "Local ranking UX QA";
-export const APP_STATUS = "Ranking local pulido: rango de temporadas, vista movil y QA de persistencia";
+export const APP_VERSION = "v0.22.9b";
+export const APP_VERSION_NAME = "Special reward player-only fix";
+export const APP_STATUS = "Premio especial: permite mantener formacion y bloquea MP puro como delantero";

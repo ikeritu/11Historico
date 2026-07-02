@@ -1,3 +1,9 @@
+### v0.22.9b — Special reward player-only fix
+
+- Premio especial: permite mantener formación y cambiar solo jugador.
+- Bloquea MP puro colocado como delantero en drafts estrictos por línea.
+- QA de recompensa ampliada.
+
 ### v0.22.9a — Local ranking UX QA
 
 El Top local muestra el rango de temporadas de cada carrera (`2025/26–2027/28`), se adapta a móvil con tarjetas apiladas y amplía `npm run qa:career-ranking` con QA de persistencia, desempates, datos corruptos, borrado y separación del guardado normal de partida.
@@ -30,7 +36,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.22.9a_LOCAL_RANKING_UX_QA`.
+Versión pública actual: `v0.22.9b_SPECIAL_REWARD_PLAYER_ONLY_FIX`.
 
 Base jugable cerrada:
 

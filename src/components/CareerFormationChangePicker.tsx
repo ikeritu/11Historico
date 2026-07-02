@@ -22,6 +22,7 @@ interface FormationOption {
   remappedPlayers: SelectedPlayer[];
   reason: string;
   movementLabel: string;
+  isKeepCurrent?: boolean;
 }
 
 const LINE_LABELS: Record<FormationSlot["line"], string> = {
@@ -39,6 +40,30 @@ function buildMovementLabel(result: ReturnType<typeof canChangeFormationWithOneP
 
 function getOriginalSlotLine(formation: Formation, selectedPlayer: SelectedPlayer): FormationSlot["line"] | undefined {
   return formation.slots.find((slot) => slot.id === selectedPlayer.slotId)?.line;
+}
+
+function buildKeepCurrentFormationOption(
+  currentFormation: Formation,
+  selectedPlayers: SelectedPlayer[],
+  allowOpenSlot: boolean,
+  removedPlayer?: SelectedPlayer,
+): FormationOption | undefined {
+  if (!allowOpenSlot || !removedPlayer) return undefined;
+
+  const occupiedSlotIds = new Set(selectedPlayers.map((player) => player.slotId));
+  const openSlots = currentFormation.slots.filter((slot) => !occupiedSlotIds.has(slot.id));
+
+  if (selectedPlayers.length !== currentFormation.slots.length - 1 || openSlots.length !== 1) {
+    return undefined;
+  }
+
+  return {
+    formation: currentFormation,
+    remappedPlayers: selectedPlayers,
+    reason: "Mantienes la alineación actual y solo cambias el jugador que ha salido.",
+    movementLabel: "Solo cambio de jugador",
+    isKeepCurrent: true,
+  };
 }
 
 function remapPlayersToFormation(
@@ -123,7 +148,14 @@ export function CareerFormationChangePicker({
   const [selectedFormationId, setSelectedFormationId] = useState<string | undefined>();
 
   const options = useMemo<FormationOption[]>(() => {
-    return FORMATIONS
+    const keepCurrentOption = buildKeepCurrentFormationOption(
+      currentFormation,
+      selectedPlayers,
+      allowOpenSlot,
+      removedPlayer,
+    );
+
+    const formationChangeOptions = FORMATIONS
       .filter((formation) => formation.id !== currentFormation.id)
       .map((formation) => {
         const compatibility = canChangeFormationWithOnePlayer(currentFormation, formation);
@@ -158,6 +190,10 @@ export function CareerFormationChangePicker({
         } satisfies FormationOption;
       })
       .filter((item): item is FormationOption => Boolean(item));
+
+    return [keepCurrentOption, ...formationChangeOptions].filter(
+      (item): item is FormationOption => Boolean(item),
+    );
   }, [allowOpenSlot, currentFormation, removedPlayer, selectedPlayers]);
 
   const selectedOption = options.find((option) => option.formation.id === selectedFormationId);
@@ -166,9 +202,9 @@ export function CareerFormationChangePicker({
     <main className="career-formation-change-screen">
       <section className="career-formation-change-card">
         <p className="eyebrow">Modo carrera Athletic · premio especial</p>
-        <h1>Cambiar formación compatible</h1>
+        <h1>Cambiar jugador o formación compatible</h1>
         <p className="career-formation-change-lead">
-          Has desbloqueado un ajuste táctico para la temporada {nextSeasonLabel}. Primero has elegido el jugador que sale; ahora solo aparecen sistemas compatibles con los jugadores restantes, sin moverlos de su línea natural, y con un hueco válido para el sustituto.
+          Has desbloqueado un ajuste táctico para la temporada {nextSeasonLabel}. Puedes mantener tu formación actual y cambiar solo el jugador, o elegir una alineación compatible con los jugadores restantes, sin moverlos de su línea natural y con un hueco válido para el sustituto.
         </p>
 
         <section className="career-formation-change-current" aria-label="Formación actual">
@@ -196,7 +232,7 @@ export function CareerFormationChangePicker({
                   className={`career-formation-option ${isSelected ? "career-formation-option-selected" : ""}`}
                   onClick={() => setSelectedFormationId(option.formation.id)}
                 >
-                  <span>Nueva formación</span>
+                  <span>{option.isKeepCurrent ? "Mantener formación" : "Nueva formación"}</span>
                   <strong>{option.formation.name}</strong>
                   <small>{option.movementLabel}</small>
                   <em>{option.reason}</em>
@@ -210,8 +246,16 @@ export function CareerFormationChangePicker({
           <section className="career-formation-change-confirm" aria-label="Confirmar cambio de formación">
             <div>
               <span>Cambio seleccionado</span>
-              <strong>{currentFormation.name} → {selectedOption.formation.name}</strong>
-              <small>Se recolocan automáticamente los jugadores actuales y el próximo draft cubrirá el hueco libre. Si cancelas, conservarás tu plantilla y formación actuales y avanzarás a la siguiente temporada.</small>
+              <strong>
+                {selectedOption.isKeepCurrent
+                  ? `${currentFormation.name} · solo cambio de jugador`
+                  : `${currentFormation.name} → ${selectedOption.formation.name}`}
+              </strong>
+              <small>
+                {selectedOption.isKeepCurrent
+                  ? "No se cambia la formación: el próximo draft cubrirá el hueco exacto del jugador que has elegido retirar."
+                  : "Se recolocan automáticamente los jugadores actuales y el próximo draft cubrirá el hueco libre."} Si cancelas, conservarás tu plantilla y formación actuales y avanzarás a la siguiente temporada.
+              </small>
             </div>
           </section>
         )}
@@ -226,7 +270,7 @@ export function CareerFormationChangePicker({
               onConfirmFormationChange(selectedOption.formation, selectedOption.remappedPlayers);
             }}
           >
-            Confirmar alineación
+            {selectedOption?.isKeepCurrent ? "Solo cambiar jugador" : "Confirmar alineación"}
           </button>
           <button type="button" className="secondary-home-button" onClick={onCancel}>
             Cancelar y avanzar

@@ -1,4 +1,4 @@
-﻿// src/domain/positionRules.ts
+// src/domain/positionRules.ts
 
 import type {
   Formation,
@@ -53,6 +53,32 @@ export function isPlayerAlreadySelected(
       getPlayerIdentityKey(selectedPlayer) === playerKey
     );
   });
+}
+
+export function getFormationLineForPlayerPosition(position: PlayerPosition): FormationSlot["line"] {
+  if (position === "POR") return "goalkeeper";
+
+  if (
+    position === "LD" ||
+    position === "DFC" ||
+    position === "LI" ||
+    position === "CAD" ||
+    position === "CAI"
+  ) {
+    return "defense";
+  }
+
+  if (
+    position === "MCD" ||
+    position === "MC" ||
+    position === "MP" ||
+    position === "MI" ||
+    position === "MD"
+  ) {
+    return "midfield";
+  }
+
+  return "attack";
 }
 
 function getPlayerRuleLabels(player: PlayerSeason): string[] {
@@ -119,11 +145,39 @@ function getAssignedPosition(
   slot: FormationSlot,
   matchedLabel: string
 ): PlayerPosition | undefined {
+  const directNaturalPosition = player.positions.find(
+    (position) =>
+      slot.allowedPositions.includes(position) &&
+      getFormationLineForPlayerPosition(position) === slot.line,
+  );
+
+  if (directNaturalPosition) return directNaturalPosition;
+
+  const matchedPosition = positionFromLabel(matchedLabel);
+
+  if (
+    matchedPosition &&
+    slot.allowedPositions.includes(matchedPosition) &&
+    getFormationLineForPlayerPosition(matchedPosition) === slot.line
+  ) {
+    return matchedPosition;
+  }
+
+  for (const playerLabel of getPlayerRuleLabels(player)) {
+    const mappedPosition = positionFromLabel(playerLabel);
+
+    if (
+      mappedPosition &&
+      slot.allowedPositions.includes(mappedPosition) &&
+      getFormationLineForPlayerPosition(mappedPosition) === slot.line
+    ) {
+      return mappedPosition;
+    }
+  }
+
   const directPosition = player.positions.find((position) => slot.allowedPositions.includes(position));
 
   if (directPosition) return directPosition;
-
-  const matchedPosition = positionFromLabel(matchedLabel);
 
   if (matchedPosition && slot.allowedPositions.includes(matchedPosition)) {
     return matchedPosition;
@@ -172,6 +226,28 @@ export function resolvePlayerSlotPlacement(
 
 export function canPlayerFillSlot(player: PlayerSeason, slot: FormationSlot): boolean {
   return resolvePlayerSlotPlacement(player, slot).canPlace;
+}
+
+export function canPlayerFillSlotInNaturalLine(
+  player: PlayerSeason,
+  slot: FormationSlot,
+  line: FormationSlot["line"],
+): boolean {
+  if (slot.line !== line) return false;
+
+  const hasNaturalPositionInLine = player.positions.some(
+    (position) => getFormationLineForPlayerPosition(position) === line,
+  );
+
+  if (!hasNaturalPositionInLine) return false;
+
+  const placement = resolvePlayerSlotPlacement(player, slot);
+
+  return Boolean(
+    placement.canPlace &&
+      placement.assignedPosition &&
+      getFormationLineForPlayerPosition(placement.assignedPosition) === line,
+  );
 }
 
 export function getAvailableSlotsForPlayer(params: {

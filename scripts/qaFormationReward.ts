@@ -4,7 +4,11 @@ import {
   evaluateCareerObjective,
 } from "../src/career/careerRules";
 import { FORMATIONS } from "../src/data/formations";
-import { resolvePlayerSlotPlacement } from "../src/domain/positionRules";
+import {
+  canPlayerFillSlotInNaturalLine,
+  getFormationLineForPlayerPosition,
+  resolvePlayerSlotPlacement,
+} from "../src/domain/positionRules";
 import { calculateTeamRating } from "../src/simulation/teamRating";
 import type { CareerSeasonResult } from "../src/types/career";
 import type { Formation, FormationSlot, PlayerSeason, SelectedCoach, SelectedPlayer } from "../src/types/game";
@@ -40,7 +44,7 @@ function makePlayer(id: string, name: string, positions: PlayerSeason["positions
     name,
     season: "qa",
     positions,
-    tacticalSlotLabels: positions,
+    tacticalSlotLabels: positions as unknown as NonNullable<PlayerSeason["tacticalSlotLabels"]>,
     matches: 38,
     minutes: 3000,
     skills: {
@@ -169,7 +173,14 @@ function remapWithOpenSlot(params: {
         originalLine: getOriginalSlotLine(fromFormation, player),
         placement: resolvePlayerSlotPlacement(player.playerSeason, slot),
       }))
-      .filter((candidate) => candidate.originalLine === slot.line && candidate.placement.canPlace)
+      .filter((candidate) =>
+        candidate.originalLine === slot.line &&
+        candidate.placement.canPlace &&
+        Boolean(
+          candidate.placement.assignedPosition &&
+            getFormationLineForPlayerPosition(candidate.placement.assignedPosition) === slot.line,
+        ),
+      )
       .sort((a, b) => b.player.playerSeason.overall - a.player.playerSeason.overall);
 
     for (const candidate of candidates) {
@@ -356,8 +367,67 @@ function runCancelSnapshotQa() {
   logOk("Cancelar no deja posiciones inválidas");
 }
 
+function runPlayerOnlyRewardQa() {
+  const formation = getFormation("4-3-3");
+  const fullTeam = build433Team();
+  const removedMidfielder = fullTeam.find((player) => player.slotId === "cm_3");
+  assert(removedMidfielder, "Debe existir un medio saliente para probar solo cambio de jugador.");
+
+  const keptPlayers = fullTeam.filter((player) => player !== removedMidfielder);
+  const occupiedSlotIds = new Set(keptPlayers.map((player) => player.slotId));
+  const openSlots = formation.slots.filter((slot) => !occupiedSlotIds.has(slot.id));
+
+  assert(keptPlayers.length === 10, "Mantener formación tras retirar un jugador debe conservar 10 jugadores.");
+  assert(openSlots.length === 1, "Mantener formación debe dejar exactamente un hueco.");
+  assert(openSlots[0].id === "cm_3", "El hueco debe ser el del jugador retirado.");
+  assert(openSlots[0].line === "midfield", "El hueco de prueba debe seguir siendo de medio.");
+
+  const replacementMidfielder = makePlayer("replacement_midfield", "Sustituto medio QA", ["MC", "MP"]);
+  const replacementForward = makePlayer("replacement_forward", "Sustituto delantero QA", ["DC"]);
+
+  assert(
+    canPlayerFillSlotInNaturalLine(replacementMidfielder, openSlots[0], "midfield"),
+    "Solo cambiar jugador debe admitir un sustituto natural de la línea abierta.",
+  );
+  assert(
+    !canPlayerFillSlotInNaturalLine(replacementForward, openSlots[0], "midfield"),
+    "Solo cambiar jugador no debe admitir un delantero en un hueco de medio.",
+  );
+  logOk("Premio especial permite mantener formación y solo cambiar jugador");
+}
+
+function runStrictNaturalReplacementQa() {
+  const formation = getFormation("3-3-4");
+  const secondStrikerSlot = formation.slots.find((slot) => slot.id === "st_2");
+  assert(secondStrikerSlot, "3-3-4 debe tener segundo delantero de prueba.");
+  assert(secondStrikerSlot.line === "attack", "El segundo delantero debe pertenecer a la línea de ataque.");
+
+  const purePlaymaker = makePlayer("pure_mp", "Mediapunta puro QA", ["MP"]);
+  const falseNine = makePlayer("false_nine", "Segundo punta QA", ["MP", "SD"]);
+
+  assert(
+    resolvePlayerSlotPlacement(purePlaymaker, secondStrikerSlot).canPlace,
+    "La regla general puede permitir un MP en slot SD.",
+  );
+  assert(
+    !canPlayerFillSlotInNaturalLine(purePlaymaker, secondStrikerSlot, "attack"),
+    "El premio especial no debe colocar un MP puro como delantero.",
+  );
+
+  const falseNinePlacement = resolvePlayerSlotPlacement(falseNine, secondStrikerSlot);
+  assert(falseNinePlacement.canPlace, "Un jugador MP/SD debe encajar en el slot SD.");
+  assert(falseNinePlacement.assignedPosition === "SD", "Si tiene SD natural, debe asignarse como SD y no como MP.");
+  assert(
+    canPlayerFillSlotInNaturalLine(falseNine, secondStrikerSlot, "attack"),
+    "Un jugador con SD natural sí debe poder cubrir el hueco de ataque.",
+  );
+  logOk("Draft de formación evita MP puro colocado como delantero");
+}
+
 console.log("QA Formation Reward\n");
 runRewardUnlockQa();
 runFormationLineQa();
 runCancelSnapshotQa();
+runPlayerOnlyRewardQa();
+runStrictNaturalReplacementQa();
 console.log("\nOK");
