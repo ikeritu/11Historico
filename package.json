@@ -1,7 +1,7 @@
 {
   "name": "futbol11",
   "private": true,
-  "version": "0.22.9",
+  "version": "0.22.9-c.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -13,7 +13,9 @@
     "audit:balance:json": "vite build --ssr scripts/balanceAuditCli.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/balanceAuditCli.js --json --out=reports/balance_cli_latest.json --csv=reports/balance_cli_latest.csv",
     "audit:copa:100": "vite build --ssr scripts/balanceAuditCli.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/balanceAuditCli.js --sims=100 --profile=balanced --difficulty=normal --range=all --cup-report",
     "qa:formation-reward": "vite build --ssr scripts/qaFormationReward.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/qaFormationReward.js",
-    "qa:career-ranking": "vite build --ssr scripts/qaCareerLocalRanking.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/qaCareerLocalRanking.js"
+    "qa:career-ranking": "vite build --ssr scripts/qaCareerLocalRanking.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/qaCareerLocalRanking.js",
+    "qa:version": "vite build --ssr scripts/qaVersionConsistency.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/qaVersionConsistency.js",
+    "qa:tech-debt": "npm run qa:version && npm run qa:formation-reward && npm run qa:career-ranking"
   },
   "dependencies": {
     "react": "^19.2.6",

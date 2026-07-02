@@ -1,3 +1,10 @@
+### v0.22.9c — Tech debt version cleanup
+
+- Versión visible y versión npm alineadas antes de abrir ranking global.
+- `package.json` usa `0.22.9-c.0` porque `0.22.9c` no es semver válido.
+- Añade `npm run qa:version` y `npm run qa:tech-debt`.
+- README, CHANGELOG y doc de fase auditados por QA.
+
 ### v0.22.9b — Special reward player-only fix
 
 - Premio especial: permite mantener formación y cambiar solo jugador.
@@ -36,7 +43,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.22.9b_SPECIAL_REWARD_PLAYER_ONLY_FIX`.
+Versión pública actual: `v0.22.9c_TECH_DEBT_VERSION_CLEANUP`.
 
 Base jugable cerrada:
 
@@ -113,6 +120,15 @@ Abre la URL que indique Vite, normalmente:
 
 ```text
 http://localhost:5173/
+```
+
+## QA técnica rápida
+
+```powershell
+npm.cmd run qa:version
+npm.cmd run qa:formation-reward
+npm.cmd run qa:career-ranking
+npm.cmd run build
 ```
 
 ## Build de producción

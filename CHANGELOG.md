@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.22.9c — Tech debt version cleanup
+
+- Alinea la versión visible del juego con `appVersion.ts`: `v0.22.9c`.
+- Actualiza `package.json` y `package-lock.json` a `0.22.9-c.0`, formato semver válido para representar la fase `v0.22.9c`.
+- Añade `npm run qa:version` para auditar consistencia entre app, paquete, lockfile, README, CHANGELOG y doc de fase.
+- Añade `npm run qa:tech-debt` para encadenar QA de versión, recompensa y ranking local.
+- Documenta la fase en `docs/v0_22_9c_TECH_DEBT_VERSION_CLEANUP.md`.
+- No toca balance, ratings históricos, plantillas, simulación ni ranking global.
+
 ## v0.22.9b — Special reward player-only fix
 
 - El premio especial de Jugador + alineación ya permite mantener la formación actual y cambiar solo el jugador.
