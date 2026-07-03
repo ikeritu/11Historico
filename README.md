@@ -1,3 +1,7 @@
+### v0.23.2a — Season Luck Wheel engine
+
+Motor lógico de la ruleta de temporada antes de la UI animada: máximo 1 uso por temporada, probabilidades 40/40/20, premios internos definidos, barra de precisión que favorece el centro y castiga extremos, textos narrativos y `npm run qa:season-luck-wheel`. No integra todavía modal/animación ni pausa real de simulación.
+
 ### v0.23.1a — Agentjacking guardrails
 
 Seguridad operativa antes de Europa Career: añade reglas anti-agentjacking en `AGENTS.md`, trata archivos/parches/logs como entrada no confiable, protege secretos y Git, y añade `npm run qa:agentjacking` dentro de `qa:tech-debt`.
@@ -71,7 +75,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.23.1a_AGENTJACKING_GUARDRAILS`.
+Versión pública actual: `v0.23.2a_SEASON_LUCK_WHEEL_ENGINE`.
 
 Base jugable cerrada:
 

@@ -3,8 +3,8 @@ import { join, relative } from "node:path";
 import { APP_STATUS, APP_VERSION, APP_VERSION_NAME } from "../src/config/appVersion";
 
 const ROOT = process.cwd();
-const CURRENT_PUBLIC_VERSION = "v0.23.1a";
-const CURRENT_RELEASE_TAG = "v0.23.1a_AGENTJACKING_GUARDRAILS";
+const CURRENT_PUBLIC_VERSION = "v0.23.2a";
+const CURRENT_RELEASE_TAG = "v0.23.2a_SEASON_LUCK_WHEEL_ENGINE";
 const REAL_APPS_SCRIPT_ID_PATTERN = /AKfycb[a-zA-Z0-9_-]{20,}/;
 const LOCAL_ENV_FILES = [".env", ".env.local", ".env.development.local", ".env.production.local"];
 const TEXT_FILE_EXTENSIONS = new Set([
@@ -68,9 +68,9 @@ function walkTextFiles(dir: string, results: string[] = []): string[] {
 
 function testReleaseVersionMetadata(): void {
   assert(APP_VERSION === CURRENT_PUBLIC_VERSION, `APP_VERSION debe ser ${CURRENT_PUBLIC_VERSION}, pero es ${APP_VERSION}.`);
-  assert(APP_VERSION_NAME === "Agentjacking guardrails", `APP_VERSION_NAME inesperado: ${APP_VERSION_NAME}.`);
-  assert(APP_STATUS.includes("anti-agentjacking"), "APP_STATUS debe describir los guardarraíles anti-agentjacking.");
-  logOk("appVersion.ts apunta a la release estable actual");
+  assert(APP_VERSION_NAME === "Season Luck Wheel engine", `APP_VERSION_NAME inesperado: ${APP_VERSION_NAME}.`);
+  assert(APP_STATUS.includes("ruleta de temporada"), "APP_STATUS debe describir el motor de ruleta de temporada.");
+  logOk("appVersion.ts apunta a la fase actual");
 }
 
 function testLocalEnvIsProtected(): void {
@@ -114,12 +114,12 @@ function testGlobalRankingDocsAreSafe(): void {
 function testReleaseDocsArePresent(): void {
   const changelog = readText("CHANGELOG.md");
   const readme = readText("README.md");
-  const releaseDocPath = "docs/v0_23_1a_AGENTJACKING_GUARDRAILS.md";
+  const releaseDocPath = "docs/v0_23_2a_SEASON_LUCK_WHEEL_ENGINE.md";
 
-  assert(changelog.startsWith("# Changelog\n\n## v0.23.1a"), "CHANGELOG debe empezar por v0.23.1a.");
-  assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), "README debe apuntar a v0.23.1a_AGENTJACKING_GUARDRAILS.");
-  assert(existsSync(join(ROOT, releaseDocPath)), "Debe existir docs/v0_23_1a_AGENTJACKING_GUARDRAILS.md.");
-  logOk("README, CHANGELOG y doc de release apuntan a v0.23.1a");
+  assert(changelog.startsWith("# Changelog\n\n## v0.23.2a"), "CHANGELOG debe empezar por v0.23.2a.");
+  assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), "README debe apuntar a v0.23.2a_SEASON_LUCK_WHEEL_ENGINE.");
+  assert(existsSync(join(ROOT, releaseDocPath)), "Debe existir docs/v0_23_2a_SEASON_LUCK_WHEEL_ENGINE.md.");
+  logOk("README, CHANGELOG y doc de release apuntan a v0.23.2a");
 }
 
 function testCriticalQaScriptsRemainRegistered(): void {
@@ -137,12 +137,14 @@ function testCriticalQaScriptsRemainRegistered(): void {
     "qa:global-ranking-ui",
     "qa:global-ranking-real",
     "qa:team-power",
+    "qa:season-luck-wheel",
   ]) {
     assert(scripts[scriptName], `Debe existir script ${scriptName}.`);
   }
 
   assert(scripts["qa:tech-debt"]?.includes("qa:release-stabilization"), "qa:tech-debt debe incluir qa:release-stabilization.");
   assert(scripts["qa:tech-debt"]?.includes("qa:agentjacking"), "qa:tech-debt debe incluir qa:agentjacking.");
+  assert(scripts["qa:tech-debt"]?.includes("qa:season-luck-wheel"), "qa:tech-debt debe incluir qa:season-luck-wheel.");
   logOk("scripts QA críticos siguen registrados");
 }
 

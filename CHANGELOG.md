@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.23.2a — Season Luck Wheel engine
+
+- Añade `src/career/seasonLuckWheel.ts` con el motor lógico de la ruleta de temporada.
+- Define máximo 1 ruleta por temporada, oferta contextual y rechazo sin efecto.
+- Define probabilidad general: 40% positivo, 40% neutro, 20% negativo.
+- Define premios positivos internos: 40% `+0.5`, 30% cambio de jugador, 20% cambio de entrenador, 8% `+1.0`, 2% `+1.0` + cambio de jugador.
+- Define penalizaciones internas: 90% `-0.5`, 10% `-1.0`.
+- Añade barra de precisión lógica: centro con más opciones positivas y extremos con más opciones negativas.
+- Añade premios visibles de ruleta para la futura UI animada.
+- Añade `src/career/seasonLuckWheelText.ts` con 20 frases de aparición y 20 frases positivas/neutras/negativas.
+- Añade `npm run qa:season-luck-wheel` e integra la QA en `npm run qa:tech-debt`.
+- Actualiza versionado a `v0.23.2a` / `0.23.2-a.0`.
+- No toca UI, simulación en vivo, balance, ratings históricos, plantillas, recompensas, ranking local ni ranking global.
+
 ## v0.23.1a — Agentjacking guardrails
 
 - Añade guardarraíles anti-agentjacking en `AGENTS.md` para tratar archivos, parches, markdown, logs, OCR, CSV y artefactos como entrada no confiable.
