@@ -51,11 +51,26 @@ function getSegmentColor(segment: { group: string; resultType: string }): string
   return "#e7b416";
 }
 
-function getSegmentDisplayParts(label: string): string[] {
-  if (label === "Cambio de jugador") return ["Cambio de", "jugador"];
-  if (label === "Cambio de entrenador") return ["Cambio de", "entrenador"];
-  if (label === "+1.0 media + jugador") return ["+1.0 media", "+ jugador"];
-  return [label];
+function getSegmentShortParts(segment: { resultType: string; label: string }): string[] {
+  if (segment.resultType === "rating_plus_0_5") return ["+0.5"];
+  if (segment.resultType === "player_change") return ["Jugador"];
+  if (segment.resultType === "coach_change") return ["Entrenador"];
+  if (segment.resultType === "rating_plus_1") return ["+1"];
+  if (segment.resultType === "rating_plus_1_and_player_change") return ["+1", "+ Jug."];
+  if (segment.resultType === "rating_minus_0_5") return ["-0.5"];
+  if (segment.resultType === "rating_minus_1") return ["-1"];
+  return [segment.label];
+}
+
+function getSegmentLegendLabel(segment: { resultType: string; label: string }): string {
+  if (segment.resultType === "rating_plus_0_5") return "+0.5 = +0.5 media de temporada";
+  if (segment.resultType === "player_change") return "Jugador = cambio de jugador";
+  if (segment.resultType === "coach_change") return "Entrenador = cambio de entrenador";
+  if (segment.resultType === "rating_plus_1") return "+1 = +1.0 media de temporada";
+  if (segment.resultType === "rating_plus_1_and_player_change") return "+1 + Jug. = +1.0 media y cambio de jugador";
+  if (segment.resultType === "rating_minus_0_5") return "-0.5 = -0.5 media de temporada";
+  if (segment.resultType === "rating_minus_1") return "-1 = -1.0 media de temporada";
+  return "Sin efecto = la temporada sigue igual";
 }
 
 function getResultDetail(result: SeasonLuckWheelResolvedResult): string {
@@ -89,6 +104,7 @@ export default function SeasonLuckWheelModal({
   const directionRef = useRef(1);
   const frameRef = useRef<number | undefined>(undefined);
   const lastFrameRef = useRef<number | undefined>(undefined);
+  const playingStartedAtRef = useRef<number | undefined>(undefined);
 
   const targetSegmentIndex = useMemo(() => {
     if (!result) return -1;
@@ -116,6 +132,15 @@ export default function SeasonLuckWheelModal({
     return 1440 + (360 - targetSegmentIndex * segmentAngle);
   }, [result, targetSegmentIndex]);
 
+  const prizeLegend = useMemo(() => {
+    const seen = new Set<string>();
+    return offer.prizeSegments.filter((segment) => {
+      if (seen.has(segment.resultType)) return false;
+      seen.add(segment.resultType);
+      return true;
+    });
+  }, [offer.prizeSegments]);
+
   useEffect(() => {
     if (stage !== "playing") return undefined;
 
@@ -123,9 +148,14 @@ export default function SeasonLuckWheelModal({
       const previousTimestamp = lastFrameRef.current ?? timestamp;
       const deltaMs = timestamp - previousTimestamp;
       lastFrameRef.current = timestamp;
+      playingStartedAtRef.current ??= timestamp;
 
       setPosition((current) => {
-        const speed = 0.0014;
+        const elapsedSeconds = Math.max(0, (timestamp - playingStartedAtRef.current!) / 1000);
+        const baseSpeed = 0.00075;
+        const accelerationPerSecond = 0.00023;
+        const maxSpeed = 0.00235;
+        const speed = Math.min(maxSpeed, baseSpeed + elapsedSeconds * accelerationPerSecond);
         let next = current + directionRef.current * deltaMs * speed;
 
         if (next >= 1) {
@@ -152,6 +182,7 @@ export default function SeasonLuckWheelModal({
       }
       frameRef.current = undefined;
       lastFrameRef.current = undefined;
+      playingStartedAtRef.current = undefined;
     };
   }, [stage]);
 
@@ -206,7 +237,7 @@ export default function SeasonLuckWheelModal({
                   className={`season-wheel-prize ${getPrizeClass(segment.group)}`}
                   style={{ transform: `rotate(${index * (360 / offer.prizeSegments.length)}deg)` }}
                 >
-                  {getSegmentDisplayParts(segment.label).map((part) => (
+                  {getSegmentShortParts(segment).map((part) => (
                     <span key={part}>{part}</span>
                   ))}
                 </span>
@@ -233,7 +264,19 @@ export default function SeasonLuckWheelModal({
 
             <p>
               Para cerca del centro para mejorar tus opciones. En los extremos aumenta el riesgo de castigo.
+              La flecha empieza lenta y acelera poco a poco.
             </p>
+
+            <div className="season-wheel-prize-legend" aria-label="Leyenda de premios de la ruleta">
+              <strong>Premios</strong>
+              <ul>
+                {prizeLegend.map((segment) => (
+                  <li key={segment.resultType} className={getPrizeClass(segment.group)}>
+                    {getSegmentLegendLabel(segment)}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
 

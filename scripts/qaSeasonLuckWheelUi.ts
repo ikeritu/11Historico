@@ -42,8 +42,11 @@ function testModalSupportsRequiredFlow(): void {
   assert(component.includes("SEASON_LUCK_WHEEL_PRIZE_SEGMENTS"), "El modal debe mostrar los premios definidos por el motor.");
   assert(component.includes("season-wheel-disc-shell"), "El puntero fijo debe vivir fuera del disco que gira.");
   assert(component.includes("key={`${segment.resultType}-${index}`}"), "Los segmentos repetidos deben tener key estable con índice.");
-  assert(component.includes("getSegmentDisplayParts"), "Los premios largos deben poder dividirse en líneas legibles.");
-  logOk("modal soporta jugar, rechazar, parar y continuar");
+  assert(component.includes("getSegmentShortParts"), "Los quesitos deben usar etiquetas cortas y nítidas.");
+  assert(component.includes("getSegmentLegendLabel"), "El modal debe explicar etiquetas cortas con una leyenda de premios.");
+  assert(component.includes("playingStartedAtRef"), "La velocidad de la flecha debe depender del tiempo de juego.");
+  assert(component.includes("accelerationPerSecond") && component.includes("maxSpeed"), "La flecha debe acelerar progresivamente con límite máximo.");
+  logOk("modal soporta jugar, rechazar, parar, continuar, leyenda y flecha progresiva");
 }
 
 function testCssProvidesWheelAndPrecisionAnimation(): void {
@@ -56,7 +59,10 @@ function testCssProvidesWheelAndPrecisionAnimation(): void {
   assert(css.includes("conic-gradient"), "La ruleta debe usar segmentos visuales de premios.");
   assert(css.includes("from -15deg"), "La ruleta de 12 quesitos debe centrar el primer segmento bajo el puntero.");
   assert(css.includes("0deg 30deg") && css.includes("330deg 360deg"), "La ruleta debe cubrir 12 segmentos de 30 grados.");
-  logOk("CSS contiene ruleta, segmentos, flecha, puntero fijo y animación");
+  assert(css.includes("text-rendering: geometricPrecision"), "Los textos de quesitos deben mejorar su nitidez.");
+  assert(css.includes("-webkit-font-smoothing: antialiased"), "Los textos de quesitos deben activar suavizado de fuente.");
+  assert(css.includes("season-wheel-prize-legend"), "Debe existir leyenda visual de premios completos.");
+  logOk("CSS contiene ruleta, segmentos, flecha, puntero fijo, textos nítidos, leyenda y animación");
 }
 
 function countBy<T extends string>(values: T[]): Record<T, number> {
@@ -107,6 +113,37 @@ function testLeagueIntegration(): void {
   logOk("LeagueSimulatorView integra pausa, triggers y ratingDelta");
 }
 
+function testReadablePrizeLabelsAndLegend(): void {
+  const component = read("src/components/SeasonLuckWheelModal.tsx");
+
+  for (const shortLabel of ["+0.5", "Jugador", "Entrenador", "+1", "+ Jug.", "-0.5", "-1"]) {
+    assert(component.includes(shortLabel), `El modal debe incluir etiqueta corta: ${shortLabel}.`);
+  }
+
+  for (const fullLabel of [
+    "+0.5 media de temporada",
+    "cambio de jugador",
+    "cambio de entrenador",
+    "+1.0 media de temporada",
+    "la temporada sigue igual",
+  ]) {
+    assert(component.includes(fullLabel), `La leyenda debe explicar el premio completo: ${fullLabel}.`);
+  }
+
+  logOk("etiquetas cortas y leyenda de premios completos presentes");
+}
+
+function testProgressiveArrowSpeed(): void {
+  const component = read("src/components/SeasonLuckWheelModal.tsx");
+
+  assert(component.includes("baseSpeed = 0.00075"), "La flecha debe empezar más lenta que en v0.23.2b1.");
+  assert(component.includes("accelerationPerSecond = 0.00023"), "La flecha debe acelerar con el paso del tiempo.");
+  assert(component.includes("maxSpeed = 0.00235"), "La flecha debe tener límite máximo de velocidad.");
+  assert(component.includes("elapsedSeconds"), "La aceleración debe depender del tiempo transcurrido.");
+
+  logOk("flecha con velocidad progresiva y límite máximo");
+}
+
 function testPackageScriptRegistered(): void {
   const packageJson = JSON.parse(read("package.json")) as { scripts?: Record<string, string> };
   const scripts = packageJson.scripts ?? {};
@@ -122,6 +159,8 @@ testUiFilesExist();
 testModalSupportsRequiredFlow();
 testCssProvidesWheelAndPrecisionAnimation();
 testTwelveSegmentVisualWheel();
+testReadablePrizeLabelsAndLegend();
+testProgressiveArrowSpeed();
 testLeagueIntegration();
 testPackageScriptRegistered();
 

@@ -1,3 +1,7 @@
+### v0.23.2b2 — Luck Wheel Readability and Arrow Speed
+
+Pulido visual de la ruleta de temporada: etiquetas cortas dentro de los quesitos, leyenda de premios completos y flecha de precisión con velocidad progresiva. Mantiene 12 quesitos, puntero fijo, coherencia visual y probabilidades reales intactas.
+
 ### v0.23.2b1 — Luck Wheel Segments Polish
 
 Pulido visual de la ruleta de temporada: 12 quesitos repartidos, puntero fijo, centro fijo, etiquetas más legibles y alineación entre resultado lógico, premio visible y segmento final. Mantiene las probabilidades reales del motor.
@@ -83,7 +87,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.23.2b1_LUCK_WHEEL_SEGMENTS_POLISH`.
+Versión pública actual: `v0.23.2b2_LUCK_WHEEL_READABILITY_AND_ARROW_SPEED`.
 
 Base jugable cerrada:
 

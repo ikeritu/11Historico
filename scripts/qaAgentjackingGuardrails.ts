@@ -3,8 +3,8 @@ import { join, relative } from "node:path";
 import { APP_STATUS, APP_VERSION, APP_VERSION_NAME } from "../src/config/appVersion";
 
 const ROOT = process.cwd();
-const CURRENT_PUBLIC_VERSION = "v0.23.2b1";
-const CURRENT_RELEASE_TAG = "v0.23.2b1_LUCK_WHEEL_SEGMENTS_POLISH";
+const CURRENT_PUBLIC_VERSION = "v0.23.2b2";
+const CURRENT_RELEASE_TAG = "v0.23.2b2_LUCK_WHEEL_READABILITY_AND_ARROW_SPEED";
 const REAL_APPS_SCRIPT_ID_PATTERN = /AKfycb[a-zA-Z0-9_-]{20,}/;
 const LOCAL_ENV_FILES = [".env", ".env.local", ".env.development.local", ".env.production.local"];
 const TEXT_FILE_EXTENSIONS = new Set([
@@ -68,8 +68,8 @@ function walkTextFiles(dir: string, results: string[] = []): string[] {
 
 function testVersionMetadata(): void {
   assert(APP_VERSION === CURRENT_PUBLIC_VERSION, `APP_VERSION debe ser ${CURRENT_PUBLIC_VERSION}, pero es ${APP_VERSION}.`);
-  assert(APP_VERSION_NAME === "Luck Wheel Segments Polish", `APP_VERSION_NAME inesperado: ${APP_VERSION_NAME}.`);
-  assert(APP_STATUS.includes("Ruleta") || APP_STATUS.includes("ruleta"), "APP_STATUS debe mencionar la ruleta de temporada.");
+  assert(APP_VERSION_NAME === "Luck Wheel Readability and Arrow Speed", `APP_VERSION_NAME inesperado: ${APP_VERSION_NAME}.`);
+  assert(APP_STATUS.includes("Ruleta") || APP_STATUS.includes("ruleta"), "APP_STATUS debe mencionar la ruleta de temporada y la velocidad progresiva.");
   logOk("appVersion.ts apunta a la fase actual");
 }
 
@@ -152,12 +152,12 @@ function testDangerousGitCommandsAreNotRecommended(): void {
 function testDocsArePresent(): void {
   const changelog = readText("CHANGELOG.md");
   const readme = readText("README.md");
-  const phaseDocPath = "docs/v0_23_2b1_LUCK_WHEEL_SEGMENTS_POLISH.md";
+  const phaseDocPath = "docs/v0_23_2b2_LUCK_WHEEL_READABILITY_AND_ARROW_SPEED.md";
 
-  assert(changelog.startsWith("# Changelog\n\n## v0.23.2b1"), "CHANGELOG debe empezar por v0.23.2b.");
-  assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), "README debe apuntar a v0.23.2b1_LUCK_WHEEL_SEGMENTS_POLISH.");
-  assert(existsSync(join(ROOT, phaseDocPath)), "Debe existir docs/v0_23_2b1_LUCK_WHEEL_SEGMENTS_POLISH.md.");
-  logOk("README, CHANGELOG y doc de fase apuntan a v0.23.2b1");
+  assert(changelog.startsWith("# Changelog\n\n## v0.23.2b2"), "CHANGELOG debe empezar por v0.23.2b2.");
+  assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), "README debe apuntar a v0.23.2b2_LUCK_WHEEL_READABILITY_AND_ARROW_SPEED.");
+  assert(existsSync(join(ROOT, phaseDocPath)), "Debe existir docs/v0_23_2b2_LUCK_WHEEL_READABILITY_AND_ARROW_SPEED.md.");
+  logOk("README, CHANGELOG y doc de fase apuntan a v0.23.2b2");
 }
 
 function testQaScriptsAreRegistered(): void {

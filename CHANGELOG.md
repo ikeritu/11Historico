@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.23.2b2 — Luck Wheel Readability and Arrow Speed
+
+- Sustituye textos largos dentro de los quesitos por etiquetas cortas y más nítidas: `+0.5`, `+1`, `Jugador`, `Entrenador`, `Sin efecto`, `-0.5` y `-1`.
+- Añade leyenda de premios completos para explicar las etiquetas cortas sin saturar la rueda.
+- Mejora contraste, tamaño y suavizado de las etiquetas de la ruleta.
+- Añade flecha de precisión con velocidad progresiva: empieza más lenta, acelera con el tiempo y tiene límite máximo.
+- Refuerza `qa:season-luck-wheel-ui` para cubrir etiquetas cortas, leyenda, aceleración y límite de velocidad.
+- Actualiza versionado a `v0.23.2b2` / `0.23.2-b2.0`.
+- No toca probabilidades reales, balance, ratings históricos, plantillas base, ranking local, ranking global ni Europa Career.
+
 ## v0.23.2b1 — Luck Wheel Segments Polish
 
 - Aumenta la ruleta visual a 12 quesitos repartidos.

@@ -137,15 +137,17 @@
   flex-direction: column;
   justify-content: center;
   gap: 0.05rem;
-  width: 44%;
+  width: 40%;
   min-height: 2.25rem;
   transform-origin: left center;
   color: #fff;
-  font-size: clamp(0.52rem, 1.15vw, 0.72rem);
-  font-weight: 900;
-  line-height: 1.05;
+  font-size: clamp(0.7rem, 1.6vw, 0.98rem);
+  font-weight: 950;
+  line-height: 0.96;
   text-align: right;
-  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.72);
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.88), 0 0 9px rgba(0, 0, 0, 0.45);
   pointer-events: none;
 }
 
@@ -208,6 +210,40 @@
   margin: 0.75rem 0 0;
   color: rgba(255, 255, 255, 0.75);
   line-height: 1.5;
+}
+
+.season-wheel-prize-legend {
+  margin-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.13);
+  padding-top: 0.85rem;
+}
+
+.season-wheel-prize-legend strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.78rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.season-wheel-prize-legend ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.35rem 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.season-wheel-prize-legend li {
+  border-radius: 10px;
+  padding: 0.35rem 0.45rem;
+  background: rgba(255, 255, 255, 0.07);
+  font-size: 0.74rem;
+  font-weight: 800;
+  line-height: 1.25;
 }
 
 .season-wheel-actions {
@@ -285,5 +321,9 @@
 
   .season-wheel-modal {
     border-radius: 20px;
+  }
+
+  .season-wheel-prize-legend ul {
+    grid-template-columns: 1fr;
   }
 }

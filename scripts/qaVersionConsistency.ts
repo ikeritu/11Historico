@@ -60,7 +60,7 @@ function testPackageLockMatchesPackageJson(): void {
 }
 
 function testAppVersionMetadata(): void {
-  assert(APP_VERSION === "v0.23.2b1", `APP_VERSION debe ser v0.23.2b1, pero es ${APP_VERSION}`);
+  assert(APP_VERSION === "v0.23.2b2", `APP_VERSION debe ser v0.23.2b2, pero es ${APP_VERSION}`);
   assert(APP_VERSION_NAME.trim().length > 0, "APP_VERSION_NAME no puede estar vacío.");
   assert(APP_STATUS.trim().length > 0, "APP_STATUS no puede estar vacío.");
   assertNoMojibake("APP_VERSION_NAME", APP_VERSION_NAME);
@@ -71,12 +71,12 @@ function testAppVersionMetadata(): void {
 function testDocsMentionCurrentVersion(): void {
   const changelog = readFileSync(join(ROOT, "CHANGELOG.md"), "utf8");
   const readme = readFileSync(join(ROOT, "README.md"), "utf8");
-  const releaseDocPath = join(ROOT, "docs", "v0_23_2b1_LUCK_WHEEL_SEGMENTS_POLISH.md");
+  const releaseDocPath = join(ROOT, "docs", "v0_23_2b2_LUCK_WHEEL_READABILITY_AND_ARROW_SPEED.md");
 
-  assert(changelog.startsWith("# Changelog\n\n## v0.23.2b1"), "CHANGELOG debe empezar por v0.23.2b.");
-  assert(readme.includes("Versión pública actual: `v0.23.2b1_LUCK_WHEEL_SEGMENTS_POLISH`."), "README debe apuntar a v0.23.2b1_LUCK_WHEEL_SEGMENTS_POLISH.");
-  assert(existsSync(releaseDocPath), "Debe existir docs/v0_23_2b1_LUCK_WHEEL_SEGMENTS_POLISH.md.");
-  logOk("README, CHANGELOG y doc de fase apuntan a v0.23.2b1");
+  assert(changelog.startsWith("# Changelog\n\n## v0.23.2b2"), "CHANGELOG debe empezar por v0.23.2b2.");
+  assert(readme.includes("Versión pública actual: `v0.23.2b2_LUCK_WHEEL_READABILITY_AND_ARROW_SPEED`."), "README debe apuntar a v0.23.2b2_LUCK_WHEEL_READABILITY_AND_ARROW_SPEED.");
+  assert(existsSync(releaseDocPath), "Debe existir docs/v0_23_2b2_LUCK_WHEEL_READABILITY_AND_ARROW_SPEED.md.");
+  logOk("README, CHANGELOG y doc de fase apuntan a v0.23.2b2");
 }
 
 function testQaScriptsAreRegistered(): void {
