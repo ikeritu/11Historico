@@ -1,3 +1,7 @@
+### v0.23.2b1 — Luck Wheel Segments Polish
+
+Pulido visual de la ruleta de temporada: 12 quesitos repartidos, puntero fijo, centro fijo, etiquetas más legibles y alineación entre resultado lógico, premio visible y segmento final. Mantiene las probabilidades reales del motor.
+
 ### v0.23.2b — Season Luck Wheel UI
 
 UI jugable para la ruleta de temporada: modal contextual, premios visibles, animación de giro, barra de precisión con flecha móvil, botón parar, rechazo sin efecto, pausa de simulación automática y aplicación de `ratingDelta` al poder de temporada. Los cambios reales de jugador/entrenador quedan registrados como premio para una iteración posterior.
@@ -79,7 +83,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.23.2b_SEASON_LUCK_WHEEL_UI`.
+Versión pública actual: `v0.23.2b1_LUCK_WHEEL_SEGMENTS_POLISH`.
 
 Base jugable cerrada:
 

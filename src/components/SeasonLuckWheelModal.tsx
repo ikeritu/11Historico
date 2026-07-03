@@ -40,6 +40,24 @@ function getResultTitle(result: SeasonLuckWheelResolvedResult): string {
   return "Sin efecto";
 }
 
+function getSegmentColor(segment: { group: string; resultType: string }): string {
+  if (segment.resultType === "rating_plus_1_and_player_change") return "#05895e";
+  if (segment.resultType === "rating_plus_1") return "#0f9d58";
+  if (segment.resultType === "player_change") return "#0891b2";
+  if (segment.resultType === "coach_change") return "#7aa321";
+  if (segment.resultType === "rating_plus_0_5") return "#14a65d";
+  if (segment.resultType === "rating_minus_1") return "#b91c1c";
+  if (segment.resultType === "rating_minus_0_5") return "#dc2626";
+  return "#e7b416";
+}
+
+function getSegmentDisplayParts(label: string): string[] {
+  if (label === "Cambio de jugador") return ["Cambio de", "jugador"];
+  if (label === "Cambio de entrenador") return ["Cambio de", "entrenador"];
+  if (label === "+1.0 media + jugador") return ["+1.0 media", "+ jugador"];
+  return [label];
+}
+
 function getResultDetail(result: SeasonLuckWheelResolvedResult): string {
   if (result.ratingDelta !== 0) {
     return `Efecto activo hasta final de temporada: ${result.ratingDelta > 0 ? "+" : ""}${result.ratingDelta.toFixed(1)} en todas las líneas del equipo.`;
@@ -72,14 +90,31 @@ export default function SeasonLuckWheelModal({
   const frameRef = useRef<number | undefined>(undefined);
   const lastFrameRef = useRef<number | undefined>(undefined);
 
-  const wheelRotation = useMemo(() => {
-    if (!result) return 0;
-    const index = SEASON_LUCK_WHEEL_PRIZE_SEGMENTS.findIndex(
+  const targetSegmentIndex = useMemo(() => {
+    if (!result) return -1;
+    return SEASON_LUCK_WHEEL_PRIZE_SEGMENTS.findIndex(
       (segment) => segment.resultType === result.resultType,
     );
-    const segmentCount = Math.max(1, SEASON_LUCK_WHEEL_PRIZE_SEGMENTS.length);
-    return 1440 + (360 - index * (360 / segmentCount));
   }, [result]);
+
+  const wheelBackground = useMemo(() => {
+    const segmentCount = Math.max(1, offer.prizeSegments.length);
+    const segmentAngle = 360 / segmentCount;
+    const stops = offer.prizeSegments.map((segment, index) => {
+      const start = index * segmentAngle;
+      const end = (index + 1) * segmentAngle;
+      return `${getSegmentColor(segment)} ${start}deg ${end}deg`;
+    });
+
+    return `conic-gradient(from ${-segmentAngle / 2}deg, ${stops.join(", ")})`;
+  }, [offer.prizeSegments]);
+
+  const wheelRotation = useMemo(() => {
+    if (!result || targetSegmentIndex < 0) return 0;
+    const segmentCount = Math.max(1, SEASON_LUCK_WHEEL_PRIZE_SEGMENTS.length);
+    const segmentAngle = 360 / segmentCount;
+    return 1440 + (360 - targetSegmentIndex * segmentAngle);
+  }, [result, targetSegmentIndex]);
 
   useEffect(() => {
     if (stage !== "playing") return undefined;
@@ -157,20 +192,26 @@ export default function SeasonLuckWheelModal({
         </div>
 
         <div className="season-wheel-content">
-          <div
-            className={`season-wheel-disc ${stage === "playing" ? "season-wheel-disc-spinning" : ""} ${result ? "season-wheel-disc-resolved" : ""}`}
-            style={result ? { transform: `rotate(${wheelRotation}deg)` } : undefined}
-            aria-label="Ruleta con premios visibles"
-          >
-            {offer.prizeSegments.map((segment, index) => (
-              <span
-                key={segment.resultType}
-                className={`season-wheel-prize ${getPrizeClass(segment.group)}`}
-                style={{ transform: `rotate(${index * (360 / offer.prizeSegments.length)}deg)` }}
-              >
-                {segment.label}
-              </span>
-            ))}
+          <div className="season-wheel-disc-shell" aria-label="Ruleta con 12 quesitos de premios visibles">
+            <div
+              className={`season-wheel-disc ${stage === "playing" ? "season-wheel-disc-spinning" : ""} ${result ? "season-wheel-disc-resolved" : ""}`}
+              style={{
+                background: wheelBackground,
+                ...(result ? { transform: `rotate(${wheelRotation}deg)` } : {}),
+              }}
+            >
+              {offer.prizeSegments.map((segment, index) => (
+                <span
+                  key={`${segment.resultType}-${index}`}
+                  className={`season-wheel-prize ${getPrizeClass(segment.group)}`}
+                  style={{ transform: `rotate(${index * (360 / offer.prizeSegments.length)}deg)` }}
+                >
+                  {getSegmentDisplayParts(segment.label).map((part) => (
+                    <span key={part}>{part}</span>
+                  ))}
+                </span>
+              ))}
+            </div>
             <strong className="season-wheel-disc-center">Aupa</strong>
           </div>
 

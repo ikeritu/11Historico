@@ -1,6 +1,13 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
+import {
+  SEASON_LUCK_WHEEL_BASE_PROBABILITIES,
+  SEASON_LUCK_WHEEL_NEGATIVE_WEIGHTS,
+  SEASON_LUCK_WHEEL_POSITIVE_WEIGHTS,
+  SEASON_LUCK_WHEEL_PRIZE_SEGMENTS,
+} from "../src/career/seasonLuckWheel";
+
 const ROOT = process.cwd();
 
 function assert(condition: unknown, message: string): asserts condition {
@@ -33,6 +40,9 @@ function testModalSupportsRequiredFlow(): void {
   assert(component.includes("resolveSeasonLuckWheel"), "El modal debe resolver la ruleta con el motor v0.23.2a.");
   assert(component.includes("declineSeasonLuckWheel"), "El modal debe permitir rechazar sin efecto.");
   assert(component.includes("SEASON_LUCK_WHEEL_PRIZE_SEGMENTS"), "El modal debe mostrar los premios definidos por el motor.");
+  assert(component.includes("season-wheel-disc-shell"), "El puntero fijo debe vivir fuera del disco que gira.");
+  assert(component.includes("key={`${segment.resultType}-${index}`}"), "Los segmentos repetidos deben tener key estable con índice.");
+  assert(component.includes("getSegmentDisplayParts"), "Los premios largos deben poder dividirse en líneas legibles.");
   logOk("modal soporta jugar, rechazar, parar y continuar");
 }
 
@@ -42,8 +52,46 @@ function testCssProvidesWheelAndPrecisionAnimation(): void {
   assert(css.includes("@keyframes seasonWheelSpin"), "La ruleta debe tener animación de giro.");
   assert(css.includes("season-wheel-precision-bar"), "Debe existir barra de precisión.");
   assert(css.includes("season-wheel-precision-marker"), "Debe existir flecha/marcador móvil.");
+  assert(css.includes(".season-wheel-disc-shell::before"), "El puntero visual de ruleta debe ser fijo y no rotar con el disco.");
   assert(css.includes("conic-gradient"), "La ruleta debe usar segmentos visuales de premios.");
-  logOk("CSS contiene ruleta, segmentos, flecha y animación");
+  assert(css.includes("from -15deg"), "La ruleta de 12 quesitos debe centrar el primer segmento bajo el puntero.");
+  assert(css.includes("0deg 30deg") && css.includes("330deg 360deg"), "La ruleta debe cubrir 12 segmentos de 30 grados.");
+  logOk("CSS contiene ruleta, segmentos, flecha, puntero fijo y animación");
+}
+
+function countBy<T extends string>(values: T[]): Record<T, number> {
+  return values.reduce((accumulator, value) => {
+    accumulator[value] = (accumulator[value] ?? 0) + 1;
+    return accumulator;
+  }, {} as Record<T, number>);
+}
+
+function sum(values: Record<string, number>): number {
+  return Object.values(values).reduce((total, value) => total + value, 0);
+}
+
+function testTwelveSegmentVisualWheel(): void {
+  assert(SEASON_LUCK_WHEEL_PRIZE_SEGMENTS.length === 12, "La ruleta visual debe tener 12 quesitos.");
+
+  const resultTypeCounts = countBy(SEASON_LUCK_WHEEL_PRIZE_SEGMENTS.map((segment) => segment.resultType));
+
+  assert(resultTypeCounts.rating_plus_0_5 === 3, "Debe haber 3 quesitos visuales de +0.5 media.");
+  assert(resultTypeCounts.no_effect === 3, "Debe haber 3 quesitos visuales de Sin efecto.");
+  assert(resultTypeCounts.player_change === 1, "Debe haber 1 quesito de cambio de jugador.");
+  assert(resultTypeCounts.coach_change === 1, "Debe haber 1 quesito de cambio de entrenador.");
+  assert(resultTypeCounts.rating_plus_1 === 1, "Debe haber 1 quesito de +1.0 media.");
+  assert(resultTypeCounts.rating_plus_1_and_player_change === 1, "Debe haber 1 quesito de +1.0 media + jugador.");
+  assert(resultTypeCounts.rating_minus_0_5 === 1, "Debe haber 1 quesito de -0.5 media.");
+  assert(resultTypeCounts.rating_minus_1 === 1, "Debe haber 1 quesito de -1.0 media.");
+
+  assert(sum(SEASON_LUCK_WHEEL_BASE_PROBABILITIES) === 100, "El pulido visual no debe alterar el 40/40/20.");
+  assert(SEASON_LUCK_WHEEL_BASE_PROBABILITIES.positive === 40, "La probabilidad positiva base debe seguir en 40%.");
+  assert(SEASON_LUCK_WHEEL_BASE_PROBABILITIES.neutral === 40, "La probabilidad neutra base debe seguir en 40%.");
+  assert(SEASON_LUCK_WHEEL_BASE_PROBABILITIES.negative === 20, "La probabilidad negativa base debe seguir en 20%.");
+  assert(sum(SEASON_LUCK_WHEEL_POSITIVE_WEIGHTS) === 100, "Los pesos positivos reales no deben cambiar.");
+  assert(sum(SEASON_LUCK_WHEEL_NEGATIVE_WEIGHTS) === 100, "Los pesos negativos reales no deben cambiar.");
+
+  logOk("ruleta visual de 12 quesitos sin tocar probabilidades reales");
 }
 
 function testLeagueIntegration(): void {
@@ -73,6 +121,7 @@ console.log("QA Season Luck Wheel UI");
 testUiFilesExist();
 testModalSupportsRequiredFlow();
 testCssProvidesWheelAndPrecisionAnimation();
+testTwelveSegmentVisualWheel();
 testLeagueIntegration();
 testPackageScriptRegistered();
 

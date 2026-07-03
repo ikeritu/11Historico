@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.23.2b1 — Luck Wheel Segments Polish
+
+- Aumenta la ruleta visual a 12 quesitos repartidos.
+- Repite visualmente premios sin cambiar probabilidades reales del motor.
+- Mantiene el puntero fijo y la rueda girando por debajo.
+- Fuerza coherencia visual entre resultado lógico, segmento final y premio mostrado.
+- Mejora legibilidad de premios largos con saltos cortos.
+- Refuerza QA de UI para comprobar 12 segmentos, 3 `Sin efecto`, 3 `+0.5`, puntero fijo y no alteración de probabilidades.
+- Actualiza versionado a `v0.23.2b1` / `0.23.2-b1.0`.
+- No toca balance, ratings históricos, plantillas base, ranking local, ranking global ni Europa Career.
+
 ## v0.23.2b — Season Luck Wheel UI
 
 - Añade `SeasonLuckWheelModal` con modal narrativo para la ruleta de temporada.
