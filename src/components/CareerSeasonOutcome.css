@@ -192,3 +192,12 @@
   font-weight: 950;
   cursor: pointer;
 }
+
+.career-game-over-palmares-showcase {
+  margin-top: 22px;
+}
+
+.career-game-over-palmares-showcase .palmares-case-card {
+  background: rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 224, 138, 0.22);
+}

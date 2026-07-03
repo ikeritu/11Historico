@@ -11,6 +11,7 @@ import type {
   SelectedPlayer,
   TeamRating,
 } from "../types/game";
+import type { CareerTrophyCounts } from "../types/career";
 
 import SelectedTeamBoard from "./SelectedTeamBoard";
 import PalmaresTrophyCase from "./PalmaresTrophyCase";
@@ -33,6 +34,7 @@ interface FinalSummaryProps {
   selectedPlayers: SelectedPlayer[];
   selectedCoach: SelectedCoach;
   teamRating: TeamRating;
+  careerTrophyCounts?: CareerTrophyCounts;
   onRestart?: () => void;
   onReturnToCareer?: () => void;
   onShare?: (shareText: string) => void;
@@ -760,6 +762,7 @@ export function FinalSummary({
   selectedPlayers,
   selectedCoach,
   teamRating,
+  careerTrophyCounts,
   onRestart,
   onReturnToCareer,
   onShare,
@@ -847,7 +850,7 @@ export function FinalSummary({
           <BestGamePanel history={history} />
 
           <FinalAccordion title="Palmarés" eyebrow="Vitrina histórica" defaultOpen={false}>
-            <PalmaresTrophyCase summary={summary} />
+            <PalmaresTrophyCase summary={summary} trophyCounts={careerTrophyCounts} variant={careerTrophyCounts ? "career" : "single-game"} />
           </FinalAccordion>
 
           <FinalAccordion title="Copa del Rey" eyebrow={getCupSummaryText(summary)} defaultOpen>

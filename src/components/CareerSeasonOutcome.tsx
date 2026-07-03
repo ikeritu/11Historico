@@ -3,6 +3,7 @@ import type { CareerLocalRankingEntry, CareerObjectiveResult, CareerSeasonResult
 import { calculateCareerArcadeScore, getFinalCareerTrophyCounts } from "../career/careerRanking";
 
 import CareerGlobalSubmitPanel from "./CareerGlobalSubmitPanel";
+import PalmaresTrophyCase from "./PalmaresTrophyCase";
 
 import "./CareerSeasonOutcome.css";
 
@@ -139,6 +140,7 @@ export function CareerSeasonOutcome({
 }: CareerSeasonOutcomeProps) {
   const survived = objectiveResult.survives;
   const xiAverage = getSelectedPlayersAverage(selectedPlayers);
+  const finalTrophies = getFinalCareerTrophyCounts(trophyCounts, seasonResult);
 
   return (
     <main className={`career-outcome-screen ${survived ? "career-outcome-success" : "career-outcome-game-over"}`}>
@@ -188,12 +190,22 @@ export function CareerSeasonOutcome({
         </p>
 
         {!survived && (
-          <CareerGameOverArcadeSummary
-            seasonResult={seasonResult}
-            objectiveResult={objectiveResult}
-            completedSeasons={completedSeasons}
-            trophyCounts={trophyCounts}
-          />
+          <>
+            <CareerGameOverArcadeSummary
+              seasonResult={seasonResult}
+              objectiveResult={objectiveResult}
+              completedSeasons={completedSeasons}
+              trophyCounts={trophyCounts}
+            />
+
+            <section className="career-game-over-palmares-showcase" aria-label="Vitrina de palmarés de carrera">
+              <PalmaresTrophyCase
+                summary={summary}
+                trophyCounts={finalTrophies}
+                variant="career"
+              />
+            </section>
+          </>
         )}
 
         {!survived && rankingEntry && onViewGlobalRanking && (

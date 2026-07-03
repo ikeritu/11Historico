@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.23.2b5 — Palmarés Supercopa + Game Over Showcase
+
+- Revisa `PalmaresTrophyCase` para aceptar `CareerTrophyCounts` y mostrar todo el palmarés acumulado de carrera.
+- Mapea correctamente Liga, Copa, Supercopa, Champions, Europa League y Conference desde el contador de carrera.
+- Añade una vitrina de palmarés en la pantalla de Game Over.
+- El Game Over suma la temporada actual antes de mostrar palmarés, evitando que una Supercopa ganada se quede fuera del escaparate final.
+- El resumen completo usa el palmarés visible de carrera cuando se vuelve desde modo carrera.
+- Añade `qa:palmares-showcase` y lo integra en `qa:tech-debt`.
+- Actualiza versionado a `v0.23.2b5` / `0.23.2-b5.0`.
+- No toca probabilidades de ruleta, balance, ratings históricos, plantillas base, ranking global ni Europa Career.
+
 ## v0.23.2b4 — Luck Wheel Skip Event Fix
 
 - Corrige la simulación rápida para que no se salte la Ruleta de la Suerte al avanzar muchos partidos de golpe.

@@ -1,3 +1,7 @@
+### v0.23.2b5 — Palmarés Supercopa + Game Over Showcase
+
+Revisión del palmarés de carrera: la vitrina usa todos los títulos acumulados, incluida Supercopa, y se muestra también en Game Over. El resumen completo de carrera recibe el palmarés visible con la temporada actual sumada.
+
 ### v0.23.2b4 — Luck Wheel Skip Event Fix
 
 Hotfix de simulación rápida: al pulsar Saltar hasta próximo evento o simular de golpe, la temporada avanza internamente partido a partido y se detiene si cruza un trigger válido de Ruleta de la Suerte antes de los 2/3 de Liga. Evita que la primera temporada se salte la ruleta por simular demasiado lejos.
@@ -91,7 +95,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.23.2b4_LUCK_WHEEL_SKIP_EVENT_FIX`.
+Versión pública actual: `v0.23.2b5_PALMARES_SUPERCOPA_GAMEOVER_SHOWCASE`.
 
 Base jugable cerrada:
 

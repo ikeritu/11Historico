@@ -1,11 +1,14 @@
 // src/components/PalmaresTrophyCase.tsx
 
 import type { FinalGameSummary, TrophyCount, TrophyId } from "../types/game";
+import type { CareerTrophyCounts } from "../types/career";
 
 import "./PalmaresTrophyCase.css";
 
 interface PalmaresTrophyCaseProps {
   summary: FinalGameSummary;
+  trophyCounts?: CareerTrophyCounts;
+  variant?: "single-game" | "career";
 }
 
 interface TrophySvgProps {
@@ -21,7 +24,24 @@ const DEFAULT_TROPHIES: TrophyCount[] = [
   { id: "supercopa", label: "Supercopa de España", count: 0 },
 ];
 
-function buildTrophies(summary: FinalGameSummary): TrophyCount[] {
+function buildCareerTrophies(trophyCounts: CareerTrophyCounts): TrophyCount[] {
+  const byId = new Map<TrophyId, TrophyCount>(DEFAULT_TROPHIES.map((item) => [item.id, item]));
+
+  byId.set("liga", { id: "liga", label: "Liga", count: trophyCounts.liga });
+  byId.set("copa_del_rey", { id: "copa_del_rey", label: "Copa del Rey", count: trophyCounts.copa });
+  byId.set("champions", { id: "champions", label: "Champions League", count: trophyCounts.champions });
+  byId.set("europa_league", { id: "europa_league", label: "Europa League", count: trophyCounts.europaLeague });
+  byId.set("conference_league", { id: "conference_league", label: "Conference League", count: trophyCounts.conference });
+  byId.set("supercopa", { id: "supercopa", label: "Supercopa de España", count: trophyCounts.supercopa });
+
+  return DEFAULT_TROPHIES.map((fallback) => byId.get(fallback.id) ?? fallback);
+}
+
+function buildTrophies(summary: FinalGameSummary, trophyCounts?: CareerTrophyCounts): TrophyCount[] {
+  if (trophyCounts) {
+    return buildCareerTrophies(trophyCounts);
+  }
+
   const byId = new Map<TrophyId, TrophyCount>(DEFAULT_TROPHIES.map((item) => [item.id, item]));
 
   for (const trophy of summary.trophiesWon ?? []) {
@@ -31,7 +51,23 @@ function buildTrophies(summary: FinalGameSummary): TrophyCount[] {
   return DEFAULT_TROPHIES.map((fallback) => byId.get(fallback.id) ?? fallback);
 }
 
-function getTrophyNote(trophy: TrophyCount, summary: FinalGameSummary): string {
+function getCareerTrophyNote(trophy: TrophyCount): string {
+  if (trophy.count > 0) {
+    const suffix = trophy.count === 1 ? "título acumulado" : "títulos acumulados";
+    return `${trophy.count} ${suffix} en carrera`;
+  }
+
+  if (trophy.id === "supercopa") return "Sin Supercopa ganada todavía";
+  if (trophy.id === "liga") return "Sin Liga ganada todavía";
+  if (trophy.id === "copa_del_rey") return "Sin Copa ganada todavía";
+
+  return "Pendiente de Europa Career";
+}
+
+function getTrophyNote(trophy: TrophyCount, summary: FinalGameSummary, variant: "single-game" | "career"): string {
+  if (variant === "career") {
+    return getCareerTrophyNote(trophy);
+  }
   if (trophy.id === "liga") {
     return summary.leaguePosition === 1 ? "Campeón de Liga" : `${summary.leaguePosition}º en Liga`;
   }
@@ -200,8 +236,8 @@ function TrophySvg({ id, dimmed }: { id: TrophyId; dimmed?: boolean }) {
   return <SupercopaTrophy dimmed={dimmed} />;
 }
 
-export function PalmaresTrophyCase({ summary }: PalmaresTrophyCaseProps) {
-  const trophies = buildTrophies(summary);
+export function PalmaresTrophyCase({ summary, trophyCounts, variant = trophyCounts ? "career" : "single-game" }: PalmaresTrophyCaseProps) {
+  const trophies = buildTrophies(summary, trophyCounts);
   const totalTitles = trophies.reduce((sum, trophy) => sum + trophy.count, 0);
 
   return (
@@ -211,8 +247,9 @@ export function PalmaresTrophyCase({ summary }: PalmaresTrophyCaseProps) {
           <span>Palmarés</span>
           <h2>Vitrina histórica</h2>
           <p>
-            Trofeos ganados en esta partida. La vitrina queda preparada para sumar
-            títulos acumulados en el futuro modo carrera.
+            {variant === "career"
+              ? "Títulos acumulados en la carrera, incluida Supercopa si se ganó antes del Game Over."
+              : "Trofeos ganados en esta partida. La vitrina queda preparada para sumar títulos acumulados en el futuro modo carrera."}
           </p>
         </div>
 
@@ -236,7 +273,7 @@ export function PalmaresTrophyCase({ summary }: PalmaresTrophyCaseProps) {
               <TrophySvg id={trophy.id} dimmed={trophy.count === 0} />
             </div>
 
-            <small>{getTrophyNote(trophy, summary)}</small>
+            <small>{getTrophyNote(trophy, summary, variant)}</small>
           </article>
         ))}
       </div>

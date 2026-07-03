@@ -1272,6 +1272,10 @@ export default function App() {
     window.alert(shareText);
   }
 
+  const displayedCareerTrophyCounts = isCareerMode && careerSeasonResult
+    ? addCareerTrophiesFromSeason(careerTrophyCounts, careerSeasonResult)
+    : undefined;
+
   const shouldShowProgress = ![
     "home",
     "career_preview",
@@ -1589,6 +1593,7 @@ export default function App() {
           onRestart={handleRestart}
           onReturnToCareer={isCareerMode && careerSeasonResult && careerObjectiveResult ? () => setScreen(careerObjectiveResult.survives ? "career_season_result" : "career_game_over") : undefined}
           onShare={handleCopyShareText}
+          careerTrophyCounts={displayedCareerTrophyCounts}
         />
       )}
     </div>
