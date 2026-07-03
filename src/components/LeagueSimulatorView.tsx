@@ -20,8 +20,6 @@ import {
   getCupStatusLabel,
   getCurrentLeagueDiagnosis,
   getPendingCupFixture,
-  simulateFullCupAndLeague,
-  simulateFullUserLeague,
   simulateNextCupMatch,
   simulateNextUserLeagueMatch,
   type UserLeagueSimulationContext,
@@ -315,7 +313,7 @@ export function LeagueSimulatorView({
     if (!triggerEvent) return false;
 
     const offer = buildSeasonLuckWheelOffer({
-      seasonId: `${gameId}_${context.leagueSeasonSalt ?? careerSeasonKey(params.nextContext)}`,
+      seasonId: `${gameId}_${params.nextContext.leagueSeasonSalt ?? careerSeasonKey(params.nextContext)}`,
       triggerEvent,
       currentState: params.nextContext.seasonLuckWheel,
     });
@@ -422,31 +420,52 @@ export function LeagueSimulatorView({
     return () => window.clearTimeout(timeoutId);
   }, [context, effectiveTeamRating, isAutoSimulating, selectedPlayers]);
 
+  function simulateLeagueUntilNextEvent(params: {
+    initialContext: UserLeagueSimulationContext;
+  }): { nextContext: UserLeagueSimulationContext; lastResult?: MatchResult; wheelOffered: boolean } {
+    let nextContext = params.initialContext;
+    let lastResult: MatchResult | undefined;
+    let wheelOffered = false;
+
+    while (!nextContext.state.completed && !getPendingCupFixture(nextContext)) {
+      const previousContext = nextContext;
+      const simulation = simulateNextUserLeagueMatch({
+        context: nextContext,
+        teamRating: effectiveTeamRating,
+        selectedPlayers,
+      });
+
+      nextContext = simulation.context;
+      lastResult = simulation.result;
+
+      if (!simulation.result || simulation.stoppedForCup) {
+        break;
+      }
+
+      wheelOffered = maybeOfferSeasonLuckWheel({
+        previousContext,
+        nextContext,
+        result: simulation.result,
+      });
+
+      if (wheelOffered) {
+        break;
+      }
+    }
+
+    return { nextContext, lastResult, wheelOffered };
+  }
+
   function handleSimulateFullSeason() {
     setIsAutoSimulating(false);
 
-    const nextContext = simulateFullUserLeague({
-      context,
-      teamRating: effectiveTeamRating,
-      selectedPlayers,
-    });
+    const simulation = simulateLeagueUntilNextEvent({ initialContext: context });
 
-    commitContext(nextContext);
+    commitContext(simulation.nextContext);
+    setLastResult(simulation.lastResult);
 
-    const lastUserLeagueResult = [...nextContext.state.results]
-      .reverse()
-      .find((result) => result.userTeamPlayed);
-
-    setLastResult(lastUserLeagueResult);
-
-    const wheelOffered = maybeOfferSeasonLuckWheel({
-      previousContext: context,
-      nextContext,
-      result: lastUserLeagueResult,
-    });
-
-    if (!wheelOffered) {
-      finishIfReady(nextContext);
+    if (!simulation.wheelOffered) {
+      finishIfReady(simulation.nextContext);
     }
   }
 
@@ -476,25 +495,58 @@ export function LeagueSimulatorView({
   function handleSimulateFullCupAndFinishSeason() {
     setIsAutoSimulating(false);
 
-    const nextContext = simulateFullCupAndLeague({
-      context,
-      teamRating: effectiveTeamRating,
-      selectedPlayers,
-    });
+    let nextContext = context;
+    let lastUserResult: MatchResult | undefined;
+    let wheelOffered = false;
+
+    while (nextContext.cupState.status === "active") {
+      const pendingCup = getPendingCupFixture(nextContext);
+
+      if (!pendingCup) {
+        const leagueSimulation = simulateLeagueUntilNextEvent({ initialContext: nextContext });
+        nextContext = leagueSimulation.nextContext;
+        lastUserResult = leagueSimulation.lastResult ?? lastUserResult;
+        wheelOffered = leagueSimulation.wheelOffered;
+
+        if (wheelOffered || !getPendingCupFixture(nextContext)) {
+          break;
+        }
+      }
+
+      const previousContext = nextContext;
+      const cupSimulation = simulateNextCupMatch({
+        context: nextContext,
+        teamRating: effectiveTeamRating,
+        selectedPlayers,
+      });
+
+      nextContext = cupSimulation.context;
+      lastUserResult = cupSimulation.result;
+
+      if (!cupSimulation.result) {
+        break;
+      }
+
+      wheelOffered = maybeOfferSeasonLuckWheel({
+        previousContext,
+        nextContext,
+        result: cupSimulation.result,
+      });
+
+      if (wheelOffered) {
+        break;
+      }
+    }
+
+    if (!wheelOffered && nextContext.cupState.status !== "active") {
+      const leagueSimulation = simulateLeagueUntilNextEvent({ initialContext: nextContext });
+      nextContext = leagueSimulation.nextContext;
+      lastUserResult = leagueSimulation.lastResult ?? lastUserResult;
+      wheelOffered = leagueSimulation.wheelOffered;
+    }
 
     commitContext(nextContext);
-
-    const lastUserResult = [...nextContext.cupState.results, ...nextContext.state.results]
-      .reverse()
-      .find((result) => result.userTeamPlayed);
-
     setLastResult(lastUserResult);
-
-    const wheelOffered = maybeOfferSeasonLuckWheel({
-      previousContext: context,
-      nextContext,
-      result: lastUserResult,
-    });
 
     if (!wheelOffered) {
       finishIfReady(nextContext);

@@ -1,14 +1,14 @@
 # Changelog
 
-## v0.23.2b3 — Luck Wheel Trigger Limit Fix
+## v0.23.2b4 — Luck Wheel Skip Event Fix
 
-- Limita la activación de la Ruleta de la Suerte a los dos primeros tercios de la Liga.
-- En una Liga de 38 jornadas, la última ventana válida queda en la jornada 25; después ya no se ofrece ruleta.
-- Evita que la ruleta aparezca al finalizar la temporada.
-- Mantiene el trigger de mitad de temporada y las eliminaciones tempranas de Copa, pero bloquea eventos tardíos.
-- Añade cierre seguro: resolver o rechazar una ruleta pendiente llama a `finishIfReady(nextContext)` para no dejar la pantalla bloqueada si la temporada ya puede cerrarse.
-- Refuerza `qa:season-luck-wheel-ui` para auditar el límite temporal de 2/3 y el cierre seguro.
-- Actualiza versionado a `v0.23.2b3` / `0.23.2-b3.0`.
+- Corrige la simulación rápida para que no se salte la Ruleta de la Suerte al avanzar muchos partidos de golpe.
+- Al pulsar Saltar hasta próximo evento, el flujo avanza internamente partido a partido y evalúa los triggers tras cada resultado.
+- Si se cruza mitad de temporada o una eliminación temprana de Copa antes de los 2/3 de Liga, se detiene y muestra la ruleta.
+- Mantiene el límite de dos primeros tercios de Liga para evitar ruletas al final de temporada.
+- Evita que la primera temporada pueda completar Liga/Copa sin ofrecer la ruleta por haber usado simulación rápida.
+- Refuerza `qa:season-luck-wheel-ui` para auditar que el salto rápido usa `simulateLeagueUntilNextEvent` y evalúa `maybeOfferSeasonLuckWheel` dentro del bucle.
+- Actualiza versionado a `v0.23.2b4` / `0.23.2-b4.0`.
 - No toca probabilidades reales, balance, ratings históricos, plantillas base, ranking local, ranking global ni Europa Career.
 
 ## v0.23.2b2 — Luck Wheel Readability and Arrow Speed

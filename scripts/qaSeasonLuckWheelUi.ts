@@ -148,6 +148,19 @@ function testProgressiveArrowSpeed(): void {
   logOk("flecha con velocidad progresiva y límite máximo");
 }
 
+function testQuickSimulationStopsAtLuckWheelTrigger(): void {
+  const leagueView = read("src/components/LeagueSimulatorView.tsx");
+
+  assert(leagueView.includes("simulateLeagueUntilNextEvent"), "La simulación rápida debe avanzar hasta el próximo evento de ruleta, no hasta final de temporada.");
+  assert(leagueView.includes("while (!nextContext.state.completed && !getPendingCupFixture(nextContext))"), "El salto rápido debe simular Liga partido a partido mientras no haya Copa pendiente.");
+  assert(leagueView.includes("previousContext = nextContext"), "Cada iteración rápida debe conservar el contexto previo para detectar cruces de trigger.");
+  assert(leagueView.includes("wheelOffered = maybeOfferSeasonLuckWheel"), "El salto rápido debe evaluar la ruleta tras cada partido simulado.");
+  assert(leagueView.includes("if (wheelOffered)"), "El salto rápido debe detenerse si aparece la ruleta.");
+  assert(leagueView.includes("params.nextContext.leagueSeasonSalt"), "La oferta de ruleta debe usar el contexto simulado más reciente para identificar la temporada.");
+
+  logOk("simulación rápida se detiene ante trigger de Ruleta de la Suerte");
+}
+
 function testPackageScriptRegistered(): void {
   const packageJson = JSON.parse(read("package.json")) as { scripts?: Record<string, string> };
   const scripts = packageJson.scripts ?? {};
@@ -166,6 +179,7 @@ testTwelveSegmentVisualWheel();
 testReadablePrizeLabelsAndLegend();
 testProgressiveArrowSpeed();
 testLeagueIntegration();
+testQuickSimulationStopsAtLuckWheelTrigger();
 testPackageScriptRegistered();
 
 console.log("QA season luck wheel UI OK");

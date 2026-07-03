@@ -1,6 +1,6 @@
-### v0.23.2b3 — Luck Wheel Trigger Limit Fix
+### v0.23.2b4 — Luck Wheel Skip Event Fix
 
-Hotfix de flujo de ruleta: la Ruleta de la Suerte solo puede ofrecerse hasta los 2/3 de la Liga y ya no aparece al terminar la temporada. Además, si una oportunidad pendiente se resuelve o se rechaza cuando la temporada ya puede cerrarse, avanza al resumen final sin bloqueo.
+Hotfix de simulación rápida: al pulsar Saltar hasta próximo evento o simular de golpe, la temporada avanza internamente partido a partido y se detiene si cruza un trigger válido de Ruleta de la Suerte antes de los 2/3 de Liga. Evita que la primera temporada se salte la ruleta por simular demasiado lejos.
 
 ### v0.23.2b2 — Luck Wheel Readability and Arrow Speed
 
@@ -91,7 +91,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.23.2b3_LUCK_WHEEL_TRIGGER_LIMIT_FIX`.
+Versión pública actual: `v0.23.2b4_LUCK_WHEEL_SKIP_EVENT_FIX`.
 
 Base jugable cerrada:
 
