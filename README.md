@@ -1,3 +1,7 @@
+### v0.23.0d — Global ranking real submit QA
+
+Valida el ranking global real conectado a Apps Script: health, carga de Top 100 y smoke test opcional de escritura/duplicados con `npm run qa:global-ranking-real`.
+
 ### v0.23.0c — Team power progression QA
 
 Asegura que las mejoras de equipo afectan al poder real usado por la simulación: rating base, bonus de entrenador `+0.5`, ratings por línea y dificultad quedan centralizados en `teamPower.ts`, visibles en el resumen y cubiertos por `npm run qa:team-power`.
@@ -55,7 +59,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.23.0c_TEAM_POWER_PROGRESSION_QA`.
+Versión pública actual: `v0.23.0d_GLOBAL_RANKING_REAL_SUBMIT_QA`.
 
 Base jugable cerrada:
 
@@ -93,6 +97,7 @@ https://ikeritu.github.io/11Historico/
 - Reglas puras del modo carrera preparadas para el MVP jugable.
 - Ranking local de mejores carreras guardado en el navegador.
 - Ranking global preparado para Google Sheets + Apps Script mediante `VITE_GLOBAL_RANKING_ENDPOINT`.
+- QA de ranking global real: health, Top 100, envío opcional y duplicados contra Apps Script.
 - Poder de equipo de carrera centralizado: Media XI, rating visible, entrenador y bonus temporal influyen en la simulación.
 - Flujo básico de carrera con copy de objetivo corregido y techo de media ajustado.
 - Flujo básico de una temporada de carrera conectado a Liga y Copa.
@@ -185,6 +190,24 @@ Copa del Rey:
 ```powershell
 npm.cmd run audit:copa:100
 ```
+
+## QA ranking global real
+
+Con `.env.local` configurado:
+
+```powershell
+npm.cmd run qa:global-ranking-real
+```
+
+Para ejecutar también un envío real de prueba al Google Sheet:
+
+```powershell
+$env:FUTBOL11_GLOBAL_RANKING_WRITE_QA = "1"
+npm.cmd run qa:global-ranking-real
+Remove-Item Env:FUTBOL11_GLOBAL_RANKING_WRITE_QA
+```
+
+La prueba de escritura crea una entrada QA real y después verifica que el segundo envío queda bloqueado como duplicado.
 
 ## Despliegue en GitHub Pages
 

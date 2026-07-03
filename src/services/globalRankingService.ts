@@ -6,6 +6,7 @@ export const GLOBAL_RANKING_TIMEOUT_MS = 6000;
 export const GLOBAL_RANKING_LIMIT = 100;
 
 export type GlobalRankingStatus =
+  | "healthy"
   | "submitted"
   | "loaded"
   | "not_configured"
@@ -142,6 +143,7 @@ export function toCareerGlobalRankingEntry(payload: CareerGlobalRankingSubmitPay
 function normalizeStatus(value: unknown): GlobalRankingStatus | undefined {
   if (value === "duplicate") return "duplicate";
   if (value === "invalid_payload") return "invalid_payload";
+  if (value === "healthy") return "healthy";
   if (value === "submitted") return "submitted";
   if (value === "loaded") return "loaded";
   if (value === "server_error") return "server_error";
@@ -208,9 +210,17 @@ export function parseCareerGlobalRanking(raw: unknown): CareerGlobalRankingEntry
   ).slice(0, GLOBAL_RANKING_LIMIT);
 }
 
-function buildTopRankingUrl(endpoint: string): string {
+function appendGlobalRankingQuery(endpoint: string, query: string): string {
   const separator = endpoint.includes("?") ? "&" : "?";
-  return `${endpoint}${separator}action=top&limit=${GLOBAL_RANKING_LIMIT}`;
+  return `${endpoint}${separator}${query}`;
+}
+
+export function buildGlobalRankingHealthUrl(endpoint: string): string {
+  return appendGlobalRankingQuery(endpoint, "action=health");
+}
+
+export function buildTopRankingUrl(endpoint: string): string {
+  return appendGlobalRankingQuery(endpoint, `action=top&limit=${GLOBAL_RANKING_LIMIT}`);
 }
 
 async function readJsonSafely(response: Response): Promise<unknown> {
@@ -227,6 +237,64 @@ function getAppsScriptResponse(raw: unknown): AppsScriptRankingResponse | undefi
 
 function getResponseMessage(data: AppsScriptRankingResponse | undefined, fallback: string): string {
   return typeof data?.message === "string" && data.message.trim().length > 0 ? data.message : fallback;
+}
+
+
+export async function checkGlobalRankingHealth(
+  options: GlobalRankingRequestOptions = {},
+): Promise<GlobalRankingServiceResult> {
+  const endpoint = getEndpoint(options.endpoint);
+
+  if (!endpoint) {
+    return {
+      ok: false,
+      status: "not_configured",
+      message: "Ranking global pendiente de configurar con Apps Script.",
+    };
+  }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), options.timeoutMs ?? GLOBAL_RANKING_TIMEOUT_MS);
+
+  try {
+    const fetcher = options.fetcher ?? fetch;
+    const response = await fetcher(buildGlobalRankingHealthUrl(endpoint), {
+      method: "GET",
+      signal: controller.signal,
+    });
+
+    if (!response.ok) {
+      return {
+        ok: false,
+        status: "server_error",
+        message: `El healthcheck del ranking global respondió con error ${response.status}.`,
+      };
+    }
+
+    const data = getAppsScriptResponse(await readJsonSafely(response));
+
+    if (data?.ok === false) {
+      return {
+        ok: false,
+        status: normalizeStatus(data.status) ?? "server_error",
+        message: getResponseMessage(data, "El backend de ranking global no está disponible."),
+      };
+    }
+
+    return {
+      ok: true,
+      status: normalizeStatus(data?.status) ?? "healthy",
+      message: getResponseMessage(data, "Ranking global activo."),
+    };
+  } catch {
+    return {
+      ok: false,
+      status: "network_error",
+      message: "No se pudo comprobar el backend del ranking global.",
+    };
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 export async function submitGlobalRankingEntry(

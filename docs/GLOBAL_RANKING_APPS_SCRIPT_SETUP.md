@@ -70,3 +70,21 @@ Top 100:
 ```text
 https://script.google.com/macros/s/TU_DEPLOYMENT_ID/exec?action=top&limit=100
 ```
+
+## 7. QA automática real
+
+Con `.env.local` creado y Vite/QA leyendo `VITE_GLOBAL_RANKING_ENDPOINT`, puedes validar health y Top 100 sin escribir en la hoja:
+
+```powershell
+cmd /c "npm run qa:global-ranking-real"
+```
+
+Para hacer una prueba real de escritura controlada:
+
+```powershell
+$env:FUTBOL11_GLOBAL_RANKING_WRITE_QA = "1"
+cmd /c "npm run qa:global-ranking-real"
+Remove-Item Env:FUTBOL11_GLOBAL_RANKING_WRITE_QA
+```
+
+Esta prueba crea una entrada real con nick `QA-Futbol11`, comprueba que aparece en el Top global y verifica que reenviar el mismo `careerId` queda bloqueado como duplicado.

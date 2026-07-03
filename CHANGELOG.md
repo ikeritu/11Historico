@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.23.0d — Global ranking real submit QA
+
+- Añade `npm run qa:global-ranking-real` para validar contra el backend real de Apps Script configurado por `VITE_GLOBAL_RANKING_ENDPOINT`.
+- La QA real comprueba `health`, carga del Top 100 y, opcionalmente, envío real + aparición en ranking + bloqueo de duplicado con `FUTBOL11_GLOBAL_RANKING_WRITE_QA=1`.
+- Expone `checkGlobalRankingHealth` y URLs puras de `health`/`top` en `globalRankingService`.
+- Documenta el flujo de prueba real con PowerShell sin commitear `.env.local`.
+- Actualiza versionado a `v0.23.0d` / `0.23.0-d.0`.
+- No toca balance, ratings históricos, plantillas, reglas de recompensa ni ranking local.
+
 ## v0.23.0c — Team power progression QA
 
 - Centraliza el cálculo de poder de carrera en `src/career/teamPower.ts`.
