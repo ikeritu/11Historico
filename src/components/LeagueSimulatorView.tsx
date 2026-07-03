@@ -275,12 +275,25 @@ export function LeagueSimulatorView({
     return targetContext.state.table.find((row) => row.teamId === "athletic_historico")?.played ?? 0;
   }
 
+  function getSeasonLuckWheelTriggerDeadlineMatchday(targetContext: UserLeagueSimulationContext): number {
+    const maxMatchday = Math.max(...targetContext.state.fixtures.map((fixture) => fixture.matchday), 38);
+    return Math.floor(maxMatchday * 2 / 3);
+  }
+
+  function isWithinSeasonLuckWheelTriggerWindow(targetContext: UserLeagueSimulationContext): boolean {
+    return getLeagueMatchesPlayed(targetContext) <= getSeasonLuckWheelTriggerDeadlineMatchday(targetContext);
+  }
+
   function maybeOfferSeasonLuckWheel(params: {
     previousContext: UserLeagueSimulationContext;
     nextContext: UserLeagueSimulationContext;
     result?: MatchResult;
   }): boolean {
     if (!isCareerMode || pendingWheelOffer || params.nextContext.seasonLuckWheel?.used) {
+      return false;
+    }
+
+    if (!isWithinSeasonLuckWheelTriggerWindow(params.nextContext)) {
       return false;
     }
 
@@ -326,6 +339,7 @@ export function LeagueSimulatorView({
 
     setPendingWheelOffer(undefined);
     commitContext(nextContext);
+    finishIfReady(nextContext);
   }
 
   function handleResolveSeasonLuckWheel(result: SeasonLuckWheelResolvedResult) {
@@ -349,6 +363,7 @@ export function LeagueSimulatorView({
 
     setPendingWheelOffer(undefined);
     commitContext(nextContext);
+    finishIfReady(nextContext);
   }
 
   function finishIfReady(nextContext: UserLeagueSimulationContext) {

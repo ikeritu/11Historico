@@ -109,8 +109,12 @@ function testLeagueIntegration(): void {
   assert(leagueView.includes("copa_elimination"), "Debe existir trigger por eliminación de Copa.");
   assert(leagueView.includes("mid_season"), "Debe existir trigger de mitad de temporada.");
   assert(leagueView.includes("applySeasonLuckWheelRatingDelta"), "Los efectos de media deben llegar al rating de simulación.");
+  assert(leagueView.includes("getSeasonLuckWheelTriggerDeadlineMatchday"), "Debe existir fecha límite para ofrecer ruleta antes del tramo final.");
+  assert(leagueView.includes("Math.floor(maxMatchday * 2 / 3)"), "La fecha límite de ruleta debe ser 2/3 de la Liga.");
+  assert(leagueView.includes("isWithinSeasonLuckWheelTriggerWindow"), "Los triggers de ruleta deben respetar la ventana máxima de activación.");
+  assert(leagueView.includes("finishIfReady(nextContext)"), "Resolver o rechazar ruleta no debe bloquear una temporada que ya puede cerrarse.");
   assert(simulator.includes("seasonLuckWheel?: SeasonLuckWheelState"), "El contexto de liga debe persistir el estado de ruleta.");
-  logOk("LeagueSimulatorView integra pausa, triggers y ratingDelta");
+  logOk("LeagueSimulatorView integra pausa, triggers, límite 2/3, cierre seguro y ratingDelta");
 }
 
 function testReadablePrizeLabelsAndLegend(): void {

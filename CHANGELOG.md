@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.23.2b3 — Luck Wheel Trigger Limit Fix
+
+- Limita la activación de la Ruleta de la Suerte a los dos primeros tercios de la Liga.
+- En una Liga de 38 jornadas, la última ventana válida queda en la jornada 25; después ya no se ofrece ruleta.
+- Evita que la ruleta aparezca al finalizar la temporada.
+- Mantiene el trigger de mitad de temporada y las eliminaciones tempranas de Copa, pero bloquea eventos tardíos.
+- Añade cierre seguro: resolver o rechazar una ruleta pendiente llama a `finishIfReady(nextContext)` para no dejar la pantalla bloqueada si la temporada ya puede cerrarse.
+- Refuerza `qa:season-luck-wheel-ui` para auditar el límite temporal de 2/3 y el cierre seguro.
+- Actualiza versionado a `v0.23.2b3` / `0.23.2-b3.0`.
+- No toca probabilidades reales, balance, ratings históricos, plantillas base, ranking local, ranking global ni Europa Career.
+
 ## v0.23.2b2 — Luck Wheel Readability and Arrow Speed
 
 - Sustituye textos largos dentro de los quesitos por etiquetas cortas y más nítidas: `+0.5`, `+1`, `Jugador`, `Entrenador`, `Sin efecto`, `-0.5` y `-1`.
