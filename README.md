@@ -1,3 +1,7 @@
+### v0.23.1a — Agentjacking guardrails
+
+Seguridad operativa antes de Europa Career: añade reglas anti-agentjacking en `AGENTS.md`, trata archivos/parches/logs como entrada no confiable, protege secretos y Git, y añade `npm run qa:agentjacking` dentro de `qa:tech-debt`.
+
 ### v0.23.1 — Release stabilization
 
 Versión estable post-ranking global real: congela la base antes de Europa Career, añade `npm run qa:release-stabilization`, protege endpoints locales y valida que fuentes/docs/dist no filtren Deployment IDs reales de Apps Script.
@@ -67,7 +71,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.23.1_RELEASE_STABILIZATION`.
+Versión pública actual: `v0.23.1a_AGENTJACKING_GUARDRAILS`.
 
 Base jugable cerrada:
 
@@ -107,6 +111,7 @@ https://ikeritu.github.io/11Historico/
 - Ranking global preparado para Google Sheets + Apps Script mediante `VITE_GLOBAL_RANKING_ENDPOINT`.
 - QA de ranking global real: health, Top 100, envío opcional y duplicados contra Apps Script.
 - QA de estabilización de release para proteger endpoints locales y evitar filtrado de Deployment IDs reales.
+- Guardarraíles anti-agentjacking: archivos/parches/logs como entrada no confiable, secretos protegidos y Git seguro.
 - Poder de equipo de carrera centralizado: Media XI, rating visible, entrenador y bonus temporal influyen en la simulación.
 - Flujo básico de carrera con copy de objetivo corregido y techo de media ajustado.
 - Flujo básico de una temporada de carrera conectado a Liga y Copa.
@@ -175,6 +180,8 @@ http://localhost:5173/
 
 ```powershell
 npm.cmd run qa:version
+npm.cmd run qa:release-stabilization
+npm.cmd run qa:agentjacking
 npm.cmd run qa:formation-reward
 npm.cmd run qa:career-ranking
 npm.cmd run build

@@ -97,3 +97,6 @@ Remove-Item Env:FUTBOL11_GLOBAL_RANKING_WRITE_QA
 ```
 
 Esta prueba crea una entrada real con nick `QA-Futbol11`, comprueba que aparece en el Top global y verifica que reenviar el mismo `careerId` queda bloqueado como duplicado.
+
+> Seguridad: .env.local no se debe subir al repositorio. Mantén VITE_GLOBAL_RANKING_ENDPOINT solo en local o configúralo desde la UI.
+

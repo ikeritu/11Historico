@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.23.1a — Agentjacking guardrails
+
+- Añade guardarraíles anti-agentjacking en `AGENTS.md` para tratar archivos, parches, markdown, logs, OCR, CSV y artefactos como entrada no confiable.
+- Bloquea instrucciones incrustadas que intenten ignorar el roadmap, leer secretos, saltarse tests, hacer `git add .`, forzar push o cambiar ratings/balance/plantillas sin fase explícita.
+- Refuerza reglas de Git seguro: stage explícito, no comandos destructivos sin confirmación y no commitear `dist` salvo release/build.
+- Añade `npm run qa:agentjacking` e integra la auditoría en `npm run qa:tech-debt`.
+- Actualiza versionado a `v0.23.1a` / `0.23.1-a.0`.
+- No toca gameplay, balance, ratings históricos, plantillas, recompensas, ranking local, ranking global ni backend Apps Script.
+
 ## v0.23.1 — Release stabilization
 
 - Cierra una versión estable post-ranking global real antes de abrir Europa Career.

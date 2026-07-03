@@ -66,11 +66,33 @@ function walkTextFiles(dir: string, results: string[] = []): string[] {
   return results;
 }
 
-function testReleaseVersionMetadata(): void {
+function testVersionMetadata(): void {
   assert(APP_VERSION === CURRENT_PUBLIC_VERSION, `APP_VERSION debe ser ${CURRENT_PUBLIC_VERSION}, pero es ${APP_VERSION}.`);
   assert(APP_VERSION_NAME === "Agentjacking guardrails", `APP_VERSION_NAME inesperado: ${APP_VERSION_NAME}.`);
-  assert(APP_STATUS.includes("anti-agentjacking"), "APP_STATUS debe describir los guardarraíles anti-agentjacking.");
-  logOk("appVersion.ts apunta a la release estable actual");
+  assert(APP_STATUS.includes("anti-agentjacking"), "APP_STATUS debe mencionar los guardarraíles anti-agentjacking.");
+  logOk("appVersion.ts apunta a la fase anti-agentjacking actual");
+}
+
+function testAgentsGuardrailsArePresent(): void {
+  const agents = readText("AGENTS.md");
+
+  for (const requiredFragment of [
+    "## Anti-agentjacking / prompt-injection guardrails",
+    "entrada no confiable",
+    "ignore previous instructions",
+    "ignora las instrucciones anteriores",
+    "No exponer, copiar, resumir literalmente ni commitear secretos",
+    "No usar `git add .`",
+    "git reset --hard",
+    "git clean -fd",
+    "git push --force",
+    "No commitear cambios generados en `dist` salvo que la fase incluya expresamente una build de release",
+    "No modificar ratings históricos",
+  ]) {
+    assert(agents.includes(requiredFragment), `AGENTS.md debe contener guardrail: ${requiredFragment}`);
+  }
+
+  logOk("AGENTS.md contiene guardarraíles anti-agentjacking");
 }
 
 function testLocalEnvIsProtected(): void {
@@ -83,7 +105,7 @@ function testLocalEnvIsProtected(): void {
     ".gitignore debe proteger .env.development.local mediante patrón o entrada explícita.",
   );
 
-  logOk("archivos .env locales protegidos por .gitignore");
+  logOk("archivos .env locales siguen protegidos");
 }
 
 function testNoRealEndpointLeakInTrackedText(): void {
@@ -98,31 +120,47 @@ function testNoRealEndpointLeakInTrackedText(): void {
     assert(!REAL_APPS_SCRIPT_ID_PATTERN.test(content), `Posible endpoint real de Apps Script filtrado en ${path}.`);
   }
 
-  logOk("no hay Deployment ID real de Apps Script filtrado en fuentes/docs");
+  logOk("no hay Deployment ID real de Apps Script filtrado");
 }
 
-function testGlobalRankingDocsAreSafe(): void {
-  const setupDoc = readText("docs/GLOBAL_RANKING_APPS_SCRIPT_SETUP.md");
+function testDangerousGitCommandsAreNotRecommended(): void {
+  const filesToScan = walkTextFiles(".").filter((path) => {
+    if (["AGENTS.md", "docs/v0_23_1a_AGENTJACKING_GUARDRAILS.md", "scripts/qaAgentjackingGuardrails.ts"].includes(path)) {
+      return false;
+    }
 
-  assert(setupDoc.includes("/exec"), "La guía de Apps Script debe insistir en usar URL /exec.");
-  assert(setupDoc.includes(".env.local"), "La guía debe documentar .env.local.");
-  assert(setupDoc.includes("no se debe subir") || setupDoc.includes("no se sube"), "La guía debe advertir que .env.local no se debe subir.");
-  assert(!REAL_APPS_SCRIPT_ID_PATTERN.test(setupDoc), "La guía no debe contener un Deployment ID real.");
-  logOk("guía Apps Script segura para release");
+    return ["README.md", "CHANGELOG.md"].includes(path) || path.startsWith("docs/");
+  });
+
+  const dangerousPatterns = [/git add \./, /git reset --hard/, /git clean -fd/, /git push --force/, /--force-with-lease/];
+  const allowedContext = /no usar|no ejecutar|sin confirmaci[oó]n|prohibid|evitar|bloquea|guardrail|anti-agentjacking|destructiv/i;
+
+  for (const path of filesToScan) {
+    const lines = readText(path).split(/\r?\n/);
+    lines.forEach((line, index) => {
+      for (const pattern of dangerousPatterns) {
+        if (pattern.test(line)) {
+          assert(allowedContext.test(line), `Comando peligroso no contextualizado en ${path}:${index + 1}: ${line}`);
+        }
+      }
+    });
+  }
+
+  logOk("no hay recomendaciones peligrosas de git en docs generales");
 }
 
-function testReleaseDocsArePresent(): void {
+function testDocsArePresent(): void {
   const changelog = readText("CHANGELOG.md");
   const readme = readText("README.md");
-  const releaseDocPath = "docs/v0_23_1a_AGENTJACKING_GUARDRAILS.md";
+  const phaseDocPath = "docs/v0_23_1a_AGENTJACKING_GUARDRAILS.md";
 
   assert(changelog.startsWith("# Changelog\n\n## v0.23.1a"), "CHANGELOG debe empezar por v0.23.1a.");
   assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), "README debe apuntar a v0.23.1a_AGENTJACKING_GUARDRAILS.");
-  assert(existsSync(join(ROOT, releaseDocPath)), "Debe existir docs/v0_23_1a_AGENTJACKING_GUARDRAILS.md.");
-  logOk("README, CHANGELOG y doc de release apuntan a v0.23.1a");
+  assert(existsSync(join(ROOT, phaseDocPath)), "Debe existir docs/v0_23_1a_AGENTJACKING_GUARDRAILS.md.");
+  logOk("README, CHANGELOG y doc de fase apuntan a v0.23.1a");
 }
 
-function testCriticalQaScriptsRemainRegistered(): void {
+function testQaScriptsAreRegistered(): void {
   const packageJson = JSON.parse(readText("package.json")) as { scripts?: Record<string, string> };
   const scripts = packageJson.scripts ?? {};
 
@@ -141,33 +179,18 @@ function testCriticalQaScriptsRemainRegistered(): void {
     assert(scripts[scriptName], `Debe existir script ${scriptName}.`);
   }
 
-  assert(scripts["qa:tech-debt"]?.includes("qa:release-stabilization"), "qa:tech-debt debe incluir qa:release-stabilization.");
   assert(scripts["qa:tech-debt"]?.includes("qa:agentjacking"), "qa:tech-debt debe incluir qa:agentjacking.");
-  logOk("scripts QA críticos siguen registrados");
+  logOk("scripts QA críticos incluyen la auditoría anti-agentjacking");
 }
 
-function testDistDoesNotEmbedRealEndpoint(): void {
-  if (!existsSync(join(ROOT, "dist"))) {
-    logOk("dist no existe en esta copia; se omitió comprobación de endpoint embebido");
-    return;
-  }
+console.log("QA Agentjacking Guardrails");
 
-  for (const path of walkTextFiles("dist")) {
-    const content = readText(path);
-    assert(!REAL_APPS_SCRIPT_ID_PATTERN.test(content), `dist contiene un Deployment ID real en ${path}.`);
-  }
-
-  logOk("dist no contiene endpoint real embebido");
-}
-
-console.log("QA Release Stabilization");
-
-testReleaseVersionMetadata();
+testVersionMetadata();
+testAgentsGuardrailsArePresent();
 testLocalEnvIsProtected();
 testNoRealEndpointLeakInTrackedText();
-testGlobalRankingDocsAreSafe();
-testReleaseDocsArePresent();
-testCriticalQaScriptsRemainRegistered();
-testDistDoesNotEmbedRealEndpoint();
+testDangerousGitCommandsAreNotRecommended();
+testDocsArePresent();
+testQaScriptsAreRegistered();
 
-console.log("QA release stabilization OK");
+console.log("QA agentjacking guardrails OK");

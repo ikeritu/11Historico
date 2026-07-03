@@ -60,7 +60,7 @@ function testPackageLockMatchesPackageJson(): void {
 }
 
 function testAppVersionMetadata(): void {
-  assert(APP_VERSION === "v0.23.1", `APP_VERSION debe ser v0.23.1, pero es ${APP_VERSION}`);
+  assert(APP_VERSION === "v0.23.1a", `APP_VERSION debe ser v0.23.1a, pero es ${APP_VERSION}`);
   assert(APP_VERSION_NAME.trim().length > 0, "APP_VERSION_NAME no puede estar vacío.");
   assert(APP_STATUS.trim().length > 0, "APP_STATUS no puede estar vacío.");
   assertNoMojibake("APP_VERSION_NAME", APP_VERSION_NAME);
@@ -71,12 +71,12 @@ function testAppVersionMetadata(): void {
 function testDocsMentionCurrentVersion(): void {
   const changelog = readFileSync(join(ROOT, "CHANGELOG.md"), "utf8");
   const readme = readFileSync(join(ROOT, "README.md"), "utf8");
-  const releaseDocPath = join(ROOT, "docs", "v0_23_1_RELEASE_STABILIZATION.md");
+  const releaseDocPath = join(ROOT, "docs", "v0_23_1a_AGENTJACKING_GUARDRAILS.md");
 
-  assert(changelog.startsWith("# Changelog\n\n## v0.23.1"), "CHANGELOG debe empezar por v0.23.1.");
-  assert(readme.includes("Versión pública actual: `v0.23.1_RELEASE_STABILIZATION`."), "README debe apuntar a v0.23.1_RELEASE_STABILIZATION.");
-  assert(existsSync(releaseDocPath), "Debe existir docs/v0_23_1_RELEASE_STABILIZATION.md.");
-  logOk("README, CHANGELOG y doc de fase apuntan a v0.23.1");
+  assert(changelog.startsWith("# Changelog\n\n## v0.23.1a"), "CHANGELOG debe empezar por v0.23.1a.");
+  assert(readme.includes("Versión pública actual: `v0.23.1a_AGENTJACKING_GUARDRAILS`."), "README debe apuntar a v0.23.1a_AGENTJACKING_GUARDRAILS.");
+  assert(existsSync(releaseDocPath), "Debe existir docs/v0_23_1a_AGENTJACKING_GUARDRAILS.md.");
+  logOk("README, CHANGELOG y doc de fase apuntan a v0.23.1a");
 }
 
 function testQaScriptsAreRegistered(): void {
@@ -85,12 +85,14 @@ function testQaScriptsAreRegistered(): void {
   assert(packageJson.scripts?.["qa:version"], "Debe existir script qa:version.");
   assert(packageJson.scripts?.["qa:tech-debt"], "Debe existir script qa:tech-debt.");
   assert(packageJson.scripts?.["qa:release-stabilization"], "Debe existir script qa:release-stabilization.");
+  assert(packageJson.scripts?.["qa:agentjacking"], "Debe existir script qa:agentjacking.");
   assert(packageJson.scripts?.["qa:formation-reward"], "Debe conservar qa:formation-reward.");
   assert(packageJson.scripts?.["qa:career-ranking"], "Debe conservar qa:career-ranking.");
   assert(packageJson.scripts?.["qa:global-ranking"], "Debe existir script qa:global-ranking.");
   assert(packageJson.scripts?.["qa:team-power"], "Debe existir script qa:team-power.");
   assert(packageJson.scripts?.["qa:global-ranking-real"], "Debe existir script qa:global-ranking-real.");
   assert(packageJson.scripts?.["qa:global-ranking-ui"], "Debe existir script qa:global-ranking-ui.");
+  assert(packageJson.scripts?.["qa:tech-debt"]?.includes("qa:agentjacking"), "qa:tech-debt debe incluir qa:agentjacking.");
   logOk("scripts QA críticos registrados");
 }
 
