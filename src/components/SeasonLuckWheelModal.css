@@ -1,0 +1,268 @@
+.season-wheel-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+  background: radial-gradient(circle at top, rgba(227, 6, 19, 0.25), rgba(4, 8, 18, 0.86));
+  backdrop-filter: blur(10px);
+}
+
+.season-wheel-modal {
+  width: min(980px, 100%);
+  max-height: min(92vh, 920px);
+  overflow: auto;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 28px;
+  padding: clamp(1rem, 2.4vw, 2rem);
+  background: linear-gradient(145deg, rgba(18, 24, 42, 0.96), rgba(87, 14, 24, 0.95));
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.48);
+  color: #fff;
+}
+
+.season-wheel-header {
+  max-width: 760px;
+  margin: 0 auto 1.4rem;
+  text-align: center;
+}
+
+.season-wheel-eyebrow {
+  display: inline-flex;
+  margin-bottom: 0.65rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  color: #ffd5d5;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.season-wheel-header h2 {
+  margin: 0 0 0.65rem;
+  font-size: clamp(1.8rem, 4vw, 3.3rem);
+}
+
+.season-wheel-header p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.6;
+}
+
+.season-wheel-content {
+  display: grid;
+  grid-template-columns: minmax(260px, 420px) minmax(260px, 1fr);
+  gap: clamp(1rem, 3vw, 2rem);
+  align-items: center;
+}
+
+.season-wheel-disc {
+  position: relative;
+  width: min(82vw, 410px);
+  aspect-ratio: 1;
+  margin: 0 auto;
+  border: 12px solid rgba(255, 255, 255, 0.9);
+  border-radius: 999px;
+  background:
+    conic-gradient(
+      from -22.5deg,
+      #0f9d58 0deg 45deg,
+      #e7b416 45deg 90deg,
+      #c5221f 90deg 135deg,
+      #0f9d58 135deg 180deg,
+      #e7b416 180deg 225deg,
+      #0f9d58 225deg 270deg,
+      #c5221f 270deg 315deg,
+      #e7b416 315deg 360deg
+    );
+  box-shadow: inset 0 0 0 7px rgba(17, 24, 39, 0.55), 0 20px 50px rgba(0, 0, 0, 0.32);
+  transition: transform 2.8s cubic-bezier(0.11, 0.67, 0.12, 1);
+}
+
+.season-wheel-disc::before {
+  content: "";
+  position: absolute;
+  inset: -23px auto auto 50%;
+  z-index: 3;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 16px solid transparent;
+  border-right: 16px solid transparent;
+  border-top: 34px solid #ffffff;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.35));
+}
+
+.season-wheel-disc-spinning {
+  animation: seasonWheelSpin 1.05s linear infinite;
+}
+
+.season-wheel-disc-resolved {
+  animation: none;
+}
+
+.season-wheel-disc-center {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  display: grid;
+  place-items: center;
+  width: 92px;
+  height: 92px;
+  transform: translate(-50%, -50%);
+  border: 6px solid rgba(255, 255, 255, 0.92);
+  border-radius: 999px;
+  background: #111827;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.season-wheel-prize {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 46%;
+  transform-origin: left center;
+  color: #fff;
+  font-size: clamp(0.65rem, 1.45vw, 0.86rem);
+  font-weight: 900;
+  text-align: right;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.65);
+  pointer-events: none;
+}
+
+.season-wheel-prize-positive { color: #ecfff4; }
+.season-wheel-prize-neutral { color: #fff7d4; }
+.season-wheel-prize-negative { color: #ffe5e5; }
+
+.season-wheel-precision-panel {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 22px;
+  padding: 1.2rem;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.season-wheel-zone-labels {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.3rem;
+  margin-bottom: 0.55rem;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.season-wheel-precision-bar {
+  position: relative;
+  height: 46px;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.32);
+  border-radius: 999px;
+  background: linear-gradient(90deg, #c5221f 0%, #e7b416 26%, #0f9d58 50%, #e7b416 74%, #c5221f 100%);
+}
+
+.season-wheel-precision-center {
+  position: absolute;
+  inset: 0 auto 0 50%;
+  width: 4px;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.9);
+}
+
+.season-wheel-precision-marker {
+  position: absolute;
+  top: -3px;
+  transform: translateX(-50%);
+  color: #111827;
+  font-size: 2.2rem;
+  font-weight: 900;
+  text-shadow: 0 1px 5px rgba(255, 255, 255, 0.8);
+}
+
+.season-wheel-precision-panel p {
+  margin: 0.75rem 0 0;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.5;
+}
+
+.season-wheel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.4rem;
+}
+
+.season-wheel-primary,
+.season-wheel-secondary {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.8rem 1.2rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.season-wheel-primary {
+  background: #ffffff;
+  color: #991b1b;
+}
+
+.season-wheel-secondary {
+  background: rgba(255, 255, 255, 0.13);
+  color: #ffffff;
+}
+
+.season-wheel-stop {
+  min-width: 170px;
+  background: #ffe8e8;
+}
+
+.season-wheel-result {
+  margin-top: 1.4rem;
+  border-radius: 22px;
+  padding: 1.1rem;
+  background: rgba(255, 255, 255, 0.11);
+  text-align: center;
+}
+
+.season-wheel-result span {
+  display: block;
+  margin-bottom: 0.45rem;
+  font-size: 0.8rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.season-wheel-result h3 {
+  margin: 0 0 0.55rem;
+  font-size: clamp(1.35rem, 3vw, 2rem);
+}
+
+.season-wheel-result p,
+.season-wheel-result small {
+  display: block;
+  max-width: 680px;
+  margin: 0.4rem auto;
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.55;
+}
+
+@keyframes seasonWheelSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 780px) {
+  .season-wheel-content {
+    grid-template-columns: 1fr;
+  }
+
+  .season-wheel-modal {
+    border-radius: 20px;
+  }
+}

@@ -15,6 +15,7 @@ import type {
   UserTeamSeasonStats,
   LeagueTableRow,
 } from "../types/game";
+import type { SeasonLuckWheelState } from "../career/seasonLuckWheel";
 
 import {
   getLaliga2526TeamById,
@@ -55,6 +56,7 @@ export interface UserLeagueSimulationContext {
   leagueSeasonSalt?: number;
   selectedCoach?: SelectedCoach;
   rivals?: RivalTeam[];
+  seasonLuckWheel?: SeasonLuckWheelState;
 }
 
 export interface SimulateNextUserMatchParams {

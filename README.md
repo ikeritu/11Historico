@@ -1,3 +1,7 @@
+### v0.23.2b — Season Luck Wheel UI
+
+UI jugable para la ruleta de temporada: modal contextual, premios visibles, animación de giro, barra de precisión con flecha móvil, botón parar, rechazo sin efecto, pausa de simulación automática y aplicación de `ratingDelta` al poder de temporada. Los cambios reales de jugador/entrenador quedan registrados como premio para una iteración posterior.
+
 ### v0.23.2a — Season Luck Wheel engine
 
 Motor lógico de la ruleta de temporada antes de la UI animada: máximo 1 uso por temporada, probabilidades 40/40/20, premios internos definidos, barra de precisión que favorece el centro y castiga extremos, textos narrativos y `npm run qa:season-luck-wheel`. No integra todavía modal/animación ni pausa real de simulación.
@@ -75,7 +79,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.23.2a_SEASON_LUCK_WHEEL_ENGINE`.
+Versión pública actual: `v0.23.2b_SEASON_LUCK_WHEEL_UI`.
 
 Base jugable cerrada:
 

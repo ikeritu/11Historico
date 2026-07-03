@@ -33,6 +33,14 @@ import {
   USER_TEAM_NAME,
 } from "../simulation/leagueTable";
 import { applyDifficultyToTeamRating } from "../career/teamPower";
+import {
+  applySeasonLuckWheelRatingDelta,
+  buildSeasonLuckWheelOffer,
+  type SeasonLuckWheelOffer,
+  type SeasonLuckWheelResolvedResult,
+  type SeasonLuckWheelState,
+} from "../career/seasonLuckWheel";
+import SeasonLuckWheelModal from "./SeasonLuckWheelModal";
 
 import "./LeagueSimulatorView.css";
 
@@ -211,10 +219,16 @@ export function LeagueSimulatorView({
 
   const [lastResult, setLastResult] = useState<MatchResult | undefined>(undefined);
   const [isAutoSimulating, setIsAutoSimulating] = useState(false);
+  const [pendingWheelOffer, setPendingWheelOffer] = useState<SeasonLuckWheelOffer | undefined>();
+
+  const teamRatingWithLuckWheel = useMemo(
+    () => applySeasonLuckWheelRatingDelta(teamRating, context.seasonLuckWheel?.accepted ? context.seasonLuckWheel.ratingDelta ?? 0 : 0),
+    [teamRating, context.seasonLuckWheel]
+  );
 
   const effectiveTeamRating = useMemo(
-    () => applyDifficultyToTeamRating(teamRating, difficulty, isCareerMode),
-    [teamRating, difficulty, isCareerMode]
+    () => applyDifficultyToTeamRating(teamRatingWithLuckWheel, difficulty, isCareerMode),
+    [teamRatingWithLuckWheel, difficulty, isCareerMode]
   );
 
   const userSummary = useMemo(
@@ -257,6 +271,86 @@ export function LeagueSimulatorView({
     onContextChange?.(contextWithCoach);
   }
 
+  function getLeagueMatchesPlayed(targetContext: UserLeagueSimulationContext): number {
+    return targetContext.state.table.find((row) => row.teamId === "athletic_historico")?.played ?? 0;
+  }
+
+  function maybeOfferSeasonLuckWheel(params: {
+    previousContext: UserLeagueSimulationContext;
+    nextContext: UserLeagueSimulationContext;
+    result?: MatchResult;
+  }): boolean {
+    if (!isCareerMode || pendingWheelOffer || params.nextContext.seasonLuckWheel?.used) {
+      return false;
+    }
+
+    const triggerEvent = (() => {
+      if (params.result?.competition === "cup" && params.result.userTeamLost) {
+        return "copa_elimination" as const;
+      }
+
+      const previousPlayed = getLeagueMatchesPlayed(params.previousContext);
+      const nextPlayed = getLeagueMatchesPlayed(params.nextContext);
+
+      if (previousPlayed < 19 && nextPlayed >= 19) {
+        return "mid_season" as const;
+      }
+
+      return undefined;
+    })();
+
+    if (!triggerEvent) return false;
+
+    const offer = buildSeasonLuckWheelOffer({
+      seasonId: `${gameId}_${context.leagueSeasonSalt ?? careerSeasonKey(params.nextContext)}`,
+      triggerEvent,
+      currentState: params.nextContext.seasonLuckWheel,
+    });
+
+    if (!offer) return false;
+
+    setPendingWheelOffer(offer);
+    setIsAutoSimulating(false);
+    return true;
+  }
+
+  function careerSeasonKey(targetContext: UserLeagueSimulationContext): string {
+    return String(targetContext.leagueSeasonSalt ?? targetContext.state.currentMatchday ?? 0);
+  }
+
+  function applySeasonLuckWheelState(nextState: SeasonLuckWheelState) {
+    const nextContext = {
+      ...context,
+      seasonLuckWheel: nextState,
+    };
+
+    setPendingWheelOffer(undefined);
+    commitContext(nextContext);
+  }
+
+  function handleResolveSeasonLuckWheel(result: SeasonLuckWheelResolvedResult) {
+    const nextContext = {
+      ...context,
+      seasonLuckWheel: {
+        seasonId: result.seasonId,
+        used: true,
+        triggerEvent: result.triggerEvent,
+        offeredAt: new Date().toISOString(),
+        accepted: true,
+        resultGroup: result.resultGroup,
+        resultType: result.resultType,
+        ratingDelta: result.ratingDelta,
+        precisionPosition: result.precisionPosition,
+        precisionZoneId: result.precisionZone.id,
+        appearanceText: result.appearanceText,
+        resultText: result.resultText,
+      },
+    };
+
+    setPendingWheelOffer(undefined);
+    commitContext(nextContext);
+  }
+
   function finishIfReady(nextContext: UserLeagueSimulationContext) {
     if (!canFinishSeason(nextContext)) return false;
 
@@ -291,7 +385,14 @@ export function LeagueSimulatorView({
       commitContext(simulation.context);
       setLastResult(simulation.result);
 
+      const wheelOffered = maybeOfferSeasonLuckWheel({
+        previousContext: context,
+        nextContext: simulation.context,
+        result: simulation.result,
+      });
+
       const shouldStop =
+        wheelOffered ||
         !simulation.result ||
         Boolean(simulation.stoppedForCup) ||
         simulation.context.state.completed ||
@@ -322,7 +423,16 @@ export function LeagueSimulatorView({
       .find((result) => result.userTeamPlayed);
 
     setLastResult(lastUserLeagueResult);
-    finishIfReady(nextContext);
+
+    const wheelOffered = maybeOfferSeasonLuckWheel({
+      previousContext: context,
+      nextContext,
+      result: lastUserLeagueResult,
+    });
+
+    if (!wheelOffered) {
+      finishIfReady(nextContext);
+    }
   }
 
   function handleSimulateNextCupMatch() {
@@ -336,7 +446,16 @@ export function LeagueSimulatorView({
 
     commitContext(simulation.context);
     setLastResult(simulation.result);
-    finishIfReady(simulation.context);
+
+    const wheelOffered = maybeOfferSeasonLuckWheel({
+      previousContext: context,
+      nextContext: simulation.context,
+      result: simulation.result,
+    });
+
+    if (!wheelOffered) {
+      finishIfReady(simulation.context);
+    }
   }
 
   function handleSimulateFullCupAndFinishSeason() {
@@ -355,7 +474,16 @@ export function LeagueSimulatorView({
       .find((result) => result.userTeamPlayed);
 
     setLastResult(lastUserResult);
-    finishIfReady(nextContext);
+
+    const wheelOffered = maybeOfferSeasonLuckWheel({
+      previousContext: context,
+      nextContext,
+      result: lastUserResult,
+    });
+
+    if (!wheelOffered) {
+      finishIfReady(nextContext);
+    }
   }
 
   function handleToggleAutoSimulation() {
@@ -365,6 +493,14 @@ export function LeagueSimulatorView({
 
   return (
     <section className="league-simulator-view">
+      {pendingWheelOffer && (
+        <SeasonLuckWheelModal
+          offer={pendingWheelOffer}
+          onDecline={applySeasonLuckWheelState}
+          onResolve={handleResolveSeasonLuckWheel}
+        />
+      )}
+
       <header className="league-header">
         <div>
           <p className="eyebrow">LaLiga 25/26 + Copa del Rey</p>
@@ -411,7 +547,7 @@ export function LeagueSimulatorView({
                   type="button"
                   className={isAutoSimulating ? "stop-league-button" : "secondary-league-button"}
                   onClick={handleToggleAutoSimulation}
-                  disabled={context.state.completed}
+                  disabled={context.state.completed || Boolean(pendingWheelOffer)}
                 >
                   {isAutoSimulating ? "Parar simulación" : "Simular"}
                 </button>
@@ -420,7 +556,7 @@ export function LeagueSimulatorView({
                   type="button"
                   className="tertiary-league-button"
                   onClick={handleSimulateFullSeason}
-                  disabled={context.state.completed || isAutoSimulating}
+                  disabled={context.state.completed || isAutoSimulating || Boolean(pendingWheelOffer)}
                 >
                   Saltar hasta próximo evento
                 </button>
@@ -434,6 +570,18 @@ export function LeagueSimulatorView({
               <h2>{pendingCupFixture.roundName}</h2>
               <p>
                 Rival: {getCupRivalDisplayName(pendingCupFixture.rivalTeamId)} · Partido {pendingCupFixture.venue === "home" ? "en San Mamés" : "fuera de casa"}
+              </p>
+            </section>
+          )}
+
+          {context.seasonLuckWheel?.used && (
+            <section className="season-luck-wheel-status-card">
+              <span>Ruleta de la temporada</span>
+              <h2>{context.seasonLuckWheel.accepted ? "Resultado aplicado" : "Oportunidad rechazada"}</h2>
+              <p>
+                {context.seasonLuckWheel.accepted
+                  ? `${context.seasonLuckWheel.resultText ?? "La ruleta ya ha marcado esta temporada."} ${context.seasonLuckWheel.ratingDelta ? `Efecto de media: ${context.seasonLuckWheel.ratingDelta > 0 ? "+" : ""}${context.seasonLuckWheel.ratingDelta.toFixed(1)}.` : ""}`
+                  : "Decidiste no jugar la ruleta. Esta temporada ya no volverá a aparecer."}
               </p>
             </section>
           )}

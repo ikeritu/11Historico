@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.23.2b — Season Luck Wheel UI
+
+- Añade `SeasonLuckWheelModal` con modal narrativo para la ruleta de temporada.
+- Muestra premios visibles en la ruleta: `+0.5`, cambio de jugador, cambio de entrenador, `+1.0`, `+1.0` + jugador, sin efecto, `-0.5` y `-1.0`.
+- Añade animación de giro con segmentos visuales.
+- Añade barra de precisión con flecha móvil y botón `Parar flecha`.
+- Integra botones `Jugar ruleta` y `No jugar`; rechazar consume la oportunidad sin efecto.
+- Pausa la simulación automática cuando aparece la oferta de ruleta.
+- Añade triggers iniciales por mitad de temporada y eliminación en Copa del Rey.
+- Persiste el estado de ruleta en el contexto de liga.
+- Aplica los efectos de media al rating que usa la simulación durante la temporada.
+- Añade `npm run qa:season-luck-wheel-ui` e integra la QA en `npm run qa:tech-debt`.
+- Actualiza versionado a `v0.23.2b` / `0.23.2-b.0`.
+- No toca ratings históricos, plantillas base, ranking local, ranking global ni Europa Career.
+
 ## v0.23.2a — Season Luck Wheel engine
 
 - Añade `src/career/seasonLuckWheel.ts` con el motor lógico de la ruleta de temporada.
@@ -217,6 +232,21 @@
 
 # Changelog
 
+## v0.23.2b — Season Luck Wheel UI
+
+- Añade `SeasonLuckWheelModal` con modal narrativo para la ruleta de temporada.
+- Muestra premios visibles en la ruleta: `+0.5`, cambio de jugador, cambio de entrenador, `+1.0`, `+1.0` + jugador, sin efecto, `-0.5` y `-1.0`.
+- Añade animación de giro con segmentos visuales.
+- Añade barra de precisión con flecha móvil y botón `Parar flecha`.
+- Integra botones `Jugar ruleta` y `No jugar`; rechazar consume la oportunidad sin efecto.
+- Pausa la simulación automática cuando aparece la oferta de ruleta.
+- Añade triggers iniciales por mitad de temporada y eliminación en Copa del Rey.
+- Persiste el estado de ruleta en el contexto de liga.
+- Aplica los efectos de media al rating que usa la simulación durante la temporada.
+- Añade `npm run qa:season-luck-wheel-ui` e integra la QA en `npm run qa:tech-debt`.
+- Actualiza versionado a `v0.23.2b` / `0.23.2-b.0`.
+- No toca ratings históricos, plantillas base, ranking local, ranking global ni Europa Career.
+
 ## v0.22.4 — Career exit copy and coach layout fix
 
 - Refuerza el copy de salida de carrera como `Salir`.
@@ -241,6 +271,21 @@
 - No se toca rating efectivo, Supercopa, Europa ni partida rápida.
 
 # Changelog
+
+## v0.23.2b — Season Luck Wheel UI
+
+- Añade `SeasonLuckWheelModal` con modal narrativo para la ruleta de temporada.
+- Muestra premios visibles en la ruleta: `+0.5`, cambio de jugador, cambio de entrenador, `+1.0`, `+1.0` + jugador, sin efecto, `-0.5` y `-1.0`.
+- Añade animación de giro con segmentos visuales.
+- Añade barra de precisión con flecha móvil y botón `Parar flecha`.
+- Integra botones `Jugar ruleta` y `No jugar`; rechazar consume la oportunidad sin efecto.
+- Pausa la simulación automática cuando aparece la oferta de ruleta.
+- Añade triggers iniciales por mitad de temporada y eliminación en Copa del Rey.
+- Persiste el estado de ruleta en el contexto de liga.
+- Aplica los efectos de media al rating que usa la simulación durante la temporada.
+- Añade `npm run qa:season-luck-wheel-ui` e integra la QA en `npm run qa:tech-debt`.
+- Actualiza versionado a `v0.23.2b` / `0.23.2-b.0`.
+- No toca ratings históricos, plantillas base, ranking local, ranking global ni Europa Career.
 
 ## v0.21.0f — Career promotion and summary fix
 
