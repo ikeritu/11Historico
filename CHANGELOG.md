@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.23.1 — Release stabilization
+
+- Cierra una versión estable post-ranking global real antes de abrir Europa Career.
+- Actualiza versionado público a `v0.23.1` y npm a `0.23.1`.
+- Añade `npm run qa:release-stabilization`.
+- `npm run qa:tech-debt` incorpora la QA de estabilización.
+- Verifica que `.env`, `.env.local` y `.env.*.local` están protegidos por `.gitignore`.
+- Verifica que fuentes/docs/dist no filtran Deployment IDs reales de Apps Script.
+- Verifica que la guía Apps Script documenta `/exec`, `.env.local` y la configuración segura.
+- No toca balance, ratings históricos, plantillas, ranking local, recompensas ni backend Apps Script.
+
 ## v0.23.0e — Global ranking UI polish
 
 - Añade configuración local del endpoint Apps Script desde la UI, guardada solo en el navegador.

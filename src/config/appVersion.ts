@@ -1,3 +1,3 @@
-export const APP_VERSION = "v0.23.0e";
-export const APP_VERSION_NAME = "Global ranking UI polish";
-export const APP_STATUS = "Ranking global real con configuración de endpoint desde navegador, mensajes más claros y QA de UX para carga/envío online";
+export const APP_VERSION = "v0.23.1";
+export const APP_VERSION_NAME = "Release stabilization";
+export const APP_STATUS = "Versión estable post-ranking global real: QA de release, protección de endpoint local, backend Apps Script validado y base lista antes de Europa Career";

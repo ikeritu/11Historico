@@ -1,3 +1,7 @@
+### v0.23.1 — Release stabilization
+
+Versión estable post-ranking global real: congela la base antes de Europa Career, añade `npm run qa:release-stabilization`, protege endpoints locales y valida que fuentes/docs/dist no filtren Deployment IDs reales de Apps Script.
+
 ### v0.23.0e — Global ranking UI polish
 
 Pulido UX del ranking global real: permite guardar la URL `/exec` de Apps Script desde el navegador, recargar el Top 100, mejorar mensajes de backend pendiente/ranking vacío y añadir `npm run qa:global-ranking-ui`.
@@ -63,7 +67,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.23.0e_GLOBAL_RANKING_UI_POLISH`.
+Versión pública actual: `v0.23.1_RELEASE_STABILIZATION`.
 
 Base jugable cerrada:
 
@@ -102,6 +106,7 @@ https://ikeritu.github.io/11Historico/
 - Ranking local de mejores carreras guardado en el navegador.
 - Ranking global preparado para Google Sheets + Apps Script mediante `VITE_GLOBAL_RANKING_ENDPOINT`.
 - QA de ranking global real: health, Top 100, envío opcional y duplicados contra Apps Script.
+- QA de estabilización de release para proteger endpoints locales y evitar filtrado de Deployment IDs reales.
 - Poder de equipo de carrera centralizado: Media XI, rating visible, entrenador y bonus temporal influyen en la simulación.
 - Flujo básico de carrera con copy de objetivo corregido y techo de media ajustado.
 - Flujo básico de una temporada de carrera conectado a Liga y Copa.
