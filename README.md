@@ -1,3 +1,7 @@
+### v0.23.0c — Team power progression QA
+
+Asegura que las mejoras de equipo afectan al poder real usado por la simulación: rating base, bonus de entrenador `+0.5`, ratings por línea y dificultad quedan centralizados en `teamPower.ts`, visibles en el resumen y cubiertos por `npm run qa:team-power`.
+
 ### v0.23.0b — Global ranking backend Apps Script
 
 Conecta el ranking global a un backend real mínimo con Google Sheets + Apps Script. Añade el script `apps-script/globalRankingBackend.gs`, configuración por `VITE_GLOBAL_RANKING_ENDPOINT`, envío real desde Game Over, carga Top 100, manejo de duplicados y QA ampliada.
@@ -51,7 +55,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.23.0b_GLOBAL_RANKING_BACKEND_APPS_SCRIPT`.
+Versión pública actual: `v0.23.0c_TEAM_POWER_PROGRESSION_QA`.
 
 Base jugable cerrada:
 
@@ -89,6 +93,7 @@ https://ikeritu.github.io/11Historico/
 - Reglas puras del modo carrera preparadas para el MVP jugable.
 - Ranking local de mejores carreras guardado en el navegador.
 - Ranking global preparado para Google Sheets + Apps Script mediante `VITE_GLOBAL_RANKING_ENDPOINT`.
+- Poder de equipo de carrera centralizado: Media XI, rating visible, entrenador y bonus temporal influyen en la simulación.
 - Flujo básico de carrera con copy de objetivo corregido y techo de media ajustado.
 - Flujo básico de una temporada de carrera conectado a Liga y Copa.
 - Supercopa básica en modo carrera con 1.º/2.º de Liga + finalistas de Copa.

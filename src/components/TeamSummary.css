@@ -115,6 +115,31 @@
   line-height: 1.2;
 }
 
+
+.team-summary-power-breakdown {
+  display: grid;
+  gap: 6px;
+  margin: 14px auto 0;
+  max-width: 270px;
+}
+
+.team-summary-power-breakdown span {
+  display: block;
+  padding: 7px 9px;
+  border-radius: 999px;
+  background: rgba(176, 0, 32, 0.09);
+  color: #6f0014;
+  font-size: 0.74rem;
+  font-weight: 950;
+}
+
+.team-summary-rating-note {
+  margin: -4px 0 14px;
+  color: #f2d2d7;
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
 .team-summary-coach-card {
   background:
     radial-gradient(circle at top right, rgba(255, 255, 255, 0.12), transparent 34%),

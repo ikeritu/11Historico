@@ -18,6 +18,7 @@ import type {
 
 import type { UserLeagueSimulationContext } from "./simulation/leagueSimulator";
 import { calculateTeamRating } from "./simulation/teamRating";
+import { applyCareerRatingBonus } from "./career/teamPower";
 import {
   createNextCareerLeagueTransition,
   getInitialCareerLeagueRivals,
@@ -113,27 +114,6 @@ function addCareerTrophiesFromSeason(
     liga: trophyCounts.liga + (seasonResult.wonLeague ? 1 : 0),
     copa: trophyCounts.copa + (seasonResult.wonCopa ? 1 : 0),
     supercopa: trophyCounts.supercopa + (seasonResult.wonSupercopa ? 1 : 0),
-  };
-}
-
-function applyCareerRatingBonus(teamRating: TeamRating, bonus: number): TeamRating {
-  if (bonus <= 0) return teamRating;
-
-  const apply = (value: number) => Math.min(100, Math.round((value + bonus) * 10) / 10);
-
-  return {
-    ...teamRating,
-    overall: apply(teamRating.overall),
-    attack: apply(teamRating.attack),
-    defense: apply(teamRating.defense),
-    control: apply(teamRating.control),
-    physical: apply(teamRating.physical),
-    mentality: apply(teamRating.mentality),
-    goalkeeping: apply(teamRating.goalkeeping),
-    strengths: [
-      ...teamRating.strengths,
-      `Premio de entrenador: +${bonus.toFixed(1)} media`,
-    ],
   };
 }
 
@@ -1480,6 +1460,8 @@ export default function App() {
           modeLabel={isCareerMode ? `Carrera Athletic · ${careerSeasonLabel}` : undefined}
           startButtonLabel={isCareerMode ? (careerPendingSupercopa?.userQualified ? "Jugar Supercopa y temporada" : "Jugar temporada de carrera") : undefined}
           careerRatingBonus={isCareerMode ? careerSeasonRatingBonus : 0}
+          difficulty={difficulty}
+          isCareerMode={isCareerMode}
         />
       )}
 

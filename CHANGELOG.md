@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.23.0c — Team power progression QA
+
+- Centraliza el cálculo de poder de carrera en `src/career/teamPower.ts`.
+- El premio de entrenador `+0.5` se refleja en todas las valoraciones visibles y llega al rating que usa la simulación.
+- La pantalla de resumen diferencia rating base, bonus activo, rating de temporada y rating simulado.
+- `LeagueSimulatorView` reutiliza el mismo cálculo compartido para compresión de carrera y dificultad.
+- Añade `npm run qa:team-power` y lo integra en `npm run qa:tech-debt`.
+- No toca balance base, ratings históricos, plantillas, reglas de recompensa ni ranking global.
+
 ## v0.23.0b — Global ranking backend Apps Script
 
 - Añade backend mínimo copiables a Apps Script en `apps-script/globalRankingBackend.gs`.

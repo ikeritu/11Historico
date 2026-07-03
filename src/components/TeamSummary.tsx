@@ -4,12 +4,14 @@ import { useMemo } from "react";
 
 import type {
   Formation,
+  GameDifficulty,
   SelectedCoach,
   SelectedPlayer,
   TeamRating,
 } from "../types/game";
 
 import { calculateTeamRating } from "../simulation/teamRating";
+import { buildCareerTeamPowerPreview } from "../career/teamPower";
 import SelectedTeamBoard from "./SelectedTeamBoard";
 
 import "./TeamSummary.css";
@@ -25,6 +27,8 @@ interface TeamSummaryProps {
   modeLabel?: string;
   startButtonLabel?: string;
   careerRatingBonus?: number;
+  difficulty?: GameDifficulty;
+  isCareerMode?: boolean;
 }
 
 type SafeTeamRating = TeamRating & {
@@ -42,6 +46,10 @@ type SafeTeamRating = TeamRating & {
 function clampRating(value: number): number {
   if (Number.isNaN(value)) return 80;
   return Math.max(40, Math.min(99, Math.round(value)));
+}
+
+function formatRatingValue(value: number): string {
+  return Number.isInteger(value) ? String(value) : value.toFixed(1);
 }
 
 function average(values: number[]): number {
@@ -149,13 +157,13 @@ function getCoachSpecialistText(coach: SelectedCoach["coachSeason"]): string {
 }
 
 function RatingBar({ label, value }: { label: string; value: number }) {
-  const safeValue = clampRating(value);
+  const safeValue = Math.max(40, Math.min(99, Number.isNaN(value) ? 80 : value));
 
   return (
     <div className="summary-rating-row">
       <div className="summary-rating-row-top">
         <span>{label}</span>
-        <strong>{safeValue}</strong>
+        <strong>{formatRatingValue(safeValue)}</strong>
       </div>
       <div className="summary-rating-track">
         <div className="summary-rating-bar" style={{ width: `${safeValue}%` }} />
@@ -172,11 +180,25 @@ export function TeamSummary({
   modeLabel,
   startButtonLabel,
   careerRatingBonus = 0,
+  difficulty = "normal",
+  isCareerMode = false,
 }: TeamSummaryProps) {
   const teamRating = useMemo(
     () => getSafeTeamRating(formation, selectedPlayers, selectedCoach),
     [formation, selectedPlayers, selectedCoach]
   );
+
+  const teamPowerPreview = useMemo(
+    () => buildCareerTeamPowerPreview({
+      teamRating: teamRating as TeamRating,
+      bonus: careerRatingBonus,
+      difficulty,
+      isCareerMode,
+    }),
+    [teamRating, careerRatingBonus, difficulty, isCareerMode]
+  );
+  const displayedRating = teamPowerPreview.seasonRating;
+  const simulatedRating = teamPowerPreview.simulationRating;
 
   const coach = selectedCoach.coachSeason;
 
@@ -226,16 +248,22 @@ export function TeamSummary({
 
         <aside className="team-summary-side">
           <article className="team-summary-overall-card">
-            <span>Valoración general</span>
-            <strong>{teamRating.overall ?? 0}</strong>
+            <span>Rating de temporada</span>
+            <strong>{formatRatingValue(displayedRating.overall ?? 0)}</strong>
             <small>
-              {(teamRating.overall ?? 0) >= 90
+              {(displayedRating.overall ?? 0) >= 90
                 ? "Athletic Club Histórico de nivel campeón"
                 : "Athletic Club Histórico competitivo"}
             </small>
-            {careerRatingBonus > 0 && (
-              <p>Premio entrenador: +{careerRatingBonus.toFixed(1)} media al iniciar la temporada.</p>
-            )}
+            <div className="team-summary-power-breakdown">
+              <span>Base visible: {formatRatingValue(teamPowerPreview.baseRating.overall ?? 0)}</span>
+              {teamPowerPreview.hasBonus && (
+                <span>Premio entrenador: +{teamPowerPreview.bonus.toFixed(1)}</span>
+              )}
+              {isCareerMode && (
+                <span>Rating que usará la simulación: {formatRatingValue(simulatedRating.overall ?? 0)}</span>
+              )}
+            </div>
           </article>
 
           <article className="team-summary-coach-card">
@@ -255,13 +283,16 @@ export function TeamSummary({
           </article>
 
           <article className="team-summary-ratings-card">
-            <h2>Ratings del equipo</h2>
-            <RatingBar label="Ataque" value={teamRating.attack ?? 0} />
-            <RatingBar label="Defensa" value={teamRating.defense ?? 0} />
-            <RatingBar label="Control" value={teamRating.control ?? 0} />
-            <RatingBar label="Físico" value={teamRating.physical ?? 0} />
-            <RatingBar label="Mentalidad" value={teamRating.mentality ?? 0} />
-            <RatingBar label="Portería" value={teamRating.goalkeeping ?? 0} />
+            <h2>Ratings que influyen en la temporada</h2>
+            <p className="team-summary-rating-note">
+              Estos valores salen de jugadores, formación, entrenador y premios activos. Son los que alimentan Liga, Copa y Supercopa.
+            </p>
+            <RatingBar label="Ataque" value={displayedRating.attack ?? 0} />
+            <RatingBar label="Defensa" value={displayedRating.defense ?? 0} />
+            <RatingBar label="Control" value={displayedRating.control ?? 0} />
+            <RatingBar label="Físico" value={displayedRating.physical ?? 0} />
+            <RatingBar label="Mentalidad" value={displayedRating.mentality ?? 0} />
+            <RatingBar label="Portería" value={displayedRating.goalkeeping ?? 0} />
           </article>
 
           <article className="team-summary-list-card">
