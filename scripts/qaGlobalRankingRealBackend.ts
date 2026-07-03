@@ -50,7 +50,7 @@ function createQaLocalEntry(now = new Date()): CareerLocalRankingEntry {
     bestLeaguePosition: 4,
     lastSeasonLabel: "2027/28",
     lastLeaguePosition: 8,
-    gameVersion: "v0.23.0d",
+    gameVersion: "v0.23.0e",
     createdAt: iso,
   };
 }

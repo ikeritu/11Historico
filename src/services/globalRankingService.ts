@@ -1,6 +1,7 @@
 import type { CareerGlobalRankingEntry, CareerGlobalRankingSubmitPayload, CareerLocalRankingEntry } from "../types/career";
 
 export const GLOBAL_RANKING_ENDPOINT = (import.meta.env.VITE_GLOBAL_RANKING_ENDPOINT ?? "").trim();
+export const GLOBAL_RANKING_ENDPOINT_STORAGE_KEY = "futbol11.globalRankingEndpoint.v1";
 export const GLOBAL_RANKING_BACKEND = "google_apps_script";
 export const GLOBAL_RANKING_TIMEOUT_MS = 6000;
 export const GLOBAL_RANKING_LIMIT = 100;
@@ -45,8 +46,82 @@ type AppsScriptRankingResponse = {
   entries?: unknown[];
 };
 
+function normalizeEndpoint(value: string): string {
+  return value.trim().replace(/\/+$/, "");
+}
+
+function getBrowserLocalStorage(): Storage | undefined {
+  try {
+    if (typeof window === "undefined") return undefined;
+    return window.localStorage;
+  } catch {
+    return undefined;
+  }
+}
+
+export function loadStoredGlobalRankingEndpoint(): string {
+  const storage = getBrowserLocalStorage();
+  if (!storage) return "";
+
+  return normalizeEndpoint(storage.getItem(GLOBAL_RANKING_ENDPOINT_STORAGE_KEY) ?? "");
+}
+
+export function validateGlobalRankingEndpoint(value: string): string | undefined {
+  const endpoint = normalizeEndpoint(value);
+
+  if (!endpoint) return "Pega la URL /exec del despliegue de Apps Script.";
+  if (!endpoint.startsWith("https://")) return "El endpoint debe empezar por https://.";
+  if (!endpoint.includes("script.google.com/macros/s/")) return "El endpoint debe ser una URL de Apps Script.";
+  if (!endpoint.endsWith("/exec")) return "Usa la URL pública que termina en /exec, no /dev.";
+
+  return undefined;
+}
+
+export function saveStoredGlobalRankingEndpoint(value: string): GlobalRankingServiceResult {
+  const storage = getBrowserLocalStorage();
+
+  if (!storage) {
+    return {
+      ok: false,
+      status: "not_configured",
+      message: "No se puede guardar el endpoint en este entorno.",
+    };
+  }
+
+  const error = validateGlobalRankingEndpoint(value);
+
+  if (error) {
+    return {
+      ok: false,
+      status: "invalid_payload",
+      message: error,
+    };
+  }
+
+  storage.setItem(GLOBAL_RANKING_ENDPOINT_STORAGE_KEY, normalizeEndpoint(value));
+
+  return {
+    ok: true,
+    status: "healthy",
+    message: "Endpoint de ranking global guardado en este navegador.",
+  };
+}
+
+export function clearStoredGlobalRankingEndpoint(): void {
+  getBrowserLocalStorage()?.removeItem(GLOBAL_RANKING_ENDPOINT_STORAGE_KEY);
+}
+
+export function getGlobalRankingEndpointSource(endpoint?: string): "explicit" | "browser" | "env" | "missing" {
+  if (endpoint !== undefined && normalizeEndpoint(endpoint).length > 0) return "explicit";
+  if (loadStoredGlobalRankingEndpoint().length > 0) return "browser";
+  if (GLOBAL_RANKING_ENDPOINT.length > 0) return "env";
+  return "missing";
+}
+
 function getEndpoint(endpoint?: string): string {
-  return (endpoint ?? GLOBAL_RANKING_ENDPOINT).trim();
+  if (endpoint !== undefined) return normalizeEndpoint(endpoint);
+
+  return loadStoredGlobalRankingEndpoint() || normalizeEndpoint(GLOBAL_RANKING_ENDPOINT);
 }
 
 export function isGlobalRankingConfigured(endpoint?: string): boolean {
@@ -54,7 +129,12 @@ export function isGlobalRankingConfigured(endpoint?: string): boolean {
 }
 
 export function getGlobalRankingBackendLabel(endpoint?: string): string {
-  return isGlobalRankingConfigured(endpoint) ? "Google Sheets + Apps Script" : "Backend pendiente";
+  const source = getGlobalRankingEndpointSource(endpoint);
+
+  if (source === "browser") return "Apps Script · navegador";
+  if (source === "env") return "Apps Script · env";
+  if (source === "explicit") return "Google Sheets + Apps Script";
+  return "Backend pendiente";
 }
 
 export function sanitizeGlobalRankingNick(value: string): string {

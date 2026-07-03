@@ -60,7 +60,7 @@ function createSampleLocalEntry(overrides: Partial<CareerLocalRankingEntry> = {}
     bestLeaguePosition: 4,
     lastSeasonLabel: "2027/28",
     lastLeaguePosition: 8,
-    gameVersion: "v0.23.0d",
+    gameVersion: "v0.23.0e",
     createdAt: "2026-07-02T10:00:00.000Z",
     ...overrides,
   };

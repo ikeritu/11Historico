@@ -7,6 +7,7 @@ import {
   submitGlobalRankingEntry,
   validateGlobalRankingNick,
 } from "../services/globalRankingService";
+import CareerGlobalEndpointConfig from "./CareerGlobalEndpointConfig";
 import {
   hasSubmittedCareerGlobalRankingEntry,
   loadLastCareerGlobalRankingNick,
@@ -28,10 +29,16 @@ export function CareerGlobalSubmitPanel({ entry, onViewGlobalRanking }: CareerGl
     ? "Introduce nick para enviar esta carrera al futuro Top global."
     : "Configura VITE_GLOBAL_RANKING_ENDPOINT para activar el envío real a Apps Script.");
   const [isSending, setIsSending] = useState(false);
+  const [endpointRevision, setEndpointRevision] = useState(0);
 
   const nickError = useMemo(() => nick ? validateGlobalRankingNick(nick) : undefined, [nick]);
-  const configured = isGlobalRankingConfigured();
-  const backendLabel = getGlobalRankingBackendLabel();
+  const configured = useMemo(() => isGlobalRankingConfigured(), [endpointRevision]);
+  const backendLabel = useMemo(() => getGlobalRankingBackendLabel(), [endpointRevision]);
+
+  function handleEndpointChange() {
+    setEndpointRevision((value) => value + 1);
+    setMessage("Endpoint guardado. Ya puedes enviar esta carrera al ranking global.");
+  }
 
   async function handleSubmit() {
     const error = validateGlobalRankingNick(nick);
@@ -58,6 +65,7 @@ export function CareerGlobalSubmitPanel({ entry, onViewGlobalRanking }: CareerGl
     if (result.ok) {
       markCareerGlobalRankingEntrySubmitted(entry.id);
       setSubmitted(true);
+      onViewGlobalRanking();
     }
   }
 
@@ -67,9 +75,13 @@ export function CareerGlobalSubmitPanel({ entry, onViewGlobalRanking }: CareerGl
         <span className="career-global-submit-kicker">Ranking global · {backendLabel}</span>
         <h2>Comparte esta carrera</h2>
         <p>
-          Envía tu puntuación al Top global conectado a Google Sheets + Apps Script. Si el endpoint no está configurado, el panel queda en modo seguro pendiente.
+          Envía tu puntuación al Top global. Si el endpoint no está configurado, puedes pegar la URL /exec aquí y guardarla solo en este navegador.
         </p>
       </div>
+
+      {!configured && (
+        <CareerGlobalEndpointConfig compact onEndpointChange={handleEndpointChange} />
+      )}
 
       <div className="career-global-submit-form">
         <label htmlFor="career-global-nick">Nick</label>
@@ -92,7 +104,7 @@ export function CareerGlobalSubmitPanel({ entry, onViewGlobalRanking }: CareerGl
           onClick={handleSubmit}
           disabled={isSending || submitted || !configured}
         >
-          {submitted ? "Carrera enviada" : configured ? (isSending ? "Enviando..." : "Enviar al ranking global") : "Backend pendiente"}
+          {submitted ? "Carrera enviada" : configured ? (isSending ? "Enviando..." : "Enviar al ranking global") : "Configura endpoint"}
         </button>
         <button type="button" className="secondary-home-button" onClick={onViewGlobalRanking}>
           Ver ranking global

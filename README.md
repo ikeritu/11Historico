@@ -1,3 +1,7 @@
+### v0.23.0e — Global ranking UI polish
+
+Pulido UX del ranking global real: permite guardar la URL `/exec` de Apps Script desde el navegador, recargar el Top 100, mejorar mensajes de backend pendiente/ranking vacío y añadir `npm run qa:global-ranking-ui`.
+
 ### v0.23.0d — Global ranking real submit QA
 
 Valida el ranking global real conectado a Apps Script: health, carga de Top 100 y smoke test opcional de escritura/duplicados con `npm run qa:global-ranking-real`.
@@ -59,7 +63,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.23.0d_GLOBAL_RANKING_REAL_SUBMIT_QA`.
+Versión pública actual: `v0.23.0e_GLOBAL_RANKING_UI_POLISH`.
 
 Base jugable cerrada:
 

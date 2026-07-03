@@ -60,7 +60,7 @@ function testPackageLockMatchesPackageJson(): void {
 }
 
 function testAppVersionMetadata(): void {
-  assert(APP_VERSION === "v0.23.0d", `APP_VERSION debe ser v0.23.0d, pero es ${APP_VERSION}`);
+  assert(APP_VERSION === "v0.23.0e", `APP_VERSION debe ser v0.23.0e, pero es ${APP_VERSION}`);
   assert(APP_VERSION_NAME.trim().length > 0, "APP_VERSION_NAME no puede estar vacío.");
   assert(APP_STATUS.trim().length > 0, "APP_STATUS no puede estar vacío.");
   assertNoMojibake("APP_VERSION_NAME", APP_VERSION_NAME);
@@ -71,12 +71,12 @@ function testAppVersionMetadata(): void {
 function testDocsMentionCurrentVersion(): void {
   const changelog = readFileSync(join(ROOT, "CHANGELOG.md"), "utf8");
   const readme = readFileSync(join(ROOT, "README.md"), "utf8");
-  const releaseDocPath = join(ROOT, "docs", "v0_23_0d_GLOBAL_RANKING_REAL_SUBMIT_QA.md");
+  const releaseDocPath = join(ROOT, "docs", "v0_23_0e_GLOBAL_RANKING_UI_POLISH.md");
 
-  assert(changelog.startsWith("# Changelog\n\n## v0.23.0d"), "CHANGELOG debe empezar por v0.23.0d.");
-  assert(readme.includes("Versión pública actual: `v0.23.0d_GLOBAL_RANKING_REAL_SUBMIT_QA`."), "README debe apuntar a v0.23.0d_GLOBAL_RANKING_REAL_SUBMIT_QA.");
-  assert(existsSync(releaseDocPath), "Debe existir docs/v0_23_0d_GLOBAL_RANKING_REAL_SUBMIT_QA.md.");
-  logOk("README, CHANGELOG y doc de fase apuntan a v0.23.0d");
+  assert(changelog.startsWith("# Changelog\n\n## v0.23.0e"), "CHANGELOG debe empezar por v0.23.0e.");
+  assert(readme.includes("Versión pública actual: `v0.23.0e_GLOBAL_RANKING_UI_POLISH`."), "README debe apuntar a v0.23.0e_GLOBAL_RANKING_UI_POLISH.");
+  assert(existsSync(releaseDocPath), "Debe existir docs/v0_23_0e_GLOBAL_RANKING_UI_POLISH.md.");
+  logOk("README, CHANGELOG y doc de fase apuntan a v0.23.0e");
 }
 
 function testQaScriptsAreRegistered(): void {
@@ -89,6 +89,7 @@ function testQaScriptsAreRegistered(): void {
   assert(packageJson.scripts?.["qa:global-ranking"], "Debe existir script qa:global-ranking.");
   assert(packageJson.scripts?.["qa:team-power"], "Debe existir script qa:team-power.");
   assert(packageJson.scripts?.["qa:global-ranking-real"], "Debe existir script qa:global-ranking-real.");
+  assert(packageJson.scripts?.["qa:global-ranking-ui"], "Debe existir script qa:global-ranking-ui.");
   logOk("scripts QA críticos registrados");
 }
 

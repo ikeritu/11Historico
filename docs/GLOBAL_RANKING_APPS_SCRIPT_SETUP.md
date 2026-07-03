@@ -28,7 +28,7 @@ apps-script/globalRankingBackend.gs
 
 ## 4. Configurar Futbol11
 
-En la raíz del proyecto local crea `.env.local`:
+Opción A — `.env.local` local:
 
 ```env
 VITE_GLOBAL_RANKING_ENDPOINT=https://script.google.com/macros/s/TU_DEPLOYMENT_ID/exec
@@ -45,6 +45,15 @@ Para producción, la variable debe existir antes de ejecutar:
 ```powershell
 cmd /c "npm run build"
 ```
+
+Opción B — configuración desde la UI:
+
+1. Abre `Ranking global`.
+2. Pega la URL `/exec` en `URL Apps Script /exec`.
+3. Pulsa `Guardar endpoint`.
+4. Pulsa `Recargar ranking`.
+
+Esta opción guarda el endpoint solo en `localStorage` del navegador. No modifica `.env.local` ni se sube a GitHub.
 
 ## 5. Prueba rápida
 

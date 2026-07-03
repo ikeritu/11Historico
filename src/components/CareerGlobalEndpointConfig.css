@@ -1,0 +1,96 @@
+.career-global-endpoint-config {
+  display: grid;
+  gap: 14px;
+  margin: 18px 0;
+  padding: 18px;
+  border-radius: 22px;
+  background: rgba(255, 224, 138, 0.1);
+  border: 1px solid rgba(255, 224, 138, 0.22);
+}
+
+.career-global-endpoint-config--compact {
+  margin: 12px 0 0;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.career-global-endpoint-kicker {
+  display: inline-flex;
+  margin-bottom: 6px;
+  color: #ffe08a;
+  font-size: 0.74rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.career-global-endpoint-config h3 {
+  margin: 0 0 6px;
+  font-size: 1.12rem;
+}
+
+.career-global-endpoint-config p {
+  margin: 0;
+  color: #f2d2d7;
+  line-height: 1.45;
+}
+
+.career-global-endpoint-form {
+  display: grid;
+  gap: 7px;
+}
+
+.career-global-endpoint-form label {
+  color: #ffe08a;
+  font-size: 0.76rem;
+  font-weight: 950;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.career-global-endpoint-form input {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 46px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 14px;
+  padding: 11px 13px;
+  background: rgba(0, 0, 0, 0.22);
+  color: #ffffff;
+  font: inherit;
+  font-weight: 760;
+}
+
+.career-global-endpoint-form small,
+.career-global-endpoint-message {
+  color: #ffd7de;
+  font-size: 0.82rem;
+  font-weight: 750;
+}
+
+.career-global-endpoint-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.career-global-endpoint-save {
+  min-height: 48px;
+  border: 0;
+  border-radius: 14px;
+  padding: 12px 16px;
+  background: #ffe08a;
+  color: #3b1018;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.career-global-endpoint-save:disabled {
+  opacity: 0.52;
+  cursor: not-allowed;
+}
+
+@media (max-width: 720px) {
+  .career-global-endpoint-actions {
+    display: grid;
+  }
+}

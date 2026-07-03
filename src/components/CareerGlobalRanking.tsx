@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { formatCareerRangeLabel } from "../career/careerRanking";
-import { getGlobalRankingBackendLabel, loadGlobalRanking } from "../services/globalRankingService";
+import { getGlobalRankingBackendLabel, isGlobalRankingConfigured, loadGlobalRanking } from "../services/globalRankingService";
+import CareerGlobalEndpointConfig from "./CareerGlobalEndpointConfig";
 import type { CareerGlobalRankingEntry } from "../types/career";
 
 import "./CareerGlobalRanking.css";
@@ -29,6 +30,9 @@ export function CareerGlobalRanking({ onNewCareer, onViewLocalRanking, onBack }:
   const [entries, setEntries] = useState<CareerGlobalRankingEntry[]>([]);
   const [message, setMessage] = useState("Cargando ranking global...");
   const [isLoading, setIsLoading] = useState(true);
+  const [endpointRevision, setEndpointRevision] = useState(0);
+
+  const configured = isGlobalRankingConfigured();
 
   useEffect(() => {
     let active = true;
@@ -49,7 +53,12 @@ export function CareerGlobalRanking({ onNewCareer, onViewLocalRanking, onBack }:
     return () => {
       active = false;
     };
-  }, []);
+  }, [endpointRevision]);
+
+  const emptyTitle = configured ? "Aún no hay carreras globales" : "Conecta el ranking global";
+  const emptyDescription = configured
+    ? message
+    : "Guarda la URL /exec de Apps Script para cargar el Top 100 online desde este navegador.";
 
   return (
     <main className="career-global-ranking-screen">
@@ -57,8 +66,12 @@ export function CareerGlobalRanking({ onNewCareer, onViewLocalRanking, onBack }:
         <p className="eyebrow">Top 100 online · {getGlobalRankingBackendLabel()}</p>
         <h1>Ranking global</h1>
         <p className="career-global-ranking-intro">
-          Top global conectado a Google Sheets + Apps Script cuando `VITE_GLOBAL_RANKING_ENDPOINT` esté configurado. Sin endpoint, se muestra un estado seguro pendiente de backend.
+          Top global conectado a Google Sheets + Apps Script. Puedes usar `VITE_GLOBAL_RANKING_ENDPOINT` o guardar el endpoint /exec solo en este navegador.
         </p>
+
+        {!configured && (
+          <CareerGlobalEndpointConfig onEndpointChange={() => setEndpointRevision((value) => value + 1)} />
+        )}
 
         {isLoading && (
           <div className="career-global-ranking-empty">
@@ -69,8 +82,8 @@ export function CareerGlobalRanking({ onNewCareer, onViewLocalRanking, onBack }:
 
         {!isLoading && entries.length === 0 && (
           <div className="career-global-ranking-empty">
-            <strong>Ranking global pendiente</strong>
-            <span>{message}</span>
+            <strong>{emptyTitle}</strong>
+            <span>{emptyDescription}</span>
           </div>
         )}
 
@@ -114,6 +127,9 @@ export function CareerGlobalRanking({ onNewCareer, onViewLocalRanking, onBack }:
           </button>
           <button type="button" className="secondary-home-button" onClick={onViewLocalRanking}>
             Ranking local
+          </button>
+          <button type="button" className="secondary-home-button" onClick={() => setEndpointRevision((value) => value + 1)}>
+            Recargar ranking
           </button>
           <button type="button" className="secondary-home-button" onClick={onBack}>
             Volver

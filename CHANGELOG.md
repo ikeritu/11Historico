@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.23.0e — Global ranking UI polish
+
+- Añade configuración local del endpoint Apps Script desde la UI, guardada solo en el navegador.
+- `globalRankingService` prioriza endpoint explícito, endpoint guardado en navegador y después `VITE_GLOBAL_RANKING_ENDPOINT`.
+- La pantalla Ranking global permite pegar URL `/exec`, guardar endpoint y recargar Top 100.
+- El panel de Game Over permite activar el ranking global si el backend aparece pendiente.
+- Añade `npm run qa:global-ranking-ui` y lo integra en `npm run qa:tech-debt`.
+- Actualiza versionado a `v0.23.0e` / `0.23.0-e.0`.
+- No toca balance, ratings históricos, plantillas, recompensas ni ranking local.
+
 ## v0.23.0d — Global ranking real submit QA
 
 - Añade `npm run qa:global-ranking-real` para validar contra el backend real de Apps Script configurado por `VITE_GLOBAL_RANKING_ENDPOINT`.
