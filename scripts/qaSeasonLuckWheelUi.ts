@@ -42,7 +42,7 @@ function testModalSupportsRequiredFlow(): void {
   assert(component.includes("SEASON_LUCK_WHEEL_PRIZE_SEGMENTS"), "El modal debe mostrar los premios definidos por el motor.");
   assert(component.includes("season-wheel-disc-shell"), "El puntero fijo debe vivir fuera del disco que gira.");
   assert(component.includes("key={`${segment.resultType}-${index}`}"), "Los segmentos repetidos deben tener key estable con índice.");
-  assert(component.includes("getSegmentShortParts"), "Los quesitos deben usar etiquetas cortas y nítidas.");
+  assert(component.includes("getSegmentShortParts"), "Los quesitos deben usar etiquetas ultracortas y nítidas.");
   assert(component.includes("getSegmentLegendLabel"), "El modal debe explicar etiquetas cortas con una leyenda de premios.");
   assert(component.includes("playingStartedAtRef"), "La velocidad de la flecha debe depender del tiempo de juego.");
   assert(component.includes("accelerationPerSecond") && component.includes("maxSpeed"), "La flecha debe acelerar progresivamente con límite máximo.");
@@ -109,6 +109,7 @@ function testLeagueIntegration(): void {
   assert(leagueView.includes("copa_elimination"), "Debe existir trigger por eliminación de Copa.");
   assert(leagueView.includes("mid_season"), "Debe existir trigger de mitad de temporada.");
   assert(leagueView.includes("applySeasonLuckWheelRatingDelta"), "Los efectos de media deben llegar al rating de simulación.");
+  assert(leagueView.includes("context.seasonLuckWheel?.accepted ? context.seasonLuckWheel.ratingDelta"), "Los premios +0.5, +1, -0.5 y -1 deben aplicarse cuando la ruleta fue aceptada.");
   assert(leagueView.includes("getSeasonLuckWheelTriggerDeadlineMatchday"), "Debe existir fecha límite para ofrecer ruleta antes del tramo final.");
   assert(leagueView.includes("Math.floor(maxMatchday * 2 / 3)"), "La fecha límite de ruleta debe ser 2/3 de la Liga.");
   assert(leagueView.includes("isWithinSeasonLuckWheelTriggerWindow"), "Los triggers de ruleta deben respetar la ventana máxima de activación.");
@@ -120,7 +121,7 @@ function testLeagueIntegration(): void {
 function testReadablePrizeLabelsAndLegend(): void {
   const component = read("src/components/SeasonLuckWheelModal.tsx");
 
-  for (const shortLabel of ["+0.5", "Jugador", "Entrenador", "+1", "+ Jug.", "-0.5", "-1"]) {
+  for (const shortLabel of ["+0.5", "Jug.", "Entr.", "+1", "-0.5", "-1"]) {
     assert(component.includes(shortLabel), `El modal debe incluir etiqueta corta: ${shortLabel}.`);
   }
 
@@ -134,7 +135,8 @@ function testReadablePrizeLabelsAndLegend(): void {
     assert(component.includes(fullLabel), `La leyenda debe explicar el premio completo: ${fullLabel}.`);
   }
 
-  logOk("etiquetas cortas y leyenda de premios completos presentes");
+  assert(!component.includes(">Jugador<") && !component.includes(">Entrenador<"), "Los textos largos no deben aparecer dentro de los quesitos.");
+  logOk("etiquetas ultracortas y leyenda de premios completos presentes");
 }
 
 function testProgressiveArrowSpeed(): void {

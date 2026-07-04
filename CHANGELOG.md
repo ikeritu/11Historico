@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.23.2b6 — Luck Wheel Label Fit
+
+- Acorta etiquetas internas de la ruleta para que encajen mejor en cada quesito: `Jug.`, `Entr.`, `+1`, `+0.5`, `-0.5`, `-1`.
+- Mantiene la leyenda externa con el nombre completo de los premios.
+- Ajusta CSS de tamaño, ancho, interlineado y sombra para mejorar nitidez.
+- Refuerza `qa:season-luck-wheel-ui` con etiquetas ultracortas y comprobación explícita de aplicación de `ratingDelta`.
+- Documenta que `+0.5`, `+1`, `-0.5` y `-1` ya tienen efecto real en el rating de temporada usado por simulación.
+- Actualiza versionado a `v0.23.2b6` / `0.23.2-b6.0`.
+- No toca probabilidades, balance, ratings históricos, plantillas base, palmarés, ranking ni Europa Career.
+
 ## v0.23.2b5 — Palmarés Supercopa + Game Over Showcase
 
 - Revisa `PalmaresTrophyCase` para aceptar `CareerTrophyCounts` y mostrar todo el palmarés acumulado de carrera.
@@ -275,6 +285,16 @@
 
 # Changelog
 
+## v0.23.2b6 — Luck Wheel Label Fit
+
+- Acorta etiquetas internas de la ruleta para que encajen mejor en cada quesito: `Jug.`, `Entr.`, `+1`, `+0.5`, `-0.5`, `-1`.
+- Mantiene la leyenda externa con el nombre completo de los premios.
+- Ajusta CSS de tamaño, ancho, interlineado y sombra para mejorar nitidez.
+- Refuerza `qa:season-luck-wheel-ui` con etiquetas ultracortas y comprobación explícita de aplicación de `ratingDelta`.
+- Documenta que `+0.5`, `+1`, `-0.5` y `-1` ya tienen efecto real en el rating de temporada usado por simulación.
+- Actualiza versionado a `v0.23.2b6` / `0.23.2-b6.0`.
+- No toca probabilidades, balance, ratings históricos, plantillas base, palmarés, ranking ni Europa Career.
+
 ## v0.23.2b — Season Luck Wheel UI
 
 - Añade `SeasonLuckWheelModal` con modal narrativo para la ruleta de temporada.
@@ -314,6 +334,16 @@
 - No se toca rating efectivo, Supercopa, Europa ni partida rápida.
 
 # Changelog
+
+## v0.23.2b6 — Luck Wheel Label Fit
+
+- Acorta etiquetas internas de la ruleta para que encajen mejor en cada quesito: `Jug.`, `Entr.`, `+1`, `+0.5`, `-0.5`, `-1`.
+- Mantiene la leyenda externa con el nombre completo de los premios.
+- Ajusta CSS de tamaño, ancho, interlineado y sombra para mejorar nitidez.
+- Refuerza `qa:season-luck-wheel-ui` con etiquetas ultracortas y comprobación explícita de aplicación de `ratingDelta`.
+- Documenta que `+0.5`, `+1`, `-0.5` y `-1` ya tienen efecto real en el rating de temporada usado por simulación.
+- Actualiza versionado a `v0.23.2b6` / `0.23.2-b6.0`.
+- No toca probabilidades, balance, ratings históricos, plantillas base, palmarés, ranking ni Europa Career.
 
 ## v0.23.2b — Season Luck Wheel UI
 

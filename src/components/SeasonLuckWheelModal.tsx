@@ -53,10 +53,10 @@ function getSegmentColor(segment: { group: string; resultType: string }): string
 
 function getSegmentShortParts(segment: { resultType: string; label: string }): string[] {
   if (segment.resultType === "rating_plus_0_5") return ["+0.5"];
-  if (segment.resultType === "player_change") return ["Jugador"];
-  if (segment.resultType === "coach_change") return ["Entrenador"];
+  if (segment.resultType === "player_change") return ["Jug."];
+  if (segment.resultType === "coach_change") return ["Entr."];
   if (segment.resultType === "rating_plus_1") return ["+1"];
-  if (segment.resultType === "rating_plus_1_and_player_change") return ["+1", "+ Jug."];
+  if (segment.resultType === "rating_plus_1_and_player_change") return ["+1", "Jug."];
   if (segment.resultType === "rating_minus_0_5") return ["-0.5"];
   if (segment.resultType === "rating_minus_1") return ["-1"];
   return [segment.label];
@@ -64,8 +64,8 @@ function getSegmentShortParts(segment: { resultType: string; label: string }): s
 
 function getSegmentLegendLabel(segment: { resultType: string; label: string }): string {
   if (segment.resultType === "rating_plus_0_5") return "+0.5 = +0.5 media de temporada";
-  if (segment.resultType === "player_change") return "Jugador = cambio de jugador";
-  if (segment.resultType === "coach_change") return "Entrenador = cambio de entrenador";
+  if (segment.resultType === "player_change") return "Jug. = cambio de jugador";
+  if (segment.resultType === "coach_change") return "Entr. = cambio de entrenador";
   if (segment.resultType === "rating_plus_1") return "+1 = +1.0 media de temporada";
   if (segment.resultType === "rating_plus_1_and_player_change") return "+1 + Jug. = +1.0 media y cambio de jugador";
   if (segment.resultType === "rating_minus_0_5") return "-0.5 = -0.5 media de temporada";

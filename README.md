@@ -1,3 +1,7 @@
+### v0.23.2b6 — Luck Wheel Label Fit
+
+Pulido de legibilidad de la ruleta: las etiquetas internas de premios se acortan para caber mejor en cada quesito (`Jug.`, `Entr.`, `+1`, `+0.5`, `-0.5`, `-1`) y la leyenda externa mantiene el texto completo. Además, la QA confirma que los efectos `+0.5`, `+1`, `-0.5` y `-1` ya se aplican al rating de temporada usado por la simulación cuando la ruleta fue aceptada.
+
 ### v0.23.2b5 — Palmarés Supercopa + Game Over Showcase
 
 Revisión del palmarés de carrera: la vitrina usa todos los títulos acumulados, incluida Supercopa, y se muestra también en Game Over. El resumen completo de carrera recibe el palmarés visible con la temporada actual sumada.
@@ -95,7 +99,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.23.2b5_PALMARES_SUPERCOPA_GAMEOVER_SHOWCASE`.
+Versión pública actual: `v0.23.2b6_LUCK_WHEEL_LABEL_FIT`.
 
 Base jugable cerrada:
 
