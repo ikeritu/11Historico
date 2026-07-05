@@ -759,6 +759,17 @@ export default function App() {
       setCareerRewardFlow(undefined);
       setCareerRewardSnapshot(undefined);
       setCoachBeforeReward(undefined);
+      setPhase("team_summary");
+      setScreen("team_summary");
+      return;
+    }
+
+    if (careerRewardFlow === "luck_wheel_coach") {
+      setCareerRewardFlow(undefined);
+      setCoachBeforeReward(undefined);
+      setPhase("league_simulation");
+      setScreen("league_simulation");
+      return;
     }
 
     setPhase("team_summary");
@@ -982,6 +993,58 @@ export default function App() {
     return true;
   }
 
+  function handleSeasonLuckWheelPlayerChange(nextContext: UserLeagueSimulationContext) {
+    if (!selectedFormation || !selectedCoach) return;
+
+    setLeagueContext(nextContext);
+    setCareerRewardFlow("luck_wheel_player");
+    setTeamRating(undefined);
+    setFinalSummary(undefined);
+    setCareerSeasonResult(undefined);
+    setCareerObjectiveResult(undefined);
+    setReplacementDraftSeason(undefined);
+    setReplacementRemovedPlayer(undefined);
+    setReplacementOriginalFormation(undefined);
+    setTeamValidationErrors([]);
+    setPhase("player_selection");
+    setScreen("career_player_replacement_pick");
+  }
+
+  function handleSeasonLuckWheelCoachChange(nextContext: UserLeagueSimulationContext) {
+    if (!selectedFormation || !selectedCoach) return;
+
+    setLeagueContext(nextContext);
+    setCareerRewardFlow("luck_wheel_coach");
+    setCoachBeforeReward(selectedCoach);
+    setSelectedCoach(undefined);
+    setTeamRating(undefined);
+    setFinalSummary(undefined);
+    setCareerSeasonResult(undefined);
+    setCareerObjectiveResult(undefined);
+    setReplacementDraftSeason(undefined);
+    setReplacementRemovedPlayer(undefined);
+    setReplacementOriginalFormation(undefined);
+    setTeamValidationErrors([]);
+    setPhase("coach_selection");
+    setScreen("coach_selection");
+  }
+
+  function handleCancelLuckWheelCoachChange() {
+    if (!coachBeforeReward) return;
+
+    setSelectedCoach(coachBeforeReward);
+    recalculateVisibleTeamRating({
+      formation: selectedFormation,
+      selectedPlayers,
+      selectedCoach: coachBeforeReward,
+    });
+    setCoachBeforeReward(undefined);
+    setCareerRewardFlow(undefined);
+    setTeamValidationErrors([]);
+    setPhase("league_simulation");
+    setScreen("league_simulation");
+  }
+
   function handleChooseCareerCoachChange() {
     ensureCareerRewardSnapshot();
 
@@ -1157,7 +1220,9 @@ export default function App() {
   }
 
   function handleCancelPlayerReplacement() {
-    if (careerRewardSnapshot && restoreCareerRewardSnapshot(careerRewardSnapshot)) {
+    const isLuckWheelPlayerFlow = careerRewardFlow === "luck_wheel_player";
+
+    if (!isLuckWheelPlayerFlow && careerRewardSnapshot && restoreCareerRewardSnapshot(careerRewardSnapshot)) {
       return;
     }
 
@@ -1185,18 +1250,25 @@ export default function App() {
 
     setSelectedFormation(fallbackFormation);
     setSelectedPlayers(fallbackPlayers);
+    recalculateVisibleTeamRating({
+      formation: fallbackFormation,
+      selectedPlayers: fallbackPlayers,
+      selectedCoach,
+    });
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
     setReplacementOriginalFormation(undefined);
     setCareerRewardFlow(undefined);
     setCareerRewardSnapshot(undefined);
     setTeamValidationErrors([]);
-    setLeagueContext(undefined);
+    if (!isLuckWheelPlayerFlow) {
+      setLeagueContext(undefined);
+    }
     setFinalSummary(undefined);
     setCareerSeasonResult(undefined);
     setCareerObjectiveResult(undefined);
-    setPhase("team_summary");
-    setScreen("team_summary");
+    setPhase(isLuckWheelPlayerFlow ? "league_simulation" : "team_summary");
+    setScreen(isLuckWheelPlayerFlow ? "league_simulation" : "team_summary");
   }
 
   function handleSelectReplacementPlayer(selection: SelectedPlayer) {
@@ -1234,6 +1306,13 @@ export default function App() {
     setCurrentRoundIndex(nextPlayers.length);
     setCareerSeasonResult(undefined);
     setCareerObjectiveResult(undefined);
+
+    if (careerRewardFlow === "luck_wheel_player") {
+      setPhase("league_simulation");
+      setScreen("league_simulation");
+      return;
+    }
+
     setPhase("team_summary");
     setScreen("team_summary");
   }
@@ -1454,6 +1533,15 @@ export default function App() {
         </div>
       )}
 
+      {screen === "coach_selection" && careerRewardFlow === "luck_wheel_coach" && coachBeforeReward && (
+        <div className="career-replacement-floating-actions">
+          <span>Premio de ruleta: puedes cambiar a {coachBeforeReward.coachSeason.name} o cancelar y volver a la Liga.</span>
+          <button type="button" onClick={handleCancelLuckWheelCoachChange}>
+            Cancelar cambio y volver a la Liga
+          </button>
+        </div>
+      )}
+
       {screen === "team_summary" && selectedFormation && selectedCoach && (
         <TeamSummary
           formation={selectedFormation}
@@ -1492,6 +1580,8 @@ export default function App() {
           leagueRivals={isCareerMode ? careerLeagueRivals : undefined}
           initialContext={leagueContext}
           onContextChange={setLeagueContext}
+          onSeasonLuckWheelPlayerChange={handleSeasonLuckWheelPlayerChange}
+          onSeasonLuckWheelCoachChange={handleSeasonLuckWheelCoachChange}
           onFinishLeague={handleFinishLeague}
         />
       )}
@@ -1551,7 +1641,7 @@ export default function App() {
           formation={selectedFormation}
           selectedPlayers={selectedPlayers}
           nextSeasonLabel={careerSeasonLabel}
-          mode={careerRewardFlow === "player_formation" ? "player_formation" : "player"}
+          mode={careerRewardFlow === "player_formation" ? "player_formation" : careerRewardFlow === "luck_wheel_player" ? "luck_wheel_player" : "player"}
           onSelectPlayerToReplace={handleSelectPlayerToReplace}
           onCancel={handleCancelPlayerReplacement}
         />
@@ -1574,10 +1664,10 @@ export default function App() {
       {screen === "career_player_replacement_draft" && replacementRemovedPlayer && (
         <div className="career-replacement-floating-actions">
           <span>
-            Sustituyendo a {replacementRemovedPlayer.playerSeason.name} ({replacementRemovedPlayer.position})
+            {careerRewardFlow === "luck_wheel_player" ? "Premio de ruleta: " : ""}Sustituyendo a {replacementRemovedPlayer.playerSeason.name} ({replacementRemovedPlayer.position})
           </span>
           <button type="button" onClick={handleCancelPlayerReplacement}>
-            Cancelar y avanzar
+            {careerRewardFlow === "luck_wheel_player" ? "Cancelar y volver a la Liga" : "Cancelar y avanzar"}
           </button>
         </div>
       )}

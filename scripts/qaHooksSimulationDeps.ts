@@ -13,10 +13,10 @@ type PackageLockJson = {
 };
 
 const ROOT = process.cwd();
-const CURRENT_PUBLIC_VERSION = "v0.23.3b";
-const CURRENT_PACKAGE_VERSION = "0.23.3-b.0";
-const CURRENT_RELEASE_TAG = "v0.23.3b_HOOKS_SIMULATION_DEPS_CLEANUP";
-const CURRENT_DOC = "docs/v0_23_3b_HOOKS_SIMULATION_DEPS_CLEANUP.md";
+const CURRENT_PUBLIC_VERSION = "v0.23.2c";
+const CURRENT_PACKAGE_VERSION = "0.23.2-c.0";
+const CURRENT_RELEASE_TAG = "v0.23.2c_LUCK_WHEEL_REAL_REWARDS";
+const CURRENT_DOC = "docs/v0_23_2c_LUCK_WHEEL_REAL_REWARDS.md";
 
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) {
@@ -41,7 +41,7 @@ function testVersionMetadata(): void {
   const packageLock = readJson<PackageLockJson>("package-lock.json");
 
   assert(APP_VERSION === CURRENT_PUBLIC_VERSION, `APP_VERSION debe ser ${CURRENT_PUBLIC_VERSION}, pero es ${APP_VERSION}.`);
-  assert(APP_VERSION_NAME === "Hooks Simulation Deps Cleanup", `APP_VERSION_NAME inesperado: ${APP_VERSION_NAME}.`);
+  assert(APP_VERSION_NAME === "Luck Wheel Real Rewards", `APP_VERSION_NAME inesperado: ${APP_VERSION_NAME}.`);
   assert(APP_STATUS.includes("hooks") && APP_STATUS.includes("lint:src"), "APP_STATUS debe describir hooks y lint:src.");
   assert(packageJson.version === CURRENT_PACKAGE_VERSION, `package.json debe usar ${CURRENT_PACKAGE_VERSION}, pero usa ${packageJson.version}.`);
   assert(packageLock.version === packageJson.version, "package-lock.json version debe coincidir con package.json.");
@@ -97,13 +97,13 @@ function testDocs(): void {
   const readme = readText("README.md");
   const doc = readText(CURRENT_DOC);
 
-  assert(changelog.startsWith("# Changelog\n\n## v0.23.3b"), "CHANGELOG debe empezar por v0.23.3b.");
-  assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), "README debe apuntar a v0.23.3b_HOOKS_SIMULATION_DEPS_CLEANUP.");
+  assert(changelog.startsWith("# Changelog\n\n## v0.23.2c"), "CHANGELOG debe empezar por v0.23.2c.");
+  assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), "README debe apuntar a v0.23.2c_LUCK_WHEEL_REAL_REWARDS.");
   assert(doc.includes("LeagueSimulatorView") && doc.includes("lint:src"), "El documento de fase debe explicar LeagueSimulatorView y lint:src.");
   logOk("documentación de fase alineada");
 }
 
-console.log("QA Hooks Simulation Deps Cleanup");
+console.log("QA Luck Wheel Real Rewards");
 
 testVersionMetadata();
 testScriptsAndWorkflow();
@@ -111,4 +111,4 @@ testLeagueSimulatorHookDeps();
 testSetStateInEffectCleanups();
 testDocs();
 
-console.log("QA hooks simulation deps OK");
+console.log("QA luck wheel real rewards OK");

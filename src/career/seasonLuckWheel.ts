@@ -60,6 +60,8 @@ export interface SeasonLuckWheelState {
   resultGroup?: SeasonLuckWheelResultGroup;
   resultType?: SeasonLuckWheelResultType;
   ratingDelta?: number;
+  requiresPlayerChange?: boolean;
+  requiresCoachChange?: boolean;
   precisionPosition?: number;
   precisionZoneId?: SeasonLuckWheelPrecisionZone["id"];
   appearanceText?: string;

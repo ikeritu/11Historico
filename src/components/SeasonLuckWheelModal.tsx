@@ -79,15 +79,15 @@ function getResultDetail(result: SeasonLuckWheelResolvedResult): string {
   }
 
   if (result.requiresPlayerChange && result.requiresCoachChange) {
-    return "Premio de cambio preparado para una fase posterior de la ruleta.";
+    return "Premio de cambio listo: al continuar se abrirá el flujo para ejecutarlo en esta temporada.";
   }
 
   if (result.requiresPlayerChange) {
-    return "Premio de cambio de jugador registrado. La ejecución del cambio queda preparada para la siguiente iteración jugable.";
+    return "Premio de cambio de jugador listo: al continuar elegirás a quién sacar y un sustituto compatible.";
   }
 
   if (result.requiresCoachChange) {
-    return "Premio de cambio de entrenador registrado. La ejecución del cambio queda preparada para la siguiente iteración jugable.";
+    return "Premio de cambio de entrenador listo: al continuar elegirás nuevo técnico o podrás cancelar el cambio.";
   }
 
   return "No se modifica el rendimiento del equipo.";

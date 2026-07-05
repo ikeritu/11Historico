@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.23.2c — Luck Wheel Real Rewards
+
+- Ejecuta de verdad los premios de ruleta de cambio de jugador y cambio de entrenador.
+- El premio de jugador pausa la simulación, permite retirar un jugador del once y elegir un sustituto compatible.
+- El premio de entrenador pausa la simulación y permite elegir nuevo técnico o cancelar y volver a la Liga.
+- El premio `+1 + jugador` mantiene el `ratingDelta` y además abre el cambio real de jugador.
+- No cambia probabilidades, ratings históricos, palmarés, ranking ni Europa Career.
+- Añade `qa:luck-wheel-real-rewards` e integra la QA en `qa:tech-debt`.
+- Actualiza versionado a `v0.23.2c` / `0.23.2-c.0`.
+
+# Changelog
+
 ## v0.23.3b — Hooks Simulation Deps Cleanup
 
 - Corrige deuda de hooks marcada por la auditoría: elimina errores `react-hooks/set-state-in-effect` y dependencias obsoletas en el bucle de simulación.

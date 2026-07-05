@@ -35,6 +35,8 @@ jobs:
         run: npm run qa:mobile-viewport
       - name: Run hooks simulation deps QA
         run: npm run qa:hooks-simulation-deps
+      - name: Run luck wheel real rewards QA
+        run: npm run qa:luck-wheel-real-rewards
       - name: Run source lint
         run: npm run lint:src
       - name: Build

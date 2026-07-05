@@ -53,6 +53,8 @@ interface LeagueSimulatorViewProps {
   leagueRivals?: RivalTeam[];
   initialContext?: UserLeagueSimulationContext;
   onContextChange?: (context: UserLeagueSimulationContext) => void;
+  onSeasonLuckWheelPlayerChange?: (context: UserLeagueSimulationContext) => void;
+  onSeasonLuckWheelCoachChange?: (context: UserLeagueSimulationContext) => void;
   onFinishLeague?: (summary: ReturnType<typeof createFinalLeagueSummary>) => void;
 }
 
@@ -209,6 +211,8 @@ export function LeagueSimulatorView({
   leagueRivals,
   initialContext,
   onContextChange,
+  onSeasonLuckWheelPlayerChange,
+  onSeasonLuckWheelCoachChange,
   onFinishLeague,
 }: LeagueSimulatorViewProps) {
   const [context, setContext] = useState<UserLeagueSimulationContext>(
@@ -341,26 +345,42 @@ export function LeagueSimulatorView({
   }
 
   function handleResolveSeasonLuckWheel(result: SeasonLuckWheelResolvedResult) {
+    const nextState: SeasonLuckWheelState = {
+      seasonId: result.seasonId,
+      used: true,
+      triggerEvent: result.triggerEvent,
+      offeredAt: new Date().toISOString(),
+      accepted: true,
+      resultGroup: result.resultGroup,
+      resultType: result.resultType,
+      ratingDelta: result.ratingDelta,
+      precisionPosition: result.precisionPosition,
+      precisionZoneId: result.precisionZone.id,
+      appearanceText: result.appearanceText,
+      resultText: result.resultText,
+      requiresPlayerChange: result.requiresPlayerChange,
+      requiresCoachChange: result.requiresCoachChange,
+    };
     const nextContext = {
       ...context,
-      seasonLuckWheel: {
-        seasonId: result.seasonId,
-        used: true,
-        triggerEvent: result.triggerEvent,
-        offeredAt: new Date().toISOString(),
-        accepted: true,
-        resultGroup: result.resultGroup,
-        resultType: result.resultType,
-        ratingDelta: result.ratingDelta,
-        precisionPosition: result.precisionPosition,
-        precisionZoneId: result.precisionZone.id,
-        appearanceText: result.appearanceText,
-        resultText: result.resultText,
-      },
+      seasonLuckWheel: nextState,
     };
 
     setPendingWheelOffer(undefined);
     commitContext(nextContext);
+
+    if (result.requiresPlayerChange) {
+      setIsAutoSimulating(false);
+      onSeasonLuckWheelPlayerChange?.(nextContext);
+      return;
+    }
+
+    if (result.requiresCoachChange) {
+      setIsAutoSimulating(false);
+      onSeasonLuckWheelCoachChange?.(nextContext);
+      return;
+    }
+
     finishIfReady(nextContext);
   }
 
@@ -650,7 +670,7 @@ export function LeagueSimulatorView({
               <h2>{context.seasonLuckWheel.accepted ? "Resultado aplicado" : "Oportunidad rechazada"}</h2>
               <p>
                 {context.seasonLuckWheel.accepted
-                  ? `${context.seasonLuckWheel.resultText ?? "La ruleta ya ha marcado esta temporada."} ${context.seasonLuckWheel.ratingDelta ? `Efecto de media: ${context.seasonLuckWheel.ratingDelta > 0 ? "+" : ""}${context.seasonLuckWheel.ratingDelta.toFixed(1)}.` : ""}`
+                  ? `${context.seasonLuckWheel.resultText ?? "La ruleta ya ha marcado esta temporada."} ${context.seasonLuckWheel.ratingDelta ? `Efecto de media: ${context.seasonLuckWheel.ratingDelta > 0 ? "+" : ""}${context.seasonLuckWheel.ratingDelta.toFixed(1)}.` : ""} ${context.seasonLuckWheel.requiresPlayerChange ? "Cambio de jugador ejecutable disponible." : ""} ${context.seasonLuckWheel.requiresCoachChange ? "Cambio de entrenador ejecutable disponible." : ""}`
                   : "Decidiste no jugar la ruleta. Esta temporada ya no volverá a aparecer."}
               </p>
             </section>

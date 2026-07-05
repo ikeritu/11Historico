@@ -7,7 +7,7 @@ interface CareerPlayerReplacementPickerProps {
   formation: Formation;
   selectedPlayers: SelectedPlayer[];
   nextSeasonLabel: string;
-  mode?: "player" | "player_formation";
+  mode?: "player" | "player_formation" | "luck_wheel_player";
   onSelectPlayerToReplace: (selection: SelectedPlayer) => void;
   onCancel: () => void;
 }
@@ -20,6 +20,8 @@ export function CareerPlayerReplacementPicker({
   onSelectPlayerToReplace,
   onCancel,
 }: CareerPlayerReplacementPickerProps) {
+  const isLuckWheelMode = mode === "luck_wheel_player";
+
   return (
     <main className="career-replace-screen">
       <section className="career-replace-card">
@@ -30,11 +32,13 @@ export function CareerPlayerReplacementPicker({
             <p>
               {mode === "player_formation"
                 ? "Saldrá un jugador del once actual. Después elegirás una alineación compatible y se sorteará un sustituto para el hueco libre. Si cancelas, conservas el once actual y avanzas a la siguiente temporada."
-                : "Saldrá un jugador del once actual. Después se sorteará una temporada histórica y elegirás un sustituto compatible. Si cancelas, conservas el once actual y avanzas a la siguiente temporada."}
+                : isLuckWheelMode
+                  ? "Premio de ruleta: puedes cambiar un jugador ahora mismo. Saldrá un jugador del once actual y se sorteará una temporada histórica para buscar un sustituto compatible. Si cancelas, volverás a la Liga con el once actual."
+                  : "Saldrá un jugador del once actual. Después se sorteará una temporada histórica y elegirás un sustituto compatible. Si cancelas, conservas el once actual y avanzas a la siguiente temporada."}
             </p>
           </div>
           <button type="button" className="secondary-home-button" onClick={onCancel}>
-            Cancelar y avanzar
+            {isLuckWheelMode ? "Cancelar y volver a la Liga" : "Cancelar y avanzar"}
           </button>
         </header>
 

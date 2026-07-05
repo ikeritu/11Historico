@@ -156,7 +156,9 @@ export type CareerRewardFlow =
   | "standard_player"
   | "standard_coach"
   | "player_formation"
-  | "coach_bonus";
+  | "coach_bonus"
+  | "luck_wheel_player"
+  | "luck_wheel_coach";
 
 export interface FormationLineCounts {
   goalkeeper: number;

@@ -1,3 +1,13 @@
+### v0.23.2c — Luck Wheel Real Rewards
+
+- Ejecuta de verdad los premios de ruleta de cambio de jugador y cambio de entrenador.
+- El premio de jugador pausa la simulación, permite retirar un jugador del once y elegir un sustituto compatible.
+- El premio de entrenador pausa la simulación y permite elegir nuevo técnico o cancelar y volver a la Liga.
+- El premio `+1 + jugador` mantiene el `ratingDelta` y además abre el cambio real de jugador.
+- No cambia probabilidades, ratings históricos, palmarés, ranking ni Europa Career.
+- Añade `qa:luck-wheel-real-rewards` e integra la QA en `qa:tech-debt`.
+- Actualiza versionado a `v0.23.2c` / `0.23.2-c.0`.
+
 ### v0.23.3b — Hooks Simulation Deps Cleanup
 
 Limpieza técnica de hooks y dependencias derivada de la auditoría: estabiliza el bucle de simulación automática, elimina errores de `react-hooks/set-state-in-effect`, deja `lint:src` sin errores/warnings y lo activa en GitHub Actions. No cambia gameplay, ratings, ruleta, palmarés ni ranking.
@@ -111,7 +121,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.23.3b_HOOKS_SIMULATION_DEPS_CLEANUP`.
+Versión pública actual: `v0.23.2c_LUCK_WHEEL_REAL_REWARDS`.
 
 Base jugable cerrada:
 
