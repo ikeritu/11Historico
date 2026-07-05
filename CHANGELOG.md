@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.23.3 — Tech Health Baseline
+
+- Añade `typecheck` explícito y lo usa antes del build.
+- Añade `qa:tech-health-baseline` para auditar higiene técnica sin tocar gameplay.
+- Integra la QA de salud técnica dentro de `qa:tech-debt`.
+- Actualiza el workflow de GitHub Pages a Node 24 y añade pasos de typecheck + QA técnica antes del build.
+- Ajusta `eslint.config.js` para ignorar `dist`, `.audit-dist`, `reports`, `patch_files`, backups y ficheros históricos `_FIXED`.
+- Añade `lint:src` como lint focalizado sobre código vivo, sin activar todavía como bloqueo de deploy hasta corregir hooks/deps reales.
+- Protege artefactos locales de auditoría en `.gitignore`.
+- Actualiza versionado a `v0.23.3` / `0.23.3`.
+- No toca probabilidades, balance, ratings históricos, ruleta, palmarés, ranking ni Europa Career.
+
 ## v0.23.2b6 — Luck Wheel Label Fit
 
 - Acorta etiquetas internas de la ruleta para que encajen mejor en cada quesito: `Jug.`, `Entr.`, `+1`, `+0.5`, `-0.5`, `-1`.

@@ -27,4 +27,6 @@ Thumbs.db
 .vscode/
 .idea/
 
-.env.local
+.audit-dist/
+
+Auditoria_*.docx

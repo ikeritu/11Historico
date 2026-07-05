@@ -60,7 +60,7 @@ function testPackageLockMatchesPackageJson(): void {
 }
 
 function testAppVersionMetadata(): void {
-  assert(APP_VERSION === "v0.23.2b6", `APP_VERSION debe ser v0.23.2b6, pero es ${APP_VERSION}`);
+  assert(APP_VERSION === "v0.23.3", `APP_VERSION debe ser v0.23.3, pero es ${APP_VERSION}`);
   assert(APP_VERSION_NAME.trim().length > 0, "APP_VERSION_NAME no puede estar vacío.");
   assert(APP_STATUS.trim().length > 0, "APP_STATUS no puede estar vacío.");
   assertNoMojibake("APP_VERSION_NAME", APP_VERSION_NAME);
@@ -71,12 +71,12 @@ function testAppVersionMetadata(): void {
 function testDocsMentionCurrentVersion(): void {
   const changelog = readFileSync(join(ROOT, "CHANGELOG.md"), "utf8");
   const readme = readFileSync(join(ROOT, "README.md"), "utf8");
-  const releaseDocPath = join(ROOT, "docs", "v0_23_2b6_LUCK_WHEEL_LABEL_FIT.md");
+  const releaseDocPath = join(ROOT, "docs", "v0_23_3_TECH_HEALTH_BASELINE.md");
 
-  assert(changelog.startsWith("# Changelog\n\n## v0.23.2b6"), "CHANGELOG debe empezar por v0.23.2b6.");
-  assert(readme.includes("Versión pública actual: `v0.23.2b6_LUCK_WHEEL_LABEL_FIT`."), "README debe apuntar a v0.23.2b6_LUCK_WHEEL_LABEL_FIT.");
-  assert(existsSync(releaseDocPath), "Debe existir docs/v0_23_2b6_LUCK_WHEEL_LABEL_FIT.md.");
-  logOk("README, CHANGELOG y doc de fase apuntan a v0.23.2b6");
+  assert(changelog.startsWith("# Changelog\n\n## v0.23.3"), "CHANGELOG debe empezar por v0.23.3.");
+  assert(readme.includes("Versión pública actual: `v0.23.3_TECH_HEALTH_BASELINE`."), "README debe apuntar a v0.23.3_TECH_HEALTH_BASELINE.");
+  assert(existsSync(releaseDocPath), "Debe existir docs/v0_23_3_TECH_HEALTH_BASELINE.md.");
+  logOk("README, CHANGELOG y doc de fase apuntan a v0.23.3");
 }
 
 function testQaScriptsAreRegistered(): void {
@@ -84,6 +84,7 @@ function testQaScriptsAreRegistered(): void {
 
   assert(packageJson.scripts?.["qa:version"], "Debe existir script qa:version.");
   assert(packageJson.scripts?.["qa:tech-debt"], "Debe existir script qa:tech-debt.");
+  assert(packageJson.scripts?.["qa:tech-health-baseline"], "Debe existir script qa:tech-health-baseline.");
   assert(packageJson.scripts?.["qa:release-stabilization"], "Debe existir script qa:release-stabilization.");
   assert(packageJson.scripts?.["qa:agentjacking"], "Debe existir script qa:agentjacking.");
   assert(packageJson.scripts?.["qa:formation-reward"], "Debe conservar qa:formation-reward.");
@@ -93,6 +94,7 @@ function testQaScriptsAreRegistered(): void {
   assert(packageJson.scripts?.["qa:global-ranking-real"], "Debe existir script qa:global-ranking-real.");
   assert(packageJson.scripts?.["qa:global-ranking-ui"], "Debe existir script qa:global-ranking-ui.");
   assert(packageJson.scripts?.["qa:season-luck-wheel"], "Debe existir script qa:season-luck-wheel.");
+  assert(packageJson.scripts?.["qa:tech-debt"]?.includes("qa:tech-health-baseline"), "qa:tech-debt debe incluir qa:tech-health-baseline.");
   assert(packageJson.scripts?.["qa:tech-debt"]?.includes("qa:agentjacking"), "qa:tech-debt debe incluir qa:agentjacking.");
   assert(packageJson.scripts?.["qa:tech-debt"]?.includes("qa:season-luck-wheel"), "qa:tech-debt debe incluir qa:season-luck-wheel.");
   logOk("scripts QA críticos registrados");

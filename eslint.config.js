@@ -6,9 +6,20 @@ import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  globalIgnores([
+    'dist/**',
+    'build/**',
+    'node_modules/**',
+    '.audit-dist/**',
+    'reports/**',
+    'patch_files/**',
+    '**/*_FIXED.ts',
+    '**/*.backup_*',
+    '**/*.bak',
+    '_export*/**',
+  ]),
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ['src/**/*.{ts,tsx}', 'scripts/**/*.ts', 'vite.config.ts'],
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,
@@ -16,7 +27,10 @@ export default defineConfig([
       reactRefresh.configs.vite,
     ],
     languageOptions: {
-      globals: globals.browser,
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
     },
   },
 ])

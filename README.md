@@ -1,3 +1,7 @@
+### v0.23.3 — Tech Health Baseline
+
+Base técnica de higiene tras auditoría: typecheck explícito en build/CI, QA de salud técnica, ignores de ESLint para ruido histórico/temporal, Node 24 en workflow de Pages y protección de artefactos locales de auditoría. No cambia gameplay, ratings, ruleta, palmarés ni ranking.
+
 ### v0.23.2b6 — Luck Wheel Label Fit
 
 Pulido de legibilidad de la ruleta: las etiquetas internas de premios se acortan para caber mejor en cada quesito (`Jug.`, `Entr.`, `+1`, `+0.5`, `-0.5`, `-1`) y la leyenda externa mantiene el texto completo. Además, la QA confirma que los efectos `+0.5`, `+1`, `-0.5` y `-1` ya se aplican al rating de temporada usado por la simulación cuando la ruleta fue aceptada.
@@ -99,7 +103,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.23.2b6_LUCK_WHEEL_LABEL_FIT`.
+Versión pública actual: `v0.23.3_TECH_HEALTH_BASELINE`.
 
 Base jugable cerrada:
 
