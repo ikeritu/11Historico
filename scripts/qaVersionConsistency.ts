@@ -60,7 +60,7 @@ function testPackageLockMatchesPackageJson(): void {
 }
 
 function testAppVersionMetadata(): void {
-  assert(APP_VERSION === "v0.23.3", `APP_VERSION debe ser v0.23.3, pero es ${APP_VERSION}`);
+  assert(APP_VERSION === "v0.23.3a", `APP_VERSION debe ser v0.23.3a, pero es ${APP_VERSION}`);
   assert(APP_VERSION_NAME.trim().length > 0, "APP_VERSION_NAME no puede estar vacío.");
   assert(APP_STATUS.trim().length > 0, "APP_STATUS no puede estar vacío.");
   assertNoMojibake("APP_VERSION_NAME", APP_VERSION_NAME);
@@ -71,12 +71,12 @@ function testAppVersionMetadata(): void {
 function testDocsMentionCurrentVersion(): void {
   const changelog = readFileSync(join(ROOT, "CHANGELOG.md"), "utf8");
   const readme = readFileSync(join(ROOT, "README.md"), "utf8");
-  const releaseDocPath = join(ROOT, "docs", "v0_23_3_TECH_HEALTH_BASELINE.md");
+  const releaseDocPath = join(ROOT, "docs", "v0_23_3a_MOBILE_VIEWPORT_FIX.md");
 
-  assert(changelog.startsWith("# Changelog\n\n## v0.23.3"), "CHANGELOG debe empezar por v0.23.3.");
-  assert(readme.includes("Versión pública actual: `v0.23.3_TECH_HEALTH_BASELINE`."), "README debe apuntar a v0.23.3_TECH_HEALTH_BASELINE.");
-  assert(existsSync(releaseDocPath), "Debe existir docs/v0_23_3_TECH_HEALTH_BASELINE.md.");
-  logOk("README, CHANGELOG y doc de fase apuntan a v0.23.3");
+  assert(changelog.startsWith("# Changelog\n\n## v0.23.3a"), "CHANGELOG debe empezar por v0.23.3a.");
+  assert(readme.includes("Versión pública actual: `v0.23.3a_MOBILE_VIEWPORT_FIX`."), "README debe apuntar a v0.23.3a_MOBILE_VIEWPORT_FIX.");
+  assert(existsSync(releaseDocPath), "Debe existir docs/v0_23_3a_MOBILE_VIEWPORT_FIX.md.");
+  logOk("README, CHANGELOG y doc de fase apuntan a v0.23.3a");
 }
 
 function testQaScriptsAreRegistered(): void {

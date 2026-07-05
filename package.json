@@ -1,7 +1,7 @@
 {
   "name": "futbol11",
   "private": true,
-  "version": "0.23.3",
+  "version": "0.23.3-a.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -15,7 +15,7 @@
     "qa:formation-reward": "vite build --ssr scripts/qaFormationReward.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/qaFormationReward.js",
     "qa:career-ranking": "vite build --ssr scripts/qaCareerLocalRanking.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/qaCareerLocalRanking.js",
     "qa:version": "vite build --ssr scripts/qaVersionConsistency.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/qaVersionConsistency.js",
-    "qa:tech-debt": "npm run qa:version && npm run qa:tech-health-baseline && npm run qa:release-stabilization && npm run qa:agentjacking && npm run qa:formation-reward && npm run qa:career-ranking && npm run qa:global-ranking && npm run qa:global-ranking-ui && npm run qa:team-power && npm run qa:season-luck-wheel && npm run qa:season-luck-wheel-ui && npm run qa:palmares-showcase",
+    "qa:tech-debt": "npm run qa:version && npm run qa:tech-health-baseline && npm run qa:mobile-viewport && npm run qa:release-stabilization && npm run qa:agentjacking && npm run qa:formation-reward && npm run qa:career-ranking && npm run qa:global-ranking && npm run qa:global-ranking-ui && npm run qa:team-power && npm run qa:season-luck-wheel && npm run qa:season-luck-wheel-ui && npm run qa:palmares-showcase",
     "qa:global-ranking": "vite build --ssr scripts/qaGlobalRankingFoundation.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/qaGlobalRankingFoundation.js",
     "qa:global-ranking-backend": "vite build --ssr scripts/qaGlobalRankingFoundation.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/qaGlobalRankingFoundation.js",
     "qa:team-power": "vite build --ssr scripts/qaTeamPower.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/qaTeamPower.js",
@@ -28,7 +28,8 @@
     "qa:palmares-showcase": "vite build --ssr scripts/qaPalmaresShowcase.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/qaPalmaresShowcase.js",
     "typecheck": "tsc -b",
     "lint:src": "eslint src scripts",
-    "qa:tech-health-baseline": "vite build --ssr scripts/qaTechHealthBaseline.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/qaTechHealthBaseline.js"
+    "qa:tech-health-baseline": "vite build --ssr scripts/qaTechHealthBaseline.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/qaTechHealthBaseline.js",
+    "qa:mobile-viewport": "vite build --ssr scripts/qaMobileViewportFix.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/qaMobileViewportFix.js"
   },
   "dependencies": {
     "react": "^19.2.6",

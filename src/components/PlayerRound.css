@@ -10,6 +10,7 @@
 
 .player-round {
   min-height: 100vh;
+  min-height: 100dvh;
   padding: 28px 18px;
   background:
     radial-gradient(circle at top right, rgba(255, 255, 255, 0.08), transparent 28%),
@@ -106,6 +107,7 @@
   top: 86px;
   z-index: 25;
   max-height: calc(100vh - 104px);
+  max-height: calc(100dvh - 104px);
   overflow: auto;
   padding-right: 2px;
 }

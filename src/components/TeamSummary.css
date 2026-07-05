@@ -10,6 +10,7 @@
 
 .team-summary {
   min-height: 100vh;
+  min-height: 100dvh;
   padding: 88px 18px 36px;
   background:
     radial-gradient(circle at top left, rgba(255, 255, 255, 0.08), transparent 30%),

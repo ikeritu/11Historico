@@ -1,3 +1,7 @@
+### v0.23.3a — Mobile Viewport Fix
+
+Corrección móvil de bajo riesgo derivada de la auditoría: todas las reglas con `100vh` conservan fallback clásico y añaden `100dvh` para evitar cortes de contenido por barras dinámicas en navegadores móviles. Añade `qa:mobile-viewport` y la ejecuta en `qa:tech-debt` y GitHub Actions. No cambia gameplay, ratings, ruleta, palmarés ni ranking.
+
 ### v0.23.3 — Tech Health Baseline
 
 Base técnica de higiene tras auditoría: typecheck explícito en build/CI, QA de salud técnica, ignores de ESLint para ruido histórico/temporal, Node 24 en workflow de Pages y protección de artefactos locales de auditoría. No cambia gameplay, ratings, ruleta, palmarés ni ranking.
@@ -103,7 +107,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.23.3_TECH_HEALTH_BASELINE`.
+Versión pública actual: `v0.23.3a_MOBILE_VIEWPORT_FIX`.
 
 Base jugable cerrada:
 

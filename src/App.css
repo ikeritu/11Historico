@@ -43,6 +43,7 @@ button:not(:disabled):hover {
 
 .app-shell {
   min-height: 100vh;
+  min-height: 100dvh;
   background: #080808;
 }
 
@@ -65,6 +66,7 @@ button:not(:disabled):hover {
   z-index: 20;
   width: min(420px, calc(100vw - 36px));
   max-height: calc(100vh - 36px);
+  max-height: calc(100dvh - 36px);
   overflow: auto;
   display: grid;
   gap: 10px;
@@ -174,6 +176,7 @@ button:not(:disabled):hover {
 /* Modo carrera preview */
 .career-preview-screen {
   min-height: 100vh;
+  min-height: 100dvh;
   padding: 36px 18px;
   display: grid;
   place-items: center;

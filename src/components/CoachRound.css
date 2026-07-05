@@ -2,6 +2,7 @@
 
 .coach-round {
   min-height: 100vh;
+  min-height: 100dvh;
   padding: 32px 18px;
   background:
     radial-gradient(circle at top left, rgba(255, 255, 255, 0.1), transparent 30%),

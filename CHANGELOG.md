@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.23.3a — Mobile Viewport Fix
+
+- Añade fallback dinámico de viewport móvil: cada regla `100vh` conserva su fallback y añade la equivalente `100dvh`.
+- Cubre pantallas principales: home, draft, selección de formación, entrenador, liga, resumen, carrera, rankings, Supercopa, ruleta y contenedores de scroll.
+- Añade `qa:mobile-viewport` para verificar que ninguna regla `100vh` quede sin fallback `100dvh`.
+- Integra la QA móvil en `qa:tech-debt` y en el workflow de GitHub Pages antes del build.
+- Actualiza versionado a `v0.23.3a` / `0.23.3-a.0`.
+- No toca probabilidades, balance, ratings históricos, ruleta, palmarés, ranking ni Europa Career.
+
 ## v0.23.3 — Tech Health Baseline
 
 - Añade `typecheck` explícito y lo usa antes del build.

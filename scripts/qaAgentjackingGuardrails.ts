@@ -3,8 +3,8 @@ import { join, relative } from "node:path";
 import { APP_STATUS, APP_VERSION, APP_VERSION_NAME } from "../src/config/appVersion";
 
 const ROOT = process.cwd();
-const CURRENT_PUBLIC_VERSION = "v0.23.3";
-const CURRENT_RELEASE_TAG = "v0.23.3_TECH_HEALTH_BASELINE";
+const CURRENT_PUBLIC_VERSION = "v0.23.3a";
+const CURRENT_RELEASE_TAG = "v0.23.3a_MOBILE_VIEWPORT_FIX";
 const REAL_APPS_SCRIPT_ID_PATTERN = /AKfycb[a-zA-Z0-9_-]{20,}/;
 const LOCAL_ENV_FILES = [".env", ".env.local", ".env.development.local", ".env.production.local"];
 const TEXT_FILE_EXTENSIONS = new Set([
@@ -68,8 +68,8 @@ function walkTextFiles(dir: string, results: string[] = []): string[] {
 
 function testVersionMetadata(): void {
   assert(APP_VERSION === CURRENT_PUBLIC_VERSION, `APP_VERSION debe ser ${CURRENT_PUBLIC_VERSION}, pero es ${APP_VERSION}.`);
-  assert(APP_VERSION_NAME === "Tech Health Baseline", `APP_VERSION_NAME inesperado: ${APP_VERSION_NAME}.`);
-  assert(APP_STATUS.includes("Base técnica") && APP_STATUS.includes("Node 24"), "APP_STATUS debe mencionar la salud técnica y Node 24.");
+  assert(APP_VERSION_NAME === "Mobile Viewport Fix", `APP_VERSION_NAME inesperado: ${APP_VERSION_NAME}.`);
+  assert(APP_STATUS.includes("Viewport móvil") && APP_STATUS.includes("100dvh"), "APP_STATUS debe mencionar la salud técnica y Node 24.");
   logOk("appVersion.ts apunta a la fase actual");
 }
 
@@ -152,12 +152,12 @@ function testDangerousGitCommandsAreNotRecommended(): void {
 function testDocsArePresent(): void {
   const changelog = readText("CHANGELOG.md");
   const readme = readText("README.md");
-  const phaseDocPath = "docs/v0_23_3_TECH_HEALTH_BASELINE.md";
+  const phaseDocPath = "docs/v0_23_3a_MOBILE_VIEWPORT_FIX.md";
 
-  assert(changelog.startsWith("# Changelog\n\n## v0.23.3"), "CHANGELOG debe empezar por v0.23.3.");
-  assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), "README debe apuntar a v0.23.3_TECH_HEALTH_BASELINE.");
-  assert(existsSync(join(ROOT, phaseDocPath)), "Debe existir docs/v0_23_3_TECH_HEALTH_BASELINE.md.");
-  logOk("README, CHANGELOG y doc de fase apuntan a v0.23.3");
+  assert(changelog.startsWith("# Changelog\n\n## v0.23.3a"), "CHANGELOG debe empezar por v0.23.3a.");
+  assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), "README debe apuntar a v0.23.3a_MOBILE_VIEWPORT_FIX.");
+  assert(existsSync(join(ROOT, phaseDocPath)), "Debe existir docs/v0_23_3a_MOBILE_VIEWPORT_FIX.md.");
+  logOk("README, CHANGELOG y doc de fase apuntan a v0.23.3a");
 }
 
 function testQaScriptsAreRegistered(): void {

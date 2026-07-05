@@ -2,6 +2,7 @@
 
 .season-reveal {
   min-height: calc(100vh - 70px);
+  min-height: calc(100dvh - 70px);
   display: grid;
   place-items: center;
   padding: 64px 18px 36px;

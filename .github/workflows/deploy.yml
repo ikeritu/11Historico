@@ -31,6 +31,8 @@ jobs:
         run: npm run typecheck
       - name: Run tech health baseline QA
         run: npm run qa:tech-health-baseline
+      - name: Run mobile viewport QA
+        run: npm run qa:mobile-viewport
       - name: Build
         run: npm run build
       - name: Upload artifact
