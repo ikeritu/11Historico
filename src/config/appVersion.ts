@@ -1,3 +1,3 @@
-export const APP_VERSION = "v0.23.3a";
-export const APP_VERSION_NAME = "Mobile Viewport Fix";
-export const APP_STATUS = "Viewport móvil reforzado: 100vh conserva fallback y se añade 100dvh para evitar cortes de contenido en navegadores móviles";
+export const APP_VERSION = "v0.23.3b";
+export const APP_VERSION_NAME = "Hooks Simulation Deps Cleanup";
+export const APP_STATUS = "Limpieza de hooks y dependencias: lint:src sin errores, bucle de simulación estabilizado y CI preparado para bloquear regresiones de hooks";

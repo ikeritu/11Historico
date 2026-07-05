@@ -91,7 +91,8 @@ export function SeasonReveal({
   );
 
   const [displaySeason, setDisplaySeason] = useState<SeasonId>(() => roulettePool[0] ?? finalSeason);
-  const [revealed, setRevealed] = useState(false);
+  const [revealedSeason, setRevealedSeason] = useState<SeasonId | undefined>(undefined);
+  const revealed = revealedSeason === finalSeason;
 
   const finalSquad = getAthleticSeasonById(finalSeason);
   const finalPlayersCount = finalSquad?.players.length ?? 0;
@@ -103,8 +104,6 @@ export function SeasonReveal({
   );
 
   useEffect(() => {
-    setRevealed(false);
-
     let tick = 0;
 
     const interval = window.setInterval(() => {
@@ -116,7 +115,7 @@ export function SeasonReveal({
     const timeout = window.setTimeout(() => {
       window.clearInterval(interval);
       setDisplaySeason(finalSeason);
-      setRevealed(true);
+      setRevealedSeason(finalSeason);
     }, MIN_REVEAL_MS);
 
     return () => {

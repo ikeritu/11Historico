@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.23.3b — Hooks Simulation Deps Cleanup
+
+- Corrige deuda de hooks marcada por la auditoría: elimina errores `react-hooks/set-state-in-effect` y dependencias obsoletas en el bucle de simulación.
+- Estabiliza `LeagueSimulatorView` con callbacks memoizados para `commitContext`, `finishIfReady` y `maybeOfferSeasonLuckWheel`, evitando closures obsoletos en la simulación automática.
+- Limpia avisos de hooks en paneles auxiliares y evita efectos usados solo para derivar estado local.
+- Activa `lint:src` como paso de GitHub Actions tras dejarlo sin errores/warnings.
+- Añade `qa:hooks-simulation-deps` y lo integra en `qa:tech-debt` y en el workflow de deploy.
+- Actualiza versionado a `v0.23.3b` / `0.23.3-b.0`.
+- No toca probabilidades, balance, ratings históricos, ruleta, palmarés, ranking ni Europa Career.
+
 ## v0.23.3a — Mobile Viewport Fix
 
 - Añade fallback dinámico de viewport móvil: cada regla `100vh` conserva su fallback y añade la equivalente `100dvh`.
@@ -306,6 +316,16 @@
 
 # Changelog
 
+## v0.23.3b — Hooks Simulation Deps Cleanup
+
+- Corrige deuda de hooks marcada por la auditoría: elimina errores `react-hooks/set-state-in-effect` y dependencias obsoletas en el bucle de simulación.
+- Estabiliza `LeagueSimulatorView` con callbacks memoizados para `commitContext`, `finishIfReady` y `maybeOfferSeasonLuckWheel`, evitando closures obsoletos en la simulación automática.
+- Limpia avisos de hooks en paneles auxiliares y evita efectos usados solo para derivar estado local.
+- Activa `lint:src` como paso de GitHub Actions tras dejarlo sin errores/warnings.
+- Añade `qa:hooks-simulation-deps` y lo integra en `qa:tech-debt` y en el workflow de deploy.
+- Actualiza versionado a `v0.23.3b` / `0.23.3-b.0`.
+- No toca probabilidades, balance, ratings históricos, ruleta, palmarés, ranking ni Europa Career.
+
 ## v0.23.2b6 — Luck Wheel Label Fit
 
 - Acorta etiquetas internas de la ruleta para que encajen mejor en cada quesito: `Jug.`, `Entr.`, `+1`, `+0.5`, `-0.5`, `-1`.
@@ -355,6 +375,16 @@
 - No se toca rating efectivo, Supercopa, Europa ni partida rápida.
 
 # Changelog
+
+## v0.23.3b — Hooks Simulation Deps Cleanup
+
+- Corrige deuda de hooks marcada por la auditoría: elimina errores `react-hooks/set-state-in-effect` y dependencias obsoletas en el bucle de simulación.
+- Estabiliza `LeagueSimulatorView` con callbacks memoizados para `commitContext`, `finishIfReady` y `maybeOfferSeasonLuckWheel`, evitando closures obsoletos en la simulación automática.
+- Limpia avisos de hooks en paneles auxiliares y evita efectos usados solo para derivar estado local.
+- Activa `lint:src` como paso de GitHub Actions tras dejarlo sin errores/warnings.
+- Añade `qa:hooks-simulation-deps` y lo integra en `qa:tech-debt` y en el workflow de deploy.
+- Actualiza versionado a `v0.23.3b` / `0.23.3-b.0`.
+- No toca probabilidades, balance, ratings históricos, ruleta, palmarés, ranking ni Europa Career.
 
 ## v0.23.2b6 — Luck Wheel Label Fit
 

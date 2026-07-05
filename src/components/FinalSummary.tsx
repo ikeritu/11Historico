@@ -1,6 +1,6 @@
 // src/components/FinalSummary.tsx
 
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 
 import type {
   FinalGameSummary,
@@ -19,7 +19,6 @@ import PalmaresTrophyCase from "./PalmaresTrophyCase";
 import {
   buildHistoryEntry,
   getBestGameHistoryEntry,
-  loadGameHistory,
   upsertGameHistoryEntry,
   type GameHistoryEntry,
 } from "../storage/gameHistoryStorage";
@@ -769,10 +768,7 @@ export function FinalSummary({
 }: FinalSummaryProps) {
   const shareText = buildShareText(summary);
 
-  const initialHistory = useMemo(() => loadGameHistory(), []);
-  const [history, setHistory] = useState<GameHistoryEntry[]>(initialHistory);
-
-  useEffect(() => {
+  const [history] = useState<GameHistoryEntry[]>(() => {
     const entry = buildHistoryEntry({
       summary,
       formation,
@@ -781,9 +777,8 @@ export function FinalSummary({
       difficulty,
     });
 
-    const nextHistory = upsertGameHistoryEntry(entry);
-    setHistory(nextHistory);
-  }, [summary, formation, selectedCoach, teamRating]);
+    return upsertGameHistoryEntry(entry);
+  });
 
   function handleShare() {
     if (onShare) {

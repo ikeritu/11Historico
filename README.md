@@ -1,3 +1,7 @@
+### v0.23.3b — Hooks Simulation Deps Cleanup
+
+Limpieza técnica de hooks y dependencias derivada de la auditoría: estabiliza el bucle de simulación automática, elimina errores de `react-hooks/set-state-in-effect`, deja `lint:src` sin errores/warnings y lo activa en GitHub Actions. No cambia gameplay, ratings, ruleta, palmarés ni ranking.
+
 ### v0.23.3a — Mobile Viewport Fix
 
 Corrección móvil de bajo riesgo derivada de la auditoría: todas las reglas con `100vh` conservan fallback clásico y añaden `100dvh` para evitar cortes de contenido por barras dinámicas en navegadores móviles. Añade `qa:mobile-viewport` y la ejecuta en `qa:tech-debt` y GitHub Actions. No cambia gameplay, ratings, ruleta, palmarés ni ranking.
@@ -107,7 +111,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.23.3a_MOBILE_VIEWPORT_FIX`.
+Versión pública actual: `v0.23.3b_HOOKS_SIMULATION_DEPS_CLEANUP`.
 
 Base jugable cerrada:
 

@@ -1,6 +1,6 @@
 // src/components/LeagueSimulatorView.tsx
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import type {
   Formation,
@@ -259,7 +259,7 @@ export function LeagueSimulatorView({
   const leagueMatchesPlayed = userRow?.played ?? 0;
   const leagueProgressLabel = `Jornada ${Math.min(leagueMatchesPlayed + 1, 38)} / 38`;
 
-  function commitContext(nextContext: UserLeagueSimulationContext) {
+  const commitContext = useCallback((nextContext: UserLeagueSimulationContext) => {
     const contextWithCoach = {
       ...nextContext,
       selectedCoach,
@@ -267,26 +267,30 @@ export function LeagueSimulatorView({
 
     setContext(contextWithCoach);
     onContextChange?.(contextWithCoach);
-  }
+  }, [onContextChange, selectedCoach]);
 
-  function getLeagueMatchesPlayed(targetContext: UserLeagueSimulationContext): number {
+  const getLeagueMatchesPlayed = useCallback((targetContext: UserLeagueSimulationContext): number => {
     return targetContext.state.table.find((row) => row.teamId === "athletic_historico")?.played ?? 0;
-  }
+  }, []);
 
-  function getSeasonLuckWheelTriggerDeadlineMatchday(targetContext: UserLeagueSimulationContext): number {
+  const getSeasonLuckWheelTriggerDeadlineMatchday = useCallback((targetContext: UserLeagueSimulationContext): number => {
     const maxMatchday = Math.max(...targetContext.state.fixtures.map((fixture) => fixture.matchday), 38);
     return Math.floor(maxMatchday * 2 / 3);
-  }
+  }, []);
 
-  function isWithinSeasonLuckWheelTriggerWindow(targetContext: UserLeagueSimulationContext): boolean {
+  const isWithinSeasonLuckWheelTriggerWindow = useCallback((targetContext: UserLeagueSimulationContext): boolean => {
     return getLeagueMatchesPlayed(targetContext) <= getSeasonLuckWheelTriggerDeadlineMatchday(targetContext);
-  }
+  }, [getLeagueMatchesPlayed, getSeasonLuckWheelTriggerDeadlineMatchday]);
 
-  function maybeOfferSeasonLuckWheel(params: {
+  const careerSeasonKey = useCallback((targetContext: UserLeagueSimulationContext): string => {
+    return String(targetContext.leagueSeasonSalt ?? targetContext.state.currentMatchday ?? 0);
+  }, []);
+
+  const maybeOfferSeasonLuckWheel = useCallback((params: {
     previousContext: UserLeagueSimulationContext;
     nextContext: UserLeagueSimulationContext;
     result?: MatchResult;
-  }): boolean {
+  }): boolean => {
     if (!isCareerMode || pendingWheelOffer || params.nextContext.seasonLuckWheel?.used) {
       return false;
     }
@@ -323,11 +327,7 @@ export function LeagueSimulatorView({
     setPendingWheelOffer(offer);
     setIsAutoSimulating(false);
     return true;
-  }
-
-  function careerSeasonKey(targetContext: UserLeagueSimulationContext): string {
-    return String(targetContext.leagueSeasonSalt ?? targetContext.state.currentMatchday ?? 0);
-  }
+  }, [careerSeasonKey, gameId, getLeagueMatchesPlayed, isCareerMode, isWithinSeasonLuckWheelTriggerWindow, pendingWheelOffer]);
 
   function applySeasonLuckWheelState(nextState: SeasonLuckWheelState) {
     const nextContext = {
@@ -364,7 +364,7 @@ export function LeagueSimulatorView({
     finishIfReady(nextContext);
   }
 
-  function finishIfReady(nextContext: UserLeagueSimulationContext) {
+  const finishIfReady = useCallback((nextContext: UserLeagueSimulationContext) => {
     if (!canFinishSeason(nextContext)) return false;
 
     const summary = createFinalLeagueSummary({
@@ -378,14 +378,17 @@ export function LeagueSimulatorView({
     onFinishLeague?.(summary);
 
     return true;
-  }
+  }, [difficulty, formation.name, gameId, onFinishLeague, selectedCoach.coachSeason.name]);
 
   useEffect(() => {
     if (!isAutoSimulating) return undefined;
 
     if (context.state.completed || getPendingCupFixture(context)) {
-      setIsAutoSimulating(false);
-      return undefined;
+      const stopTimeoutId = window.setTimeout(() => {
+        setIsAutoSimulating(false);
+      }, 0);
+
+      return () => window.clearTimeout(stopTimeoutId);
     }
 
     const timeoutId = window.setTimeout(() => {
@@ -418,7 +421,7 @@ export function LeagueSimulatorView({
     }, AUTO_SIMULATION_DELAY_MS);
 
     return () => window.clearTimeout(timeoutId);
-  }, [context, effectiveTeamRating, isAutoSimulating, selectedPlayers]);
+  }, [commitContext, context, effectiveTeamRating, finishIfReady, isAutoSimulating, maybeOfferSeasonLuckWheel, selectedPlayers]);
 
   function simulateLeagueUntilNextEvent(params: {
     initialContext: UserLeagueSimulationContext;

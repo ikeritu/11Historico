@@ -13,8 +13,8 @@ type PackageLockJson = {
 };
 
 const ROOT = process.cwd();
-const CURRENT_PUBLIC_VERSION = "v0.23.3a";
-const CURRENT_RELEASE_TAG = "v0.23.3a_MOBILE_VIEWPORT_FIX";
+const CURRENT_PUBLIC_VERSION = "v0.23.3b";
+const CURRENT_RELEASE_TAG = "v0.23.3b_HOOKS_SIMULATION_DEPS_CLEANUP";
 
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) {
@@ -39,9 +39,9 @@ function testVersionMetadata(): void {
   const packageLock = readJson<PackageLockJson>("package-lock.json");
 
   assert(APP_VERSION === CURRENT_PUBLIC_VERSION, `APP_VERSION debe ser ${CURRENT_PUBLIC_VERSION}, pero es ${APP_VERSION}.`);
-  assert(APP_VERSION_NAME === "Mobile Viewport Fix", `APP_VERSION_NAME inesperado: ${APP_VERSION_NAME}.`);
-  assert(APP_STATUS.includes("Viewport móvil") && APP_STATUS.includes("100dvh"), "APP_STATUS debe describir el viewport móvil y 100dvh.");
-  assert(packageJson.version === "0.23.3-a.0", `package.json debe usar 0.23.3-a.0, pero usa ${packageJson.version}.`);
+  assert(APP_VERSION_NAME === "Hooks Simulation Deps Cleanup", `APP_VERSION_NAME inesperado: ${APP_VERSION_NAME}.`);
+  assert(APP_STATUS.includes("Limpieza de hooks") && APP_STATUS.includes("lint:src"), "APP_STATUS debe describir la limpieza de hooks y lint:src.");
+  assert(packageJson.version === "0.23.3-b.0", `package.json debe usar 0.23.3-b.0, pero usa ${packageJson.version}.`);
   assert(packageLock.version === packageJson.version, "package-lock.json version debe coincidir con package.json.");
   assert(packageLock.packages?.[""]?.version === packageJson.version, "package-lock raíz debe coincidir con package.json.");
   logOk("versionado técnico alineado");
@@ -102,11 +102,11 @@ function testGitignore(): void {
 function testDocs(): void {
   const changelog = readText("CHANGELOG.md");
   const readme = readText("README.md");
-  const docPath = "docs/v0_23_3a_MOBILE_VIEWPORT_FIX.md";
+  const docPath = "docs/v0_23_3b_HOOKS_SIMULATION_DEPS_CLEANUP.md";
 
-  assert(changelog.startsWith("# Changelog\n\n## v0.23.3a"), "CHANGELOG debe empezar por v0.23.3a.");
-  assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), "README debe apuntar a v0.23.3a_MOBILE_VIEWPORT_FIX.");
-  assert(existsSync(join(ROOT, docPath)), "Debe existir el documento de fase v0.23.3a.");
+  assert(changelog.startsWith("# Changelog\n\n## v0.23.3b"), "CHANGELOG debe empezar por v0.23.3b.");
+  assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), "README debe apuntar a v0.23.3b_HOOKS_SIMULATION_DEPS_CLEANUP.");
+  assert(existsSync(join(ROOT, docPath)), "Debe existir el documento de fase v0.23.3b.");
   logOk("documentación de fase alineada");
 }
 

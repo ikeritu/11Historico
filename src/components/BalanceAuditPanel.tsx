@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import type {
   GameDifficulty,
@@ -192,7 +192,7 @@ export function BalanceAuditPanel({
     [difficulty, selectedPlayers, teamRating]
   );
 
-  function runAudit(totalSimulations: number) {
+  const runAudit = useCallback((totalSimulations: number) => {
     setIsRunning(true);
     setLastRunSize(totalSimulations);
 
@@ -243,7 +243,7 @@ export function BalanceAuditPanel({
       setRows(nextRows);
       setIsRunning(false);
     }, 40);
-  }
+  }, [effectiveTeamRating, selectedPlayers]);
 
   useEffect(() => {
     if (selectedPlayers.length === 0) return;
@@ -251,7 +251,7 @@ export function BalanceAuditPanel({
 
     autoAuditSignatureRef.current = auditSignature;
     runAudit(DEFAULT_AUTO_AUDIT_SIZE);
-  }, [auditSignature, selectedPlayers.length]);
+  }, [auditSignature, runAudit, selectedPlayers.length]);
 
   return (
     <section className="balance-audit-card">

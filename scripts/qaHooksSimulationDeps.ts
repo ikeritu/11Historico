@@ -1,0 +1,114 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { APP_STATUS, APP_VERSION, APP_VERSION_NAME } from "../src/config/appVersion";
+
+type PackageJson = {
+  version?: string;
+  scripts?: Record<string, string>;
+};
+
+type PackageLockJson = {
+  version?: string;
+  packages?: Record<string, { version?: string }>;
+};
+
+const ROOT = process.cwd();
+const CURRENT_PUBLIC_VERSION = "v0.23.3b";
+const CURRENT_PACKAGE_VERSION = "0.23.3-b.0";
+const CURRENT_RELEASE_TAG = "v0.23.3b_HOOKS_SIMULATION_DEPS_CLEANUP";
+const CURRENT_DOC = "docs/v0_23_3b_HOOKS_SIMULATION_DEPS_CLEANUP.md";
+
+function assert(condition: unknown, message: string): asserts condition {
+  if (!condition) {
+    throw new Error(message);
+  }
+}
+
+function logOk(message: string): void {
+  console.log(`✓ ${message}`);
+}
+
+function readText(path: string): string {
+  return readFileSync(join(ROOT, path), "utf8");
+}
+
+function readJson<T>(path: string): T {
+  return JSON.parse(readText(path)) as T;
+}
+
+function testVersionMetadata(): void {
+  const packageJson = readJson<PackageJson>("package.json");
+  const packageLock = readJson<PackageLockJson>("package-lock.json");
+
+  assert(APP_VERSION === CURRENT_PUBLIC_VERSION, `APP_VERSION debe ser ${CURRENT_PUBLIC_VERSION}, pero es ${APP_VERSION}.`);
+  assert(APP_VERSION_NAME === "Hooks Simulation Deps Cleanup", `APP_VERSION_NAME inesperado: ${APP_VERSION_NAME}.`);
+  assert(APP_STATUS.includes("hooks") && APP_STATUS.includes("lint:src"), "APP_STATUS debe describir hooks y lint:src.");
+  assert(packageJson.version === CURRENT_PACKAGE_VERSION, `package.json debe usar ${CURRENT_PACKAGE_VERSION}, pero usa ${packageJson.version}.`);
+  assert(packageLock.version === packageJson.version, "package-lock.json version debe coincidir con package.json.");
+  assert(packageLock.packages?.[""]?.version === packageJson.version, "package-lock raíz debe coincidir con package.json.");
+  logOk("versionado de limpieza de hooks alineado");
+}
+
+function testScriptsAndWorkflow(): void {
+  const packageJson = readJson<PackageJson>("package.json");
+  const scripts = packageJson.scripts ?? {};
+  const workflow = readText(".github/workflows/deploy.yml");
+
+  assert(scripts["lint:src"] === "eslint src scripts", "Debe existir lint:src sobre código vivo.");
+  assert(scripts["qa:hooks-simulation-deps"]?.includes("qaHooksSimulationDeps.ts"), "Debe existir qa:hooks-simulation-deps.");
+  assert(scripts["qa:tech-debt"]?.includes("qa:hooks-simulation-deps"), "qa:tech-debt debe incluir qa:hooks-simulation-deps.");
+  assert(workflow.includes("run: npm run qa:hooks-simulation-deps"), "deploy.yml debe ejecutar qa:hooks-simulation-deps.");
+  assert(workflow.includes("run: npm run lint:src"), "deploy.yml debe ejecutar lint:src.");
+  assert(workflow.indexOf("run: npm run qa:hooks-simulation-deps") < workflow.indexOf("run: npm run build"), "qa:hooks-simulation-deps debe ejecutarse antes del build.");
+  assert(workflow.indexOf("run: npm run lint:src") < workflow.indexOf("run: npm run build"), "lint:src debe ejecutarse antes del build.");
+  logOk("scripts y workflow bloquean regresiones de hooks antes del deploy");
+}
+
+function testLeagueSimulatorHookDeps(): void {
+  const source = readText("src/components/LeagueSimulatorView.tsx");
+
+  assert(source.includes("useCallback"), "LeagueSimulatorView debe importar y usar useCallback.");
+  assert(source.includes("const commitContext = useCallback"), "commitContext debe estar memoizado.");
+  assert(source.includes("const maybeOfferSeasonLuckWheel = useCallback"), "maybeOfferSeasonLuckWheel debe estar memoizado.");
+  assert(source.includes("const finishIfReady = useCallback"), "finishIfReady debe estar memoizado.");
+  assert(source.includes("commitContext, context, effectiveTeamRating, finishIfReady, isAutoSimulating, maybeOfferSeasonLuckWheel, selectedPlayers"), "El efecto de auto-simulación debe declarar dependencias reales.");
+  assert(!source.includes("setIsAutoSimulating(false);\n      return undefined;"), "El efecto de auto-simulación no debe hacer setState síncrono y salir.");
+  logOk("LeagueSimulatorView declara dependencias reales y reduce closures obsoletos");
+}
+
+function testSetStateInEffectCleanups(): void {
+  const coachRound = readText("src/components/CoachRound.tsx");
+  const seasonReveal = readText("src/components/SeasonReveal.tsx");
+  const finalSummary = readText("src/components/FinalSummary.tsx");
+  const balanceAudit = readText("src/components/BalanceAuditPanel.tsx");
+  const globalSubmit = readText("src/components/CareerGlobalSubmitPanel.tsx");
+
+  assert(!coachRound.includes("setRevealedCount(0);"), "CoachRound no debe resetear revealedCount de forma síncrona dentro del efecto.");
+  assert(!seasonReveal.includes("setRevealed(false);"), "SeasonReveal no debe resetear revealed de forma síncrona dentro del efecto.");
+  assert(seasonReveal.includes("revealedSeason === finalSeason"), "SeasonReveal debe derivar revealed desde revealedSeason.");
+  assert(!finalSummary.includes("const [history, setHistory]"), "FinalSummary no debe derivar history con setState dentro de useEffect.");
+  assert(balanceAudit.includes("const runAudit = useCallback"), "BalanceAuditPanel debe memoizar runAudit.");
+  assert(globalSubmit.includes("const endpointStatus = useMemo"), "CareerGlobalSubmitPanel debe agrupar estado derivado de endpoint.");
+  logOk("limpiezas de set-state-in-effect aplicadas en componentes señalados");
+}
+
+function testDocs(): void {
+  const changelog = readText("CHANGELOG.md");
+  const readme = readText("README.md");
+  const doc = readText(CURRENT_DOC);
+
+  assert(changelog.startsWith("# Changelog\n\n## v0.23.3b"), "CHANGELOG debe empezar por v0.23.3b.");
+  assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), "README debe apuntar a v0.23.3b_HOOKS_SIMULATION_DEPS_CLEANUP.");
+  assert(doc.includes("LeagueSimulatorView") && doc.includes("lint:src"), "El documento de fase debe explicar LeagueSimulatorView y lint:src.");
+  logOk("documentación de fase alineada");
+}
+
+console.log("QA Hooks Simulation Deps Cleanup");
+
+testVersionMetadata();
+testScriptsAndWorkflow();
+testLeagueSimulatorHookDeps();
+testSetStateInEffectCleanups();
+testDocs();
+
+console.log("QA hooks simulation deps OK");

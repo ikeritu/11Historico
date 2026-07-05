@@ -231,7 +231,8 @@ function applyUnderdogAndDrawVariance(params: {
   userGoals: number;
   rivalGoals: number;
 } {
-  let { userGoals, rivalGoals } = params;
+  const { userGoals } = params;
+  let { rivalGoals } = params;
   const { teamRating, rival, userIsHome, random } = params;
 
   const userAverage = getAverageUserRating(teamRating);

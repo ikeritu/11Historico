@@ -174,6 +174,7 @@ function getTacticalSlotLabelsForPlayer(
   canonicalPlayerId: string,
   _positions: PlayerPosition[]
 ): PlayerSeason["tacticalSlotLabels"] {
+  void _positions;
   const explicitLabels = TACTICAL_SLOT_LABELS_BY_CANONICAL_PLAYER_ID[canonicalPlayerId];
 
   if (explicitLabels && explicitLabels.length > 0) {

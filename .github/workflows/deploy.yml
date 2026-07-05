@@ -33,6 +33,10 @@ jobs:
         run: npm run qa:tech-health-baseline
       - name: Run mobile viewport QA
         run: npm run qa:mobile-viewport
+      - name: Run hooks simulation deps QA
+        run: npm run qa:hooks-simulation-deps
+      - name: Run source lint
+        run: npm run lint:src
       - name: Build
         run: npm run build
       - name: Upload artifact

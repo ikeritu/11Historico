@@ -293,7 +293,6 @@ export function CoachRound({
   const roulettePool = useMemo(() => getAllCoachPool(), []);
 
   useEffect(() => {
-    setRevealedCount(0);
     const timers = coachOptions.map((_, index) =>
       window.setTimeout(() => {
         setRevealedCount(index + 1);

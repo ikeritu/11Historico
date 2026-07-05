@@ -32,8 +32,13 @@ export function CareerGlobalSubmitPanel({ entry, onViewGlobalRanking }: CareerGl
   const [endpointRevision, setEndpointRevision] = useState(0);
 
   const nickError = useMemo(() => nick ? validateGlobalRankingNick(nick) : undefined, [nick]);
-  const configured = useMemo(() => isGlobalRankingConfigured(), [endpointRevision]);
-  const backendLabel = useMemo(() => getGlobalRankingBackendLabel(), [endpointRevision]);
+  const endpointStatus = useMemo(() => ({
+    configured: isGlobalRankingConfigured(),
+    backendLabel: getGlobalRankingBackendLabel(),
+    revision: endpointRevision,
+  }), [endpointRevision]);
+  const configured = endpointStatus.configured;
+  const backendLabel = endpointStatus.backendLabel;
 
   function handleEndpointChange() {
     setEndpointRevision((value) => value + 1);
