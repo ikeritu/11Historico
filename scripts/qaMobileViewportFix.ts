@@ -13,10 +13,10 @@ type PackageLockJson = {
 };
 
 const ROOT = process.cwd();
-const CURRENT_PUBLIC_VERSION = "v0.23.2c";
-const CURRENT_PACKAGE_VERSION = "0.23.2-c.0";
-const CURRENT_RELEASE_TAG = "v0.23.2c_LUCK_WHEEL_REAL_REWARDS";
-const CURRENT_DOC = "docs/v0_23_2c_LUCK_WHEEL_REAL_REWARDS.md";
+const CURRENT_PUBLIC_VERSION = "v0.24.0c";
+const CURRENT_PACKAGE_VERSION = "0.24.0-c.0";
+const CURRENT_RELEASE_TAG = "v0.24.0c_EUROPA_QUALIFICATION_FOUNDATION";
+const CURRENT_DOC = "docs/v0_24_0c_EUROPA_QUALIFICATION_FOUNDATION.md";
 
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) {
@@ -59,8 +59,8 @@ function testVersionMetadata(): void {
   const packageLock = readJson<PackageLockJson>("package-lock.json");
 
   assert(APP_VERSION === CURRENT_PUBLIC_VERSION, `APP_VERSION debe ser ${CURRENT_PUBLIC_VERSION}, pero es ${APP_VERSION}.`);
-  assert(APP_VERSION_NAME === "Luck Wheel Real Rewards", `APP_VERSION_NAME inesperado: ${APP_VERSION_NAME}.`);
-  assert(APP_STATUS.includes("hooks") && APP_STATUS.includes("lint:src"), "APP_STATUS debe describir la limpieza de hooks y lint:src.");
+  assert(APP_VERSION_NAME === "Europa Qualification Foundation", `APP_VERSION_NAME inesperado: ${APP_VERSION_NAME}.`);
+  assert(APP_STATUS.includes("Europa Career") && APP_STATUS.includes("clasificación"), "APP_STATUS debe describir la base de Europa Career y su clasificación.");
   assert(packageJson.version === CURRENT_PACKAGE_VERSION, `package.json debe usar ${CURRENT_PACKAGE_VERSION}, pero usa ${packageJson.version}.`);
   assert(packageLock.version === packageJson.version, "package-lock.json version debe coincidir con package.json.");
   assert(packageLock.packages?.[""]?.version === packageJson.version, "package-lock raíz debe coincidir con package.json.");
@@ -123,7 +123,7 @@ function testDocs(): void {
   const changelog = readText("CHANGELOG.md");
   const readme = readText("README.md");
 
-  assert(changelog.startsWith("# Changelog\n\n## v0.23.2c"), "CHANGELOG debe empezar por v0.23.3a.");
+  assert(changelog.startsWith("# Changelog\n\n## v0.24.0c"), "CHANGELOG debe empezar por v0.24.0c.");
   assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), "README debe apuntar a v0.23.2c_LUCK_WHEEL_REAL_REWARDS.");
   assert(existsSync(join(ROOT, CURRENT_DOC)), "Debe existir docs/v0_23_2c_LUCK_WHEEL_REAL_REWARDS.md.");
   logOk("documentación de viewport móvil alineada");

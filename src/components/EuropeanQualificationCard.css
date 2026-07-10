@@ -1,0 +1,70 @@
+.european-qualification-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px;
+  margin: 18px 0;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.european-qualification-card-qualified {
+  background: radial-gradient(circle at top left, rgba(255, 224, 138, 0.14), transparent 60%),
+    rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 224, 138, 0.32);
+}
+
+.european-qualification-card-none {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.european-qualification-eyebrow {
+  margin: 0;
+  color: #f2d2d7;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.european-qualification-competition {
+  font-size: 1.3rem;
+  color: #ffe08a;
+}
+
+.european-qualification-card-none .european-qualification-competition {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.european-qualification-reason {
+  display: inline-block;
+  width: fit-content;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 0.78rem;
+}
+
+.european-qualification-narrative {
+  margin: 4px 0 0;
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.45;
+  font-size: 0.92rem;
+}
+
+.european-qualification-note {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.78rem;
+}
+
+@media (max-width: 560px) {
+  .european-qualification-card {
+    padding: 14px;
+  }
+
+  .european-qualification-competition {
+    font-size: 1.14rem;
+  }
+}

@@ -1,9 +1,11 @@
 import type { FinalGameSummary, SelectedPlayer, TeamRating } from "../types/game";
 import type { CareerLocalRankingEntry, CareerObjectiveResult, CareerSeasonResult, CareerTrophyCounts } from "../types/career";
+import type { EuropeanQualificationResult } from "../europe/europeanTypes";
 import { calculateCareerArcadeScore, getFinalCareerTrophyCounts } from "../career/careerRanking";
 
 import CareerGlobalSubmitPanel from "./CareerGlobalSubmitPanel";
 import PalmaresTrophyCase from "./PalmaresTrophyCase";
+import EuropeanQualificationCard from "./EuropeanQualificationCard";
 
 import "./CareerSeasonOutcome.css";
 
@@ -21,6 +23,7 @@ interface CareerSeasonOutcomeProps {
   teamRating?: TeamRating;
   completedSeasons?: number;
   trophyCounts?: CareerTrophyCounts;
+  europeanQualification?: EuropeanQualificationResult;
 }
 
 function getSelectedPlayersAverage(selectedPlayers: SelectedPlayer[] = []): number | undefined {
@@ -137,6 +140,7 @@ export function CareerSeasonOutcome({
   teamRating,
   completedSeasons = 0,
   trophyCounts,
+  europeanQualification,
 }: CareerSeasonOutcomeProps) {
   const survived = objectiveResult.survives;
   const xiAverage = getSelectedPlayersAverage(selectedPlayers);
@@ -176,6 +180,8 @@ export function CareerSeasonOutcome({
             <small>{seasonResult.wonSupercopa ? "+2 palmarés" : "No salva la temporada"}</small>
           </article>
         </div>
+
+        {europeanQualification && <EuropeanQualificationCard result={europeanQualification} />}
 
         {(xiAverage || teamRating) && (
           <p className="career-outcome-team-rating-note">

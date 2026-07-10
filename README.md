@@ -1,3 +1,13 @@
+### v0.24.0c — Europa Qualification Foundation
+
+- Añade la base de reglas puras de clasificación europea (`src/europe/europeanQualification.ts`): 1º-4º Champions League, 5º-6º Europa League, 7º Conference League, y la Copa del Rey garantiza como mínimo Europa League.
+- Añade `EuropeanQualificationCard` y la integra en el resumen de temporada de carrera y en el resumen completo, mostrando la clasificación europea de la próxima temporada (sin dar a entender que ya se ha jugado).
+- Añade persistencia del estado europeo dentro de la carrera (`europeanCareer`): histórico por temporada, mejor competición alcanzada y total de clasificaciones. Las partidas antiguas sin este campo cargan sin romperse.
+- Todavía NO incluye partidos europeos, calendario, eliminatorias, simulación de torneos europeos ni ranking europeo. No suma títulos europeos al palmarés en esta fase.
+- No cambia probabilidades, ratings históricos, balance de Liga/Copa/Supercopa ni funcionalidades existentes.
+- Añade `qa:european-qualification`, `qa:european-qualification-ui` y `qa:european-persistence`, integradas en `qa:tech-debt` y en GitHub Actions.
+- Actualiza versionado a `v0.24.0c` / `0.24.0-c.0`.
+
 ### v0.23.2c — Luck Wheel Real Rewards
 
 - Ejecuta de verdad los premios de ruleta de cambio de jugador y cambio de entrenador.
@@ -121,7 +131,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.23.2c_LUCK_WHEEL_REAL_REWARDS`.
+Versión pública actual: `v0.24.0c_EUROPA_QUALIFICATION_FOUNDATION`.
 
 Base jugable cerrada:
 

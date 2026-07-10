@@ -3,8 +3,8 @@ import { join, relative } from "node:path";
 import { APP_STATUS, APP_VERSION, APP_VERSION_NAME } from "../src/config/appVersion";
 
 const ROOT = process.cwd();
-const CURRENT_PUBLIC_VERSION = "v0.23.2c";
-const CURRENT_RELEASE_TAG = "v0.23.2c_LUCK_WHEEL_REAL_REWARDS";
+const CURRENT_PUBLIC_VERSION = "v0.24.0c";
+const CURRENT_RELEASE_TAG = "v0.24.0c_EUROPA_QUALIFICATION_FOUNDATION";
 const REAL_APPS_SCRIPT_ID_PATTERN = /AKfycb[a-zA-Z0-9_-]{20,}/;
 const LOCAL_ENV_FILES = [".env", ".env.local", ".env.development.local", ".env.production.local"];
 const TEXT_FILE_EXTENSIONS = new Set([
@@ -68,8 +68,8 @@ function walkTextFiles(dir: string, results: string[] = []): string[] {
 
 function testVersionMetadata(): void {
   assert(APP_VERSION === CURRENT_PUBLIC_VERSION, `APP_VERSION debe ser ${CURRENT_PUBLIC_VERSION}, pero es ${APP_VERSION}.`);
-  assert(APP_VERSION_NAME === "Luck Wheel Real Rewards", `APP_VERSION_NAME inesperado: ${APP_VERSION_NAME}.`);
-  assert(APP_STATUS.includes("Limpieza de hooks") && APP_STATUS.includes("lint:src"), "APP_STATUS debe mencionar la salud técnica y Node 24.");
+  assert(APP_VERSION_NAME === "Europa Qualification Foundation", `APP_VERSION_NAME inesperado: ${APP_VERSION_NAME}.`);
+  assert(APP_STATUS.includes("Europa Career") && APP_STATUS.includes("clasificación"), "APP_STATUS debe mencionar la base de Europa Career.");
   logOk("appVersion.ts apunta a la fase actual");
 }
 
@@ -152,12 +152,12 @@ function testDangerousGitCommandsAreNotRecommended(): void {
 function testDocsArePresent(): void {
   const changelog = readText("CHANGELOG.md");
   const readme = readText("README.md");
-  const phaseDocPath = "docs/v0_23_2c_LUCK_WHEEL_REAL_REWARDS.md";
+  const phaseDocPath = "docs/v0_24_0c_EUROPA_QUALIFICATION_FOUNDATION.md";
 
-  assert(changelog.startsWith("# Changelog\n\n## v0.23.2c"), "CHANGELOG debe empezar por v0.23.2c.");
-  assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), "README debe apuntar a v0.23.2c_LUCK_WHEEL_REAL_REWARDS.");
-  assert(existsSync(join(ROOT, phaseDocPath)), "Debe existir docs/v0_23_2c_LUCK_WHEEL_REAL_REWARDS.md.");
-  logOk("README, CHANGELOG y doc de fase apuntan a v0.23.2c");
+  assert(changelog.startsWith("# Changelog\n\n## v0.24.0c"), "CHANGELOG debe empezar por v0.24.0c.");
+  assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), "README debe apuntar a v0.24.0c_EUROPA_QUALIFICATION_FOUNDATION.");
+  assert(existsSync(join(ROOT, phaseDocPath)), "Debe existir docs/v0_24_0c_EUROPA_QUALIFICATION_FOUNDATION.md.");
+  logOk("README, CHANGELOG y doc de fase apuntan a v0.24.0c");
 }
 
 function testQaScriptsAreRegistered(): void {

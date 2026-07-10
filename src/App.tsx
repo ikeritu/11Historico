@@ -25,6 +25,13 @@ import {
   getInitialCareerSecondDivisionPool,
 } from "./simulation/leagueSimulator";
 import type { CareerLocalRankingEntry, CareerObjectiveResult, CareerPromotionTransition, CareerRewardFlow, CareerRewardSnapshot, CareerSeasonResult, CareerSupercopaQualification, CareerSupercopaResult, CareerTrophyCounts } from "./types/career";
+import type { EuropeanCareerState, EuropeanQualificationResult, EuropeanSeasonEntry } from "./europe/europeanTypes";
+import { resolveEuropeanQualification } from "./europe/europeanQualification";
+import {
+  appendEuropeanQualification,
+  createEmptyEuropeanCareerState,
+  normalizeEuropeanCareerState,
+} from "./europe/europeanCareerState";
 
 import { getPlayerIdentityKey, resolvePlayerSlotPlacement } from "./domain/positionRules";
 
@@ -406,6 +413,9 @@ export default function App() {
   const [coachBeforeReward, setCoachBeforeReward] = useState<SelectedCoach | undefined>();
   const [careerLocalRanking, setCareerLocalRanking] = useState<CareerLocalRankingEntry[]>(() => loadCareerLocalRanking());
   const [careerCurrentRankingEntry, setCareerCurrentRankingEntry] = useState<CareerLocalRankingEntry | undefined>(() => savedGame?.careerCurrentRankingEntry);
+  const [europeanCareerState, setEuropeanCareerState] = useState<EuropeanCareerState>(() =>
+    normalizeEuropeanCareerState(savedGame?.europeanCareer)
+  );
 
   const [gameId, setGameId] = useState<string>(() => savedGame?.gameId ?? createGameId());
   const [phase, setPhase] = useState<GamePhase>(() => savedGame?.phase ?? "formation_selection");
@@ -477,6 +487,7 @@ export default function App() {
       careerSeasonRatingBonus,
       careerRewardSnapshot,
       careerCurrentRankingEntry,
+      europeanCareer: europeanCareerState,
     });
   }, [
     gameId,
@@ -508,7 +519,18 @@ export default function App() {
     careerSeasonRatingBonus,
     careerRewardSnapshot,
     careerCurrentRankingEntry,
+    europeanCareerState,
   ]);
+
+  const careerEuropeanQualification = useMemo<EuropeanQualificationResult | undefined>(() => {
+    if (!careerSeasonResult) return undefined;
+
+    return resolveEuropeanQualification({
+      leaguePosition: careerSeasonResult.leaguePosition,
+      userWonCopa: careerSeasonResult.wonCopa,
+      seasonNumber: careerCompletedSeasons,
+    });
+  }, [careerSeasonResult, careerCompletedSeasons]);
 
   function recalculateVisibleTeamRating(params: {
     formation?: Formation;
@@ -561,6 +583,7 @@ export default function App() {
     setCareerSeasonRatingBonus(0);
     setCareerRewardSnapshot(undefined);
     setCareerCurrentRankingEntry(undefined);
+    setEuropeanCareerState(createEmptyEuropeanCareerState());
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
     setReplacementOriginalFormation(undefined);
@@ -596,6 +619,7 @@ export default function App() {
     setCareerSeasonRatingBonus(0);
     setCareerRewardSnapshot(undefined);
     setCareerCurrentRankingEntry(undefined);
+    setEuropeanCareerState(createEmptyEuropeanCareerState());
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
     setReplacementOriginalFormation(undefined);
@@ -839,6 +863,22 @@ export default function App() {
       setCareerSeasonResult(seasonResult);
       setCareerObjectiveResult(objectiveResult);
       setCareerBestLeaguePosition(nextBestLeaguePosition);
+
+      const europeanResult = resolveEuropeanQualification({
+        leaguePosition: seasonResult.leaguePosition,
+        userWonCopa: seasonResult.wonCopa,
+        seasonNumber: careerCompletedSeasons,
+      });
+      const europeanEntry: EuropeanSeasonEntry = {
+        seasonNumber: careerCompletedSeasons,
+        qualified: europeanResult.qualified,
+        competition: europeanResult.competition,
+        source: europeanResult.source,
+        explanation: europeanResult.explanation,
+        achievedFromLeaguePosition: seasonResult.leaguePosition,
+        achievedFromCopa: seasonResult.wonCopa,
+      };
+      setEuropeanCareerState((current) => appendEuropeanQualification(current, europeanEntry));
 
       if (objectiveResult.isGameOver) {
         const rankingEntry = buildCareerLocalRankingEntry({
@@ -1601,6 +1641,7 @@ export default function App() {
           teamRating={teamRating}
           completedSeasons={careerCompletedSeasons}
           trophyCounts={careerTrophyCounts}
+          europeanQualification={careerEuropeanQualification}
         />
       )}
 
@@ -1684,6 +1725,7 @@ export default function App() {
           onReturnToCareer={isCareerMode && careerSeasonResult && careerObjectiveResult ? () => setScreen(careerObjectiveResult.survives ? "career_season_result" : "career_game_over") : undefined}
           onShare={handleCopyShareText}
           careerTrophyCounts={displayedCareerTrophyCounts}
+          europeanQualification={isCareerMode ? careerEuropeanQualification : undefined}
         />
       )}
     </div>

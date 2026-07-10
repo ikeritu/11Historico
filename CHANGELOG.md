@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.24.0c — Europa Qualification Foundation
+
+- Añade la base de reglas puras de clasificación europea (`src/europe/europeanTypes.ts`, `europeanQualification.ts`): 1º-4º Champions League, 5º-6º Europa League, 7º Conference League, 8º o peor sin Europa.
+- La Copa del Rey garantiza como mínimo Europa League: mejora Conference/sin Europa hasta Europa League, pero no rebaja una plaza de Liga igual o mejor (Champions o Europa League).
+- Añade `EuropeanQualificationCard` (+ CSS) y la integra en `CareerSeasonOutcome` y `FinalSummary`, mostrando la clasificación europea de la próxima temporada sin insinuar que ya se ha jugado.
+- Añade persistencia del estado europeo dentro de la carrera (`europeanCareer` en `SavedGameState`): histórico por temporada, mejor competición alcanzada y total de clasificaciones, con normalización segura para partidas antiguas sin este campo.
+- El módulo nuevo es independiente del `EuropeanCompetition` heredado de `src/types/career.ts` / `getEuropeanQualification` en `careerRules.ts`, que sigue decidiendo la supervivencia de la carrera sin cambios. Ver `docs/v0_24_0c_EUROPA_QUALIFICATION_FOUNDATION.md` para la justificación.
+- Todavía NO incluye partidos europeos, calendario, eliminatorias, simulación de torneos europeos ni ranking europeo. No suma títulos europeos al palmarés en esta fase.
+- No cambia probabilidades, ratings históricos, balance de Liga/Copa/Supercopa ni funcionalidades existentes.
+- Añade `qa:european-qualification`, `qa:european-qualification-ui` y `qa:european-persistence`, integradas en `qa:tech-debt` y en el workflow de GitHub Pages antes del build.
+- Actualiza versionado a `v0.24.0c` / `0.24.0-c.0`.
+
+# Changelog
+
 ## v0.23.2c — Luck Wheel Real Rewards
 
 - Ejecuta de verdad los premios de ruleta de cambio de jugador y cambio de entrenador.

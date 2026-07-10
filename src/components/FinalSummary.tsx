@@ -12,9 +12,11 @@ import type {
   TeamRating,
 } from "../types/game";
 import type { CareerTrophyCounts } from "../types/career";
+import type { EuropeanQualificationResult } from "../europe/europeanTypes";
 
 import SelectedTeamBoard from "./SelectedTeamBoard";
 import PalmaresTrophyCase from "./PalmaresTrophyCase";
+import EuropeanQualificationCard from "./EuropeanQualificationCard";
 
 import {
   buildHistoryEntry,
@@ -34,6 +36,7 @@ interface FinalSummaryProps {
   selectedCoach: SelectedCoach;
   teamRating: TeamRating;
   careerTrophyCounts?: CareerTrophyCounts;
+  europeanQualification?: EuropeanQualificationResult;
   onRestart?: () => void;
   onReturnToCareer?: () => void;
   onShare?: (shareText: string) => void;
@@ -762,6 +765,7 @@ export function FinalSummary({
   selectedCoach,
   teamRating,
   careerTrophyCounts,
+  europeanQualification,
   onRestart,
   onReturnToCareer,
   onShare,
@@ -851,6 +855,16 @@ export function FinalSummary({
           <FinalAccordion title="Copa del Rey" eyebrow={getCupSummaryText(summary)} defaultOpen>
             <CupSummaryPanel summary={summary} />
           </FinalAccordion>
+
+          {europeanQualification && (
+            <FinalAccordion
+              title="Clasificación europea"
+              eyebrow={europeanQualification.qualified ? europeanQualification.shortLabel : "Sin billete europeo"}
+              defaultOpen
+            >
+              <EuropeanQualificationCard result={europeanQualification} />
+            </FinalAccordion>
+          )}
 
           <FinalAccordion title="Clasificación final completa" eyebrow="LaLiga 25/26" defaultOpen>
             <LeagueTableFinal table={summary.table} summary={summary} />
