@@ -13,10 +13,10 @@ type PackageLockJson = {
 };
 
 const ROOT = process.cwd();
-const CURRENT_PUBLIC_VERSION = "v0.24.0c";
-const CURRENT_PACKAGE_VERSION = "0.24.0-c.0";
-const CURRENT_RELEASE_TAG = "v0.24.0c_EUROPA_QUALIFICATION_FOUNDATION";
-const CURRENT_DOC = "docs/v0_24_0c_EUROPA_QUALIFICATION_FOUNDATION.md";
+const CURRENT_PUBLIC_VERSION = "v0.24.1c";
+const CURRENT_PACKAGE_VERSION = "0.24.1-c.0";
+const CURRENT_RELEASE_TAG = "v0.24.1c_EUROPEAN_TOURNAMENT_CALENDAR";
+const CURRENT_DOC = "docs/v0_24_1c_EUROPEAN_TOURNAMENT_CALENDAR.md";
 
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) {
@@ -41,7 +41,7 @@ function testVersionMetadata(): void {
   const packageLock = readJson<PackageLockJson>("package-lock.json");
 
   assert(APP_VERSION === CURRENT_PUBLIC_VERSION, `APP_VERSION debe ser ${CURRENT_PUBLIC_VERSION}, pero es ${APP_VERSION}.`);
-  assert(APP_VERSION_NAME === "Europa Qualification Foundation", `APP_VERSION_NAME inesperado: ${APP_VERSION_NAME}.`);
+  assert(APP_VERSION_NAME === "European Tournament Calendar", `APP_VERSION_NAME inesperado: ${APP_VERSION_NAME}.`);
   assert(APP_STATUS.includes("Europa Career") && APP_STATUS.includes("clasificación"), "APP_STATUS debe describir la base de Europa Career y su clasificación.");
   assert(packageJson.version === CURRENT_PACKAGE_VERSION, `package.json debe usar ${CURRENT_PACKAGE_VERSION}, pero usa ${packageJson.version}.`);
   assert(packageLock.version === packageJson.version, "package-lock.json version debe coincidir con package.json.");
@@ -71,7 +71,7 @@ function testLeagueSimulatorHookDeps(): void {
   assert(source.includes("const commitContext = useCallback"), "commitContext debe estar memoizado.");
   assert(source.includes("const maybeOfferSeasonLuckWheel = useCallback"), "maybeOfferSeasonLuckWheel debe estar memoizado.");
   assert(source.includes("const finishIfReady = useCallback"), "finishIfReady debe estar memoizado.");
-  assert(source.includes("commitContext, context, effectiveTeamRating, finishIfReady, isAutoSimulating, maybeOfferSeasonLuckWheel, selectedPlayers"), "El efecto de auto-simulación debe declarar dependencias reales.");
+  assert(source.includes("commitContext, context, effectiveTeamRating, finishIfReady, isAutoSimulating, maybeOfferSeasonLuckWheel, pendingEuropeanMatch, selectedPlayers"), "El efecto de auto-simulación debe declarar dependencias reales.");
   assert(!source.includes("setIsAutoSimulating(false);\n      return undefined;"), "El efecto de auto-simulación no debe hacer setState síncrono y salir.");
   logOk("LeagueSimulatorView declara dependencias reales y reduce closures obsoletos");
 }
@@ -97,8 +97,8 @@ function testDocs(): void {
   const readme = readText("README.md");
   const doc = readText(CURRENT_DOC);
 
-  assert(changelog.startsWith("# Changelog\n\n## v0.24.0c"), "CHANGELOG debe empezar por v0.24.0c.");
-  assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), "README debe apuntar a v0.23.2c_LUCK_WHEEL_REAL_REWARDS.");
+  assert(changelog.startsWith("# Changelog\n\n## v0.24.1c"), "CHANGELOG debe empezar por v0.24.1c.");
+  assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), "README debe apuntar a v0.24.1c_EUROPEAN_TOURNAMENT_CALENDAR.");
   assert(doc.includes("Europa") && doc.includes("clasificación"), "El documento de fase debe explicar la clasificación europea.");
   logOk("documentación de fase alineada");
 }

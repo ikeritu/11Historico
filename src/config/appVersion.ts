@@ -1,3 +1,3 @@
-export const APP_VERSION = "v0.24.0c";
-export const APP_VERSION_NAME = "Europa Qualification Foundation";
-export const APP_STATUS = "Base de Europa Career: reglas de clasificación, tarjeta de resumen y persistencia del estado europeo. Sin partidos europeos todavía; mantiene ruleta, palmarés, ranking y balance de Liga/Copa/Supercopa intactos.";
+export const APP_VERSION = "v0.24.1c";
+export const APP_VERSION_NAME = "European Tournament Calendar";
+export const APP_STATUS = "Europa Career: reglas de clasificación, tarjeta de resumen, persistencia y ahora torneo europeo jugable (fase inicial, semifinal y final) integrado en el calendario de Liga. Títulos europeos aún no se añaden al palmarés. Mantiene ruleta, palmarés, ranking y balance de Liga/Copa/Supercopa intactos.";

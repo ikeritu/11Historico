@@ -43,6 +43,12 @@ jobs:
         run: npm run qa:european-qualification-ui
       - name: Run european persistence QA
         run: npm run qa:european-persistence
+      - name: Run european tournament QA
+        run: npm run qa:european-tournament
+      - name: Run european match engine QA
+        run: npm run qa:european-match-engine
+      - name: Run european calendar QA
+        run: npm run qa:european-calendar
       - name: Run source lint
         run: npm run lint:src
       - name: Build

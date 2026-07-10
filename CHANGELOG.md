@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.24.1c — European Tournament Calendar
+
+- Añade el primer torneo europeo jugable con formato simplificado: fase inicial de 6 partidos, semifinal a partido único y final a partido único (`src/europe/europeanTournament.ts`). Clasificar a semifinales requiere 10 o más puntos en la fase inicial; con menos, el equipo queda eliminado. Perder la semifinal elimina; ganarla lleva a la final.
+- Añade rivales europeos genéricos por competición (Champions League 82-94, Europa League 76-88, Conference League 70-82 de rating) en `src/europe/europeanOpponents.ts`, elegidos de forma determinista por semilla, sin nombres ni escudos reales.
+- Añade `src/europe/europeanMatchEngine.ts`, que reutiliza el motor de partidos real (`src/simulation/matchEngine.ts`, sin modificarlo) para simular los partidos europeos; el rating de usuario y de rival, y la ventaja de local, influyen en el resultado igual que en Liga/Copa.
+- Añade `src/europe/europeanCalendar.ts` e integra los partidos europeos como eventos dentro del calendario de Liga (`LeagueSimulatorView`): jornadas fijas 4/8/12/16/20/24 (fase inicial), 30 (semifinal) y 36 (final) para una Liga de 38 jornadas, o el equivalente proporcional si el tamaño de Liga es distinto. La simulación automática y "saltar hasta el próximo evento" se detienen en la jornada europea, igual que ya hacían con la Copa del Rey.
+- Añade el componente `EuropeanMatchEvent` (+ CSS) con la tarjeta de evento "Noche europea": competición, fase, rival, condición de local/visitante, rating del rival, botón "Simular partido europeo", resultado y estado del torneo, y botón "Continuar temporada".
+- El torneo se crea solo si la última clasificación europea guardada indica `qualified: true`, al continuar a la temporada siguiente (`handleContinueCareerAfterSeason` en `App.tsx`), y se guarda en `europeanCareer.currentTournament`. No se duplica al continuar la carrera ni al recargar una partida guardada; `normalizeEuropeanCareerState` acepta partidas antiguas sin este campo.
+- Todavía NO suma títulos europeos al palmarés: ganar la final europea se registra solo internamente (`tournament.champion`), mostrando el texto "Campeón europeo pendiente de integración en palmarés" en vez de dar a entender que el título ya cuenta. Esa integración queda planificada para v0.24.3b.
+- No cambia probabilidades, ratings históricos, balance de Liga/Copa/Supercopa, la Ruleta de la Suerte ni funcionalidades existentes. Ver `docs/v0_24_1c_EUROPEAN_TOURNAMENT_CALENDAR.md` para el detalle del formato elegido y las decisiones de diseño.
+- Añade `qa:european-tournament`, `qa:european-match-engine` y `qa:european-calendar`, integradas en `qa:tech-debt` y en el workflow de GitHub Pages antes del build.
+- Actualiza versionado a `v0.24.1c` / `0.24.1-c.0`.
+
+# Changelog
+
 ## v0.24.0c — Europa Qualification Foundation
 
 - Añade la base de reglas puras de clasificación europea (`src/europe/europeanTypes.ts`, `europeanQualification.ts`): 1º-4º Champions League, 5º-6º Europa League, 7º Conference League, 8º o peor sin Europa.

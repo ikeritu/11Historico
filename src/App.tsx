@@ -25,13 +25,16 @@ import {
   getInitialCareerSecondDivisionPool,
 } from "./simulation/leagueSimulator";
 import type { CareerLocalRankingEntry, CareerObjectiveResult, CareerPromotionTransition, CareerRewardFlow, CareerRewardSnapshot, CareerSeasonResult, CareerSupercopaQualification, CareerSupercopaResult, CareerTrophyCounts } from "./types/career";
-import type { EuropeanCareerState, EuropeanQualificationResult, EuropeanSeasonEntry } from "./europe/europeanTypes";
+import type { EuropeanCareerState, EuropeanQualificationResult, EuropeanSeasonEntry, EuropeanTournamentState } from "./europe/europeanTypes";
 import { resolveEuropeanQualification } from "./europe/europeanQualification";
 import {
   appendEuropeanQualification,
   createEmptyEuropeanCareerState,
+  getLatestEuropeanQualification,
   normalizeEuropeanCareerState,
+  setEuropeanCurrentTournament,
 } from "./europe/europeanCareerState";
+import { createEuropeanTournamentForQualification } from "./europe/europeanTournament";
 
 import { getPlayerIdentityKey, resolvePlayerSlotPlacement } from "./domain/positionRules";
 
@@ -907,6 +910,21 @@ export default function App() {
     const nextCompletedSeasons = careerCompletedSeasons + 1;
     const nextSeasonLabel = getCareerSeasonLabelFromIndex(nextCompletedSeasons);
     const nextTrophyCounts = addCareerTrophiesFromSeason(careerTrophyCounts, careerSeasonResult);
+
+    const latestEuropeanQualification = getLatestEuropeanQualification(europeanCareerState);
+    const alreadyHasTournamentForNextSeason = europeanCareerState.currentTournament?.seasonNumber === nextCompletedSeasons;
+
+    if (latestEuropeanQualification?.qualified && !alreadyHasTournamentForNextSeason) {
+      const nextTournament = createEuropeanTournamentForQualification({
+        seasonNumber: nextCompletedSeasons,
+        qualification: latestEuropeanQualification,
+        seed: `${gameId}_${nextCompletedSeasons}`,
+      });
+
+      setEuropeanCareerState((current) => setEuropeanCurrentTournament(current, nextTournament));
+    } else if (!latestEuropeanQualification?.qualified) {
+      setEuropeanCareerState((current) => setEuropeanCurrentTournament(current, null));
+    }
     let nextCareerLeagueRivals = careerLeagueRivals;
     let nextCareerSecondDivisionPool = careerSecondDivisionPool;
     let nextCareerPromotionTransition: CareerPromotionTransition | undefined;
@@ -1623,6 +1641,10 @@ export default function App() {
           onSeasonLuckWheelPlayerChange={handleSeasonLuckWheelPlayerChange}
           onSeasonLuckWheelCoachChange={handleSeasonLuckWheelCoachChange}
           onFinishLeague={handleFinishLeague}
+          europeanTournament={isCareerMode ? europeanCareerState.currentTournament : undefined}
+          onEuropeanTournamentChange={(tournament: EuropeanTournamentState) =>
+            setEuropeanCareerState((current) => setEuropeanCurrentTournament(current, tournament))
+          }
         />
       )}
 

@@ -3,8 +3,8 @@ import { join, relative } from "node:path";
 import { APP_STATUS, APP_VERSION, APP_VERSION_NAME } from "../src/config/appVersion";
 
 const ROOT = process.cwd();
-const CURRENT_PUBLIC_VERSION = "v0.24.0c";
-const CURRENT_RELEASE_TAG = "v0.24.0c_EUROPA_QUALIFICATION_FOUNDATION";
+const CURRENT_PUBLIC_VERSION = "v0.24.1c";
+const CURRENT_RELEASE_TAG = "v0.24.1c_EUROPEAN_TOURNAMENT_CALENDAR";
 const REAL_APPS_SCRIPT_ID_PATTERN = /AKfycb[a-zA-Z0-9_-]{20,}/;
 const LOCAL_ENV_FILES = [".env", ".env.local", ".env.development.local", ".env.production.local"];
 const TEXT_FILE_EXTENSIONS = new Set([
@@ -68,7 +68,7 @@ function walkTextFiles(dir: string, results: string[] = []): string[] {
 
 function testVersionMetadata(): void {
   assert(APP_VERSION === CURRENT_PUBLIC_VERSION, `APP_VERSION debe ser ${CURRENT_PUBLIC_VERSION}, pero es ${APP_VERSION}.`);
-  assert(APP_VERSION_NAME === "Europa Qualification Foundation", `APP_VERSION_NAME inesperado: ${APP_VERSION_NAME}.`);
+  assert(APP_VERSION_NAME === "European Tournament Calendar", `APP_VERSION_NAME inesperado: ${APP_VERSION_NAME}.`);
   assert(APP_STATUS.includes("Europa Career") && APP_STATUS.includes("clasificación"), "APP_STATUS debe mencionar la base de Europa Career.");
   logOk("appVersion.ts apunta a la fase actual");
 }
@@ -152,12 +152,12 @@ function testDangerousGitCommandsAreNotRecommended(): void {
 function testDocsArePresent(): void {
   const changelog = readText("CHANGELOG.md");
   const readme = readText("README.md");
-  const phaseDocPath = "docs/v0_24_0c_EUROPA_QUALIFICATION_FOUNDATION.md";
+  const phaseDocPath = "docs/v0_24_1c_EUROPEAN_TOURNAMENT_CALENDAR.md";
 
-  assert(changelog.startsWith("# Changelog\n\n## v0.24.0c"), "CHANGELOG debe empezar por v0.24.0c.");
-  assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), "README debe apuntar a v0.24.0c_EUROPA_QUALIFICATION_FOUNDATION.");
-  assert(existsSync(join(ROOT, phaseDocPath)), "Debe existir docs/v0_24_0c_EUROPA_QUALIFICATION_FOUNDATION.md.");
-  logOk("README, CHANGELOG y doc de fase apuntan a v0.24.0c");
+  assert(changelog.startsWith("# Changelog\n\n## v0.24.1c"), "CHANGELOG debe empezar por v0.24.1c.");
+  assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), "README debe apuntar a v0.24.1c_EUROPEAN_TOURNAMENT_CALENDAR.");
+  assert(existsSync(join(ROOT, phaseDocPath)), "Debe existir docs/v0_24_1c_EUROPEAN_TOURNAMENT_CALENDAR.md.");
+  logOk("README, CHANGELOG y doc de fase apuntan a v0.24.1c");
 }
 
 function testQaScriptsAreRegistered(): void {

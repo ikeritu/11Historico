@@ -1,3 +1,15 @@
+### v0.24.1c — European Tournament Calendar
+
+- Añade el primer torneo europeo jugable: formato simplificado con fase inicial de 6 partidos, semifinal a partido único y final a partido único (`src/europe/europeanTournament.ts`).
+- Rivales genéricos por competición (Champions League, Europa League, Conference League) con rating coherente por competición (`src/europe/europeanOpponents.ts`), sin nombres ni escudos reales.
+- Reutiliza el motor de partidos existente (`src/simulation/matchEngine.ts`, sin modificarlo) para simular los partidos europeos (`src/europe/europeanMatchEngine.ts`); el rating de usuario y de rival, y la ventaja de local, influyen en el resultado igual que en Liga/Copa.
+- Integra los partidos europeos como eventos dentro del calendario de Liga (`src/europe/europeanCalendar.ts`, `LeagueSimulatorView`): se reparten en jornadas fijas (o proporcionales si la Liga tiene otro tamaño), detienen la simulación automática y "saltar hasta el próximo evento", y muestran una tarjeta de evento ("Noche europea") para simular el partido y ver el resultado y el estado del torneo.
+- El torneo se crea solo si la carrera está clasificada para Europa, persiste dentro de `europeanCareer.currentTournament`, y no se duplica al continuar la carrera ni al recargar una partida guardada. Las partidas antiguas sin este campo cargan sin romperse.
+- Todavía NO suma títulos europeos al palmarés: ganar la final se registra solo internamente, con el texto "Campeón europeo pendiente de integración en palmarés".
+- No cambia probabilidades, ratings históricos, balance de Liga/Copa/Supercopa ni funcionalidades existentes.
+- Añade `qa:european-tournament`, `qa:european-match-engine` y `qa:european-calendar`, integradas en `qa:tech-debt` y en GitHub Actions.
+- Actualiza versionado a `v0.24.1c` / `0.24.1-c.0`.
+
 ### v0.24.0c — Europa Qualification Foundation
 
 - Añade la base de reglas puras de clasificación europea (`src/europe/europeanQualification.ts`): 1º-4º Champions League, 5º-6º Europa League, 7º Conference League, y la Copa del Rey garantiza como mínimo Europa League.
@@ -131,7 +143,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.24.0c_EUROPA_QUALIFICATION_FOUNDATION`.
+Versión pública actual: `v0.24.1c_EUROPEAN_TOURNAMENT_CALENDAR`.
 
 Base jugable cerrada:
 

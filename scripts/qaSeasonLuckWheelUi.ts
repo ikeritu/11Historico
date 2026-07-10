@@ -154,7 +154,7 @@ function testQuickSimulationStopsAtLuckWheelTrigger(): void {
   const leagueView = read("src/components/LeagueSimulatorView.tsx");
 
   assert(leagueView.includes("simulateLeagueUntilNextEvent"), "La simulación rápida debe avanzar hasta el próximo evento de ruleta, no hasta final de temporada.");
-  assert(leagueView.includes("while (!nextContext.state.completed && !getPendingCupFixture(nextContext))"), "El salto rápido debe simular Liga partido a partido mientras no haya Copa pendiente.");
+  assert(leagueView.includes("!nextContext.state.completed &&") && leagueView.includes("!getPendingCupFixture(nextContext) &&") && leagueView.includes("!shouldPlayEuropeanMatchAtLeagueMatchday(europeanTournament, getLeagueMatchesPlayed(nextContext) + 1)"), "El salto rápido debe simular Liga partido a partido mientras no haya Copa ni evento europeo pendiente.");
   assert(leagueView.includes("previousContext = nextContext"), "Cada iteración rápida debe conservar el contexto previo para detectar cruces de trigger.");
   assert(leagueView.includes("wheelOffered = maybeOfferSeasonLuckWheel"), "El salto rápido debe evaluar la ruleta tras cada partido simulado.");
   assert(leagueView.includes("if (wheelOffered)"), "El salto rápido debe detenerse si aparece la ruleta.");

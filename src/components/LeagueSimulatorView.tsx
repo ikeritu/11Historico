@@ -39,6 +39,11 @@ import {
   type SeasonLuckWheelState,
 } from "../career/seasonLuckWheel";
 import SeasonLuckWheelModal from "./SeasonLuckWheelModal";
+import { shouldPlayEuropeanMatchAtLeagueMatchday } from "../europe/europeanCalendar";
+import { simulateEuropeanMatch } from "../europe/europeanMatchEngine";
+import { applyEuropeanMatchResult } from "../europe/europeanTournament";
+import type { EuropeanTournamentMatch, EuropeanTournamentState } from "../europe/europeanTypes";
+import EuropeanMatchEvent from "./EuropeanMatchEvent";
 
 import "./LeagueSimulatorView.css";
 
@@ -56,6 +61,8 @@ interface LeagueSimulatorViewProps {
   onSeasonLuckWheelPlayerChange?: (context: UserLeagueSimulationContext) => void;
   onSeasonLuckWheelCoachChange?: (context: UserLeagueSimulationContext) => void;
   onFinishLeague?: (summary: ReturnType<typeof createFinalLeagueSummary>) => void;
+  europeanTournament?: EuropeanTournamentState | null;
+  onEuropeanTournamentChange?: (tournament: EuropeanTournamentState) => void;
 }
 
 const AUTO_SIMULATION_DELAY_MS = 1300;
@@ -214,6 +221,8 @@ export function LeagueSimulatorView({
   onSeasonLuckWheelPlayerChange,
   onSeasonLuckWheelCoachChange,
   onFinishLeague,
+  europeanTournament,
+  onEuropeanTournamentChange,
 }: LeagueSimulatorViewProps) {
   const [context, setContext] = useState<UserLeagueSimulationContext>(
     () => normalizeLeagueContext(initialContext, selectedCoach, leagueRivals)
@@ -222,6 +231,7 @@ export function LeagueSimulatorView({
   const [lastResult, setLastResult] = useState<MatchResult | undefined>(undefined);
   const [isAutoSimulating, setIsAutoSimulating] = useState(false);
   const [pendingWheelOffer, setPendingWheelOffer] = useState<SeasonLuckWheelOffer | undefined>();
+  const [justPlayedEuropeanMatch, setJustPlayedEuropeanMatch] = useState<EuropeanTournamentMatch | undefined>();
 
   const teamRatingWithLuckWheel = useMemo(
     () => applySeasonLuckWheelRatingDelta(teamRating, context.seasonLuckWheel?.accepted ? context.seasonLuckWheel.ratingDelta ?? 0 : 0),
@@ -262,6 +272,9 @@ export function LeagueSimulatorView({
   const userPosition = userSummary.position;
   const leagueMatchesPlayed = userRow?.played ?? 0;
   const leagueProgressLabel = `Jornada ${Math.min(leagueMatchesPlayed + 1, 38)} / 38`;
+
+  const pendingEuropeanMatch = shouldPlayEuropeanMatchAtLeagueMatchday(europeanTournament, leagueMatchesPlayed + 1);
+  const europeanEventMatch = justPlayedEuropeanMatch ?? pendingEuropeanMatch;
 
   const commitContext = useCallback((nextContext: UserLeagueSimulationContext) => {
     const contextWithCoach = {
@@ -400,10 +413,32 @@ export function LeagueSimulatorView({
     return true;
   }, [difficulty, formation.name, gameId, onFinishLeague, selectedCoach.coachSeason.name]);
 
+  function handleSimulateEuropeanMatch() {
+    if (!europeanTournament || !pendingEuropeanMatch) return;
+
+    const outcome = simulateEuropeanMatch({
+      userTeamRating: effectiveTeamRating.overall,
+      opponentRating: pendingEuropeanMatch.opponent.rating,
+      isHome: pendingEuropeanMatch.isHome,
+      competition: pendingEuropeanMatch.competition,
+      seed: `${gameId}_${pendingEuropeanMatch.id}`,
+    });
+
+    const nextTournament = applyEuropeanMatchResult(europeanTournament, pendingEuropeanMatch.id, outcome);
+    onEuropeanTournamentChange?.(nextTournament);
+
+    const playedMatch = nextTournament.matches.find((match) => match.id === pendingEuropeanMatch.id);
+    setJustPlayedEuropeanMatch(playedMatch);
+  }
+
+  function handleContinueAfterEuropeanMatch() {
+    setJustPlayedEuropeanMatch(undefined);
+  }
+
   useEffect(() => {
     if (!isAutoSimulating) return undefined;
 
-    if (context.state.completed || getPendingCupFixture(context)) {
+    if (context.state.completed || getPendingCupFixture(context) || pendingEuropeanMatch) {
       const stopTimeoutId = window.setTimeout(() => {
         setIsAutoSimulating(false);
       }, 0);
@@ -441,7 +476,7 @@ export function LeagueSimulatorView({
     }, AUTO_SIMULATION_DELAY_MS);
 
     return () => window.clearTimeout(timeoutId);
-  }, [commitContext, context, effectiveTeamRating, finishIfReady, isAutoSimulating, maybeOfferSeasonLuckWheel, selectedPlayers]);
+  }, [commitContext, context, effectiveTeamRating, finishIfReady, isAutoSimulating, maybeOfferSeasonLuckWheel, pendingEuropeanMatch, selectedPlayers]);
 
   function simulateLeagueUntilNextEvent(params: {
     initialContext: UserLeagueSimulationContext;
@@ -450,7 +485,11 @@ export function LeagueSimulatorView({
     let lastResult: MatchResult | undefined;
     let wheelOffered = false;
 
-    while (!nextContext.state.completed && !getPendingCupFixture(nextContext)) {
+    while (
+      !nextContext.state.completed &&
+      !getPendingCupFixture(nextContext) &&
+      !shouldPlayEuropeanMatchAtLeagueMatchday(europeanTournament, getLeagueMatchesPlayed(nextContext) + 1)
+    ) {
       const previousContext = nextContext;
       const simulation = simulateNextUserLeagueMatch({
         context: nextContext,
@@ -577,7 +616,7 @@ export function LeagueSimulatorView({
   }
 
   function handleToggleAutoSimulation() {
-    if (context.state.completed || pendingCupFixture) return;
+    if (context.state.completed || pendingCupFixture || pendingEuropeanMatch) return;
     setIsAutoSimulating((current) => !current);
   }
 
@@ -613,7 +652,7 @@ export function LeagueSimulatorView({
         <main className="league-main-panel">
           <div className={`league-actions-card ${isAutoSimulating ? "league-actions-card-running" : ""}`}>
             <div>
-              <h2>{pendingCupFixture ? "Toca Copa del Rey" : context.state.completed ? "Liga terminada" : "Próximo paso"}</h2>
+              <h2>{pendingCupFixture ? "Toca Copa del Rey" : pendingEuropeanMatch ? "Noche europea" : context.state.completed ? "Liga terminada" : "Próximo paso"}</h2>
               <p>{isAutoSimulating ? `${leagueProgressLabel} · Simulación automática en marcha.` : diagnosis}</p>
             </div>
 
@@ -637,7 +676,7 @@ export function LeagueSimulatorView({
                   type="button"
                   className={isAutoSimulating ? "stop-league-button" : "secondary-league-button"}
                   onClick={handleToggleAutoSimulation}
-                  disabled={context.state.completed || Boolean(pendingWheelOffer)}
+                  disabled={context.state.completed || Boolean(pendingWheelOffer) || Boolean(pendingEuropeanMatch)}
                 >
                   {isAutoSimulating ? "Parar simulación" : "Simular"}
                 </button>
@@ -646,7 +685,7 @@ export function LeagueSimulatorView({
                   type="button"
                   className="tertiary-league-button"
                   onClick={handleSimulateFullSeason}
-                  disabled={context.state.completed || isAutoSimulating || Boolean(pendingWheelOffer)}
+                  disabled={context.state.completed || isAutoSimulating || Boolean(pendingWheelOffer) || Boolean(pendingEuropeanMatch)}
                 >
                   Saltar hasta próximo evento
                 </button>
@@ -662,6 +701,16 @@ export function LeagueSimulatorView({
                 Rival: {getCupRivalDisplayName(pendingCupFixture.rivalTeamId)} · Partido {pendingCupFixture.venue === "home" ? "en San Mamés" : "fuera de casa"}
               </p>
             </section>
+          )}
+
+          {europeanTournament && europeanEventMatch && (
+            <EuropeanMatchEvent
+              tournament={europeanTournament}
+              match={europeanEventMatch}
+              userTeamRating={effectiveTeamRating.overall}
+              onSimulate={handleSimulateEuropeanMatch}
+              onContinue={handleContinueAfterEuropeanMatch}
+            />
           )}
 
           {context.seasonLuckWheel?.used && (

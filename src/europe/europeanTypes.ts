@@ -1,11 +1,11 @@
 // src/europe/europeanTypes.ts
 //
-// Europa Career Foundation (v0.24.0a).
+// Europa Career Foundation (v0.24.0a) + European Tournament Skeleton (v0.24.1a).
 //
-// Tipos puros para la base de reglas de clasificación europea. Esta fase NO
-// incluye partidos europeos, calendario, eliminatorias ni ranking europeo:
-// solo determina a qué competición se clasificaría el Athletic al final de
-// temporada y deja ese dato preparado para fases futuras.
+// Tipos puros para la base de reglas de clasificación europea y, desde
+// v0.24.1a, para el esqueleto de torneo europeo jugable (fase inicial,
+// semifinal, final). No incluye todavía calendario UEFA completo de 36
+// equipos, eliminatorias ida/vuelta ni ranking europeo global.
 //
 // Importante: este módulo es independiente del tipo `EuropeanCompetition`
 // heredado de `src/types/career.ts` (usado por `getEuropeanQualification` en
@@ -45,9 +45,67 @@ export interface EuropeanSeasonEntry {
   achievedFromCopa?: boolean;
 }
 
+// ==========================
+// TORNEO EUROPEO (v0.24.1a)
+// ==========================
+
+export type EuropeanTournamentPhase =
+  | "not_started"
+  | "league_phase"
+  | "semifinal"
+  | "final"
+  | "completed"
+  | "eliminated";
+
+export type EuropeanMatchStatus = "scheduled" | "played";
+
+export type EuropeanMatchOutcome = "win" | "draw" | "loss";
+
+export interface EuropeanOpponent {
+  id: string;
+  name: string;
+  country: string;
+  rating: number;
+  tier: EuropeanCompetition;
+}
+
+export interface EuropeanTournamentMatch {
+  id: string;
+  seasonNumber: number;
+  competition: EuropeanCompetition;
+  matchday: number;
+  phase: EuropeanTournamentPhase;
+  opponent: EuropeanOpponent;
+  isHome: boolean;
+  status: EuropeanMatchStatus;
+  userGoals?: number;
+  opponentGoals?: number;
+  result?: EuropeanMatchOutcome;
+}
+
+export interface EuropeanTournamentState {
+  seasonNumber: number;
+  competition: EuropeanCompetition;
+  phase: EuropeanTournamentPhase;
+  matches: EuropeanTournamentMatch[];
+  leaguePhasePoints: number;
+  leaguePhasePlayed: number;
+  wins: number;
+  draws: number;
+  losses: number;
+  goalsFor: number;
+  goalsAgainst: number;
+  qualifiedForSemifinal: boolean;
+  eliminated: boolean;
+  completed: boolean;
+  champion: boolean;
+  currentMatchId?: string | null;
+}
+
 export interface EuropeanCareerState {
   currentQualification?: EuropeanSeasonEntry | null;
   history: EuropeanSeasonEntry[];
   bestCompetition?: EuropeanCompetition | null;
   totalQualifications: number;
+  currentTournament?: EuropeanTournamentState | null;
 }
