@@ -13,8 +13,8 @@ type PackageLockJson = {
 };
 
 const ROOT = process.cwd();
-const CURRENT_PUBLIC_VERSION = "v0.24.1c";
-const CURRENT_RELEASE_TAG = "v0.24.1c_EUROPEAN_TOURNAMENT_CALENDAR";
+const CURRENT_PUBLIC_VERSION = "v0.24.2a";
+const CURRENT_RELEASE_TAG = "v0.24.2a_EUROPEAN_TOURNAMENT_CALENDAR";
 
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) {
@@ -39,9 +39,9 @@ function testVersionMetadata(): void {
   const packageLock = readJson<PackageLockJson>("package-lock.json");
 
   assert(APP_VERSION === CURRENT_PUBLIC_VERSION, `APP_VERSION debe ser ${CURRENT_PUBLIC_VERSION}, pero es ${APP_VERSION}.`);
-  assert(APP_VERSION_NAME === "European Tournament Calendar", `APP_VERSION_NAME inesperado: ${APP_VERSION_NAME}.`);
+  assert(APP_VERSION_NAME === "European UI Matchday View", `APP_VERSION_NAME inesperado: ${APP_VERSION_NAME}.`);
   assert(APP_STATUS.includes("Europa Career") && APP_STATUS.includes("clasificación"), "APP_STATUS debe describir la base de Europa Career y su clasificación.");
-  assert(packageJson.version === "0.24.1-c.0", `package.json debe usar 0.24.1-c.0, pero usa ${packageJson.version}.`);
+  assert(packageJson.version === "0.24.2-a.0", `package.json debe usar 0.24.2-a.0, pero usa ${packageJson.version}.`);
   assert(packageLock.version === packageJson.version, "package-lock.json version debe coincidir con package.json.");
   assert(packageLock.packages?.[""]?.version === packageJson.version, "package-lock raíz debe coincidir con package.json.");
   logOk("versionado técnico alineado");
@@ -102,11 +102,11 @@ function testGitignore(): void {
 function testDocs(): void {
   const changelog = readText("CHANGELOG.md");
   const readme = readText("README.md");
-  const docPath = "docs/v0_24_1c_EUROPEAN_TOURNAMENT_CALENDAR.md";
+  const docPath = "docs/v0_24_2a_EUROPEAN_UI_MATCHDAY_VIEW.md";
 
-  assert(changelog.startsWith("# Changelog\n\n## v0.24.1c"), "CHANGELOG debe empezar por v0.24.1c.");
-  assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), "README debe apuntar a v0.24.1c_EUROPEAN_TOURNAMENT_CALENDAR.");
-  assert(existsSync(join(ROOT, docPath)), "Debe existir el documento de fase v0.24.1c.");
+  assert(changelog.startsWith("# Changelog\n\n## v0.24.2a"), "CHANGELOG debe empezar por v0.24.2a.");
+  assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), "README debe apuntar a v0.24.2a_EUROPEAN_TOURNAMENT_CALENDAR.");
+  assert(existsSync(join(ROOT, docPath)), "Debe existir el documento de fase v0.24.2a.");
   logOk("documentación de fase alineada");
 }
 
