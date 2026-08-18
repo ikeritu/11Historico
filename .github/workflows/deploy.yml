@@ -49,6 +49,8 @@ jobs:
         run: npm run qa:european-match-engine
       - name: Run european calendar QA
         run: npm run qa:european-calendar
+      - name: Run european matchday UI QA
+        run: npm run qa:european-matchday-ui
       - name: Run source lint
         run: npm run lint:src
       - name: Build

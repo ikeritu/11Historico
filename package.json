@@ -1,7 +1,7 @@
 {
   "name": "futbol11",
   "private": true,
-  "version": "0.24.1-c.0",
+  "version": "0.24.2-a.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -15,7 +15,7 @@
     "qa:formation-reward": "vite build --ssr scripts/qaFormationReward.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/qaFormationReward.js",
     "qa:career-ranking": "vite build --ssr scripts/qaCareerLocalRanking.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/qaCareerLocalRanking.js",
     "qa:version": "vite build --ssr scripts/qaVersionConsistency.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/qaVersionConsistency.js",
-    "qa:tech-debt": "npm run qa:version && npm run qa:tech-health-baseline && npm run qa:mobile-viewport && npm run qa:hooks-simulation-deps && npm run qa:release-stabilization && npm run qa:agentjacking && npm run qa:formation-reward && npm run qa:career-ranking && npm run qa:global-ranking && npm run qa:global-ranking-ui && npm run qa:team-power && npm run qa:season-luck-wheel && npm run qa:season-luck-wheel-ui && npm run qa:palmares-showcase && npm run qa:luck-wheel-real-rewards && npm run qa:european-qualification && npm run qa:european-qualification-ui && npm run qa:european-persistence && npm run qa:european-tournament && npm run qa:european-match-engine && npm run qa:european-calendar",
+    "qa:tech-debt": "npm run qa:version && npm run qa:tech-health-baseline && npm run qa:mobile-viewport && npm run qa:hooks-simulation-deps && npm run qa:release-stabilization && npm run qa:agentjacking && npm run qa:formation-reward && npm run qa:career-ranking && npm run qa:global-ranking && npm run qa:global-ranking-ui && npm run qa:team-power && npm run qa:season-luck-wheel && npm run qa:season-luck-wheel-ui && npm run qa:palmares-showcase && npm run qa:luck-wheel-real-rewards && npm run qa:european-qualification && npm run qa:european-qualification-ui && npm run qa:european-persistence && npm run qa:european-tournament && npm run qa:european-match-engine && npm run qa:european-calendar && npm run qa:european-matchday-ui",
     "qa:global-ranking": "vite build --ssr scripts/qaGlobalRankingFoundation.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/qaGlobalRankingFoundation.js",
     "qa:global-ranking-backend": "vite build --ssr scripts/qaGlobalRankingFoundation.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/qaGlobalRankingFoundation.js",
     "qa:team-power": "vite build --ssr scripts/qaTeamPower.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/qaTeamPower.js",
@@ -37,7 +37,8 @@
     "qa:european-persistence": "vite build --ssr scripts/qaEuropeanPersistence.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/qaEuropeanPersistence.js",
     "qa:european-tournament": "vite build --ssr scripts/qaEuropeanTournamentSkeleton.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/qaEuropeanTournamentSkeleton.js",
     "qa:european-match-engine": "vite build --ssr scripts/qaEuropeanMatchEngine.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/qaEuropeanMatchEngine.js",
-    "qa:european-calendar": "vite build --ssr scripts/qaEuropeanCalendarIntegration.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/qaEuropeanCalendarIntegration.js"
+    "qa:european-calendar": "vite build --ssr scripts/qaEuropeanCalendarIntegration.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/qaEuropeanCalendarIntegration.js",
+    "qa:european-matchday-ui": "vite build --ssr scripts/qaEuropeanMatchdayUi.ts --outDir .audit-dist --emptyOutDir false && node .audit-dist/qaEuropeanMatchdayUi.js"
   },
   "dependencies": {
     "react": "^19.2.6",

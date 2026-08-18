@@ -21,8 +21,8 @@ const modal = read("src/components/SeasonLuckWheelModal.tsx");
 const packageJson = JSON.parse(read("package.json")) as { scripts?: Record<string, string>; version?: string };
 const version = read("src/config/appVersion.ts");
 
-assertIncludes(version, 'APP_VERSION = "v0.24.1c"', "versionado app");
-assertIncludes(packageJson.version ?? "", "0.24.1-c.0", "versionado package");
+assertIncludes(version, 'APP_VERSION = "v0.24.2a"', "versionado app");
+assertIncludes(packageJson.version ?? "", "0.24.2-a.0", "versionado package");
 assertIncludes(packageJson.scripts?.["qa:tech-debt"] ?? "", "qa:luck-wheel-real-rewards", "qa integrada en tech-debt");
 
 assertIncludes(careerTypes, '"luck_wheel_player"', "tipo CareerRewardFlow jugador ruleta");

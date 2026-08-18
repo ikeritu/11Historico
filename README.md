@@ -143,7 +143,7 @@ Juego web en React + TypeScript para construir un once histórico del Athletic C
 
 ## Estado actual
 
-Versión pública actual: `v0.24.1c_EUROPEAN_TOURNAMENT_CALENDAR`.
+Versión pública actual: `v0.24.2a_EUROPEAN_UI_MATCHDAY_VIEW`.
 
 Base jugable cerrada:
 

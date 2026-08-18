@@ -60,7 +60,7 @@ function testPackageLockMatchesPackageJson(): void {
 }
 
 function testAppVersionMetadata(): void {
-  assert(APP_VERSION === "v0.24.1c", `APP_VERSION debe ser v0.24.1c, pero es ${APP_VERSION}`);
+  assert(APP_VERSION === "v0.24.2a", `APP_VERSION debe ser v0.24.2a, pero es ${APP_VERSION}`);
   assert(APP_VERSION_NAME.trim().length > 0, "APP_VERSION_NAME no puede estar vacío.");
   assert(APP_STATUS.trim().length > 0, "APP_STATUS no puede estar vacío.");
   assertNoMojibake("APP_VERSION_NAME", APP_VERSION_NAME);
@@ -71,12 +71,12 @@ function testAppVersionMetadata(): void {
 function testDocsMentionCurrentVersion(): void {
   const changelog = readFileSync(join(ROOT, "CHANGELOG.md"), "utf8");
   const readme = readFileSync(join(ROOT, "README.md"), "utf8");
-  const releaseDocPath = join(ROOT, "docs", "v0_24_1c_EUROPEAN_TOURNAMENT_CALENDAR.md");
+  const releaseDocPath = join(ROOT, "docs", "v0_24_2a_EUROPEAN_UI_MATCHDAY_VIEW.md");
 
-  assert(changelog.startsWith("# Changelog\n\n## v0.24.1c"), "CHANGELOG debe empezar por v0.24.1c.");
-  assert(readme.includes("Versión pública actual: `v0.24.1c_EUROPEAN_TOURNAMENT_CALENDAR`."), "README debe apuntar a v0.24.1c_EUROPEAN_TOURNAMENT_CALENDAR.");
-  assert(existsSync(releaseDocPath), "Debe existir docs/v0_24_1c_EUROPEAN_TOURNAMENT_CALENDAR.md.");
-  logOk("README, CHANGELOG y doc de fase apuntan a v0.24.1c");
+  assert(changelog.startsWith("# Changelog\n\n## v0.24.2a"), "CHANGELOG debe empezar por v0.24.2a.");
+  assert(readme.includes("Versión pública actual: `v0.24.2a_EUROPEAN_UI_MATCHDAY_VIEW`."), "README debe apuntar a v0.24.2a_EUROPEAN_UI_MATCHDAY_VIEW.");
+  assert(existsSync(releaseDocPath), "Debe existir docs/v0_24_2a_EUROPEAN_UI_MATCHDAY_VIEW.md.");
+  logOk("README, CHANGELOG y doc de fase apuntan a v0.24.2a");
 }
 
 function testQaScriptsAreRegistered(): void {

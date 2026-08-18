@@ -1,13 +1,12 @@
 // src/components/EuropeanMatchEvent.tsx
 //
-// European Calendar Integration (v0.24.1c). Tarjeta básica (no premium) que
-// muestra el partido europeo pendiente o recién jugado dentro de la
-// simulación de temporada. No implica que el título europeo ya se haya
-// sumado al palmarés.
+// European UI Matchday View (v0.24.2a). Tarjeta visual de evento
+// europeo: competición, fase, rival, rating, progreso, resultado y copy
+// narrativo. No suma títulos europeos al palmarés todavía.
 
 import { getEuropeanCompetitionLabel } from "../europe/europeanQualification";
 import { getEuropeanTournamentPhaseLabel, getEuropeanTournamentSummary } from "../europe/europeanTournament";
-import type { EuropeanTournamentMatch, EuropeanTournamentState } from "../europe/europeanTypes";
+import type { EuropeanCompetition, EuropeanTournamentMatch, EuropeanTournamentState } from "../europe/europeanTypes";
 
 import "./EuropeanMatchEvent.css";
 
@@ -31,6 +30,35 @@ function getResultClass(match: EuropeanTournamentMatch): string {
   return "european-match-result european-match-result-loss";
 }
 
+function getCompetitionClass(competition: EuropeanCompetition): string {
+  if (competition === "champions_league") return "european-match-event-card european-match-event-card-champions";
+  if (competition === "europa_league") return "european-match-event-card european-match-event-card-europa";
+  return "european-match-event-card european-match-event-card-conference";
+}
+
+function getCompetitionBadge(competition: EuropeanCompetition): string {
+  if (competition === "champions_league") return "CHAMPIONS";
+  if (competition === "europa_league") return "EUROPA";
+  return "CONFERENCE";
+}
+
+function getPhaseNarrative(tournament: EuropeanTournamentState, match: EuropeanTournamentMatch): string {
+  if (tournament.completed && tournament.champion) {
+    return "El Athletic ha conquistado Europa; el título queda pendiente de integrarse en el palmarés histórico.";
+  }
+  if (tournament.eliminated) return "El sueño europeo termina aquí, pero la temporada nacional continúa.";
+  if (match.phase === "final") return "Final europea: una noche para entrar en la historia.";
+  if (match.phase === "semifinal") return "Semifinal europea: el Athletic sigue vivo y tiene la final a un paso.";
+  if (match.isHome) return "Noche grande en San Mamés: Europa vuelve a Bilbao.";
+  return "Salida europea exigente: toca competir lejos de San Mamés.";
+}
+
+function getProgressPercent(tournament: EuropeanTournamentState): number {
+  const played = tournament.matches.filter((candidate) => candidate.status === "played").length;
+  const total = Math.max(tournament.matches.length, 1);
+  return Math.min(100, Math.round((played / total) * 100));
+}
+
 export function EuropeanMatchEvent({
   tournament,
   match,
@@ -43,28 +71,35 @@ export function EuropeanMatchEvent({
   const homeAwayText = match.isHome
     ? "El Athletic jugará como local"
     : "El Athletic jugará como visitante";
+  const progressPercent = getProgressPercent(tournament);
+  const phaseLabel = getEuropeanTournamentPhaseLabel(match.phase);
 
   return (
-    <section className="european-match-event-card" aria-label="Evento europeo">
-      <p className="european-match-event-eyebrow">Noche europea</p>
-      <h2>{getEuropeanCompetitionLabel(match.competition)}</h2>
-      <p className="european-match-event-phase">{getEuropeanTournamentPhaseLabel(match.phase)}</p>
+    <section className={getCompetitionClass(match.competition)} aria-label="Evento europeo">
+      <div className="european-match-event-hero">
+        <div>
+          <p className="european-match-event-eyebrow">Noche europea</p>
+          <h2>{getEuropeanCompetitionLabel(match.competition)}</h2>
+          <p className="european-match-event-phase">
+            {phaseLabel} · Jornada europea {match.matchday}
+          </p>
+        </div>
+        <span className="european-match-event-badge">{getCompetitionBadge(match.competition)}</span>
+      </div>
 
-      <div className="european-match-event-grid">
-        <article>
-          <span>Rival</span>
-          <strong>{match.opponent.name}</strong>
-          <small>{match.opponent.country}</small>
+      <p className="european-match-event-narrative">{getPhaseNarrative(tournament, match)}</p>
+
+      <div className="european-match-event-scoreboard" aria-label="Previa europea">
+        <article className="european-match-event-team european-match-event-team-user">
+          <span>Athletic Club</span>
+          <strong>{Math.round(userTeamRating)}</strong>
+          <small>{match.isHome ? "Local · San Mamés" : "Visitante"}</small>
         </article>
-        <article>
-          <span>Rating rival</span>
+        <div className="european-match-event-versus">VS</div>
+        <article className="european-match-event-team european-match-event-team-rival">
+          <span>{match.opponent.name}</span>
           <strong>{match.opponent.rating}</strong>
-          <small>Tu rating: {Math.round(userTeamRating)}</small>
-        </article>
-        <article>
-          <span>Sede</span>
-          <strong>{match.isHome ? "San Mamés" : "Fuera de casa"}</strong>
-          <small>{homeAwayText}</small>
+          <small>{match.opponent.country}</small>
         </article>
       </div>
 
@@ -83,12 +118,36 @@ export function EuropeanMatchEvent({
       )}
 
       <div className="european-match-event-summary">
-        <span>Resumen de torneo</span>
+        <div className="european-match-event-summary-header">
+          <span>Progreso europeo</span>
+          <strong>{summary.statusText}</strong>
+        </div>
+        <div className="european-match-event-progress" aria-hidden="true">
+          <div style={{ width: `${progressPercent}%` }} />
+        </div>
         <p>
           {summary.phaseLabel} · {summary.matchesPlayed}/{summary.totalMatches} jugados · {summary.points} pts ·{" "}
-          {summary.wins}V {summary.draws}E {summary.losses}D
+          {summary.wins}V {summary.draws}E {summary.losses}D · GF {summary.goalsFor} / GC {summary.goalsAgainst}
         </p>
         <p className="european-match-event-status">{summary.statusText}</p>
+      </div>
+
+      <div className="european-match-event-grid">
+        <article>
+          <span>Rival</span>
+          <strong>{match.opponent.name}</strong>
+          <small>{match.opponent.country}</small>
+        </article>
+        <article>
+          <span>Rating rival</span>
+          <strong>{match.opponent.rating}</strong>
+          <small>Tu rating: {Math.round(userTeamRating)}</small>
+        </article>
+        <article>
+          <span>Sede</span>
+          <strong>{match.isHome ? "San Mamés" : "Fuera de casa"}</strong>
+          <small>{homeAwayText}</small>
+        </article>
       </div>
 
       <div className="european-match-event-actions">

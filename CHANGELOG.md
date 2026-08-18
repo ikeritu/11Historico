@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.24.2a — European UI Matchday View
+
+- Mejora visualmente la tarjeta de evento europeo "Noche europea".
+- Añade badge por competición: Champions League, Europa League y Conference League.
+- Añade narrativa contextual para partido local, visitante, semifinal, final, eliminación y campeón pendiente de palmarés.
+- Mejora la presentación del rival, país, rating, sede y marcador previo.
+- Añade progreso visual del torneo europeo con partidos jugados, puntos, V/E/D y goles a favor/en contra.
+- Refuerza el responsive móvil de la tarjeta europea.
+- Añade `qa:european-matchday-ui` e integra la QA en `qa:tech-debt` y GitHub Actions.
+- No suma títulos europeos al palmarés todavía. Esa integración queda para v0.24.3b.
+- No cambia ratings históricos, Ruleta de la Suerte, ranking global ni balance de Liga/Copa/Supercopa.
+- Actualiza versionado a `v0.24.2a` / `0.24.2-a.0`.
+
 ## v0.24.1c — European Tournament Calendar
 
 - Añade el primer torneo europeo jugable con formato simplificado: fase inicial de 6 partidos, semifinal a partido único y final a partido único (`src/europe/europeanTournament.ts`). Clasificar a semifinales requiere 10 o más puntos en la fase inicial; con menos, el equipo queda eliminado. Perder la semifinal elimina; ganarla lleva a la final.
