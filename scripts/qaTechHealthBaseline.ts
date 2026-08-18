@@ -14,7 +14,7 @@ type PackageLockJson = {
 
 const ROOT = process.cwd();
 const CURRENT_PUBLIC_VERSION = "v0.24.2a";
-const CURRENT_RELEASE_TAG = "v0.24.2a_EUROPEAN_TOURNAMENT_CALENDAR";
+const CURRENT_RELEASE_TAG = "v0.24.2a_EUROPEAN_UI_MATCHDAY_VIEW";
 
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) {
@@ -105,7 +105,7 @@ function testDocs(): void {
   const docPath = "docs/v0_24_2a_EUROPEAN_UI_MATCHDAY_VIEW.md";
 
   assert(changelog.startsWith("# Changelog\n\n## v0.24.2a"), "CHANGELOG debe empezar por v0.24.2a.");
-  assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), "README debe apuntar a v0.24.2a_EUROPEAN_TOURNAMENT_CALENDAR.");
+  assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), "README debe apuntar a v0.24.2a_EUROPEAN_UI_MATCHDAY_VIEW.");
   assert(existsSync(join(ROOT, docPath)), "Debe existir el documento de fase v0.24.2a.");
   logOk("documentación de fase alineada");
 }
