@@ -1,12 +1,14 @@
 // src/components/EuropeanMatchEvent.tsx
 //
-// European UI Matchday View (v0.24.2a). Tarjeta visual de evento
-// europeo: competición, fase, rival, rating, progreso, resultado y copy
-// narrativo. No suma títulos europeos al palmarés todavía.
+// European UI Matchday View (v0.24.2a) + European Progress UI (v0.24.2b).
+// Tarjeta visual de evento europeo: competición, fase, rival, rating,
+// progreso, resultado, calendario europeo y copy narrativo. No suma títulos
+// europeos al palmarés todavía.
 
 import { getEuropeanCompetitionLabel } from "../europe/europeanQualification";
 import { getEuropeanTournamentPhaseLabel, getEuropeanTournamentSummary } from "../europe/europeanTournament";
 import type { EuropeanCompetition, EuropeanTournamentMatch, EuropeanTournamentState } from "../europe/europeanTypes";
+import EuropeanProgressPanel from "./EuropeanProgressPanel";
 
 import "./EuropeanMatchEvent.css";
 
@@ -131,6 +133,8 @@ export function EuropeanMatchEvent({
         </p>
         <p className="european-match-event-status">{summary.statusText}</p>
       </div>
+
+      <EuropeanProgressPanel tournament={tournament} currentMatchId={match.id} />
 
       <div className="european-match-event-grid">
         <article>
