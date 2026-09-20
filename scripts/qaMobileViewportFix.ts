@@ -15,7 +15,7 @@ type PackageLockJson = {
 const ROOT = process.cwd();
 const CURRENT_PUBLIC_VERSION = "v0.24.2a";
 const CURRENT_PACKAGE_VERSION = "0.24.2-a.0";
-const CURRENT_RELEASE_TAG = "v0.24.2a_EUROPEAN_TOURNAMENT_CALENDAR";
+const CURRENT_RELEASE_TAG = "v0.24.2a_EUROPEAN_UI_MATCHDAY_VIEW";
 const CURRENT_DOC = "docs/v0_24_2a_EUROPEAN_UI_MATCHDAY_VIEW.md";
 
 function assert(condition: unknown, message: string): asserts condition {
@@ -124,7 +124,7 @@ function testDocs(): void {
   const readme = readText("README.md");
 
   assert(changelog.startsWith("# Changelog\n\n## v0.24.2a"), "CHANGELOG debe empezar por v0.24.2a.");
-  assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), "README debe apuntar a v0.24.2a_EUROPEAN_TOURNAMENT_CALENDAR.");
+  assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), "README debe apuntar a v0.24.2a_EUROPEAN_UI_MATCHDAY_VIEW.");
   assert(existsSync(join(ROOT, CURRENT_DOC)), "Debe existir docs/v0_24_2a_EUROPEAN_UI_MATCHDAY_VIEW.md.");
   logOk("documentación de viewport móvil alineada");
 }

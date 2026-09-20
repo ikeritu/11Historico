@@ -3,6 +3,8 @@ name: Deploy Futbol11 to GitHub Pages
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -51,6 +53,8 @@ jobs:
         run: npm run qa:european-calendar
       - name: Run european matchday UI QA
         run: npm run qa:european-matchday-ui
+      - name: Run european progress UI QA
+        run: npm run qa:european-progress-ui
       - name: Run source lint
         run: npm run lint:src
       - name: Build
@@ -61,6 +65,7 @@ jobs:
           path: dist
 
   deploy:
+    if: github.event_name != 'pull_request'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
