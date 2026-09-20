@@ -99,7 +99,10 @@ function testDocs(): void {
 
   assert(changelog.startsWith("# Changelog\n\n## v0.24.2a"), "CHANGELOG debe empezar por v0.24.2a.");
   assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), "README debe apuntar a v0.24.2a_EUROPEAN_UI_MATCHDAY_VIEW.");
-  assert(doc.includes("Europa") && doc.includes("clasificación"), "El documento de fase debe explicar la clasificación europea.");
+  assert(
+    doc.includes("Europa") && doc.includes("Noche europea") && doc.includes("EuropeanMatchEvent"),
+    "El documento de fase debe explicar la UI de jornada europea."
+  );
   logOk("documentación de fase alineada");
 }
 
