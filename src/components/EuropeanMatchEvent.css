@@ -43,6 +43,30 @@
     linear-gradient(145deg, rgba(10, 42, 32, 0.96), rgba(6, 18, 16, 0.98));
 }
 
+.european-match-event-card-knockout {
+  border-width: 2px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.34), 0 0 36px rgba(255, 224, 138, 0.08);
+}
+
+.european-match-event-card-semifinal {
+  background: radial-gradient(circle at top right, rgba(255, 224, 138, 0.18), transparent 42%),
+    radial-gradient(circle at top left, rgba(120, 170, 255, 0.22), transparent 54%),
+    linear-gradient(145deg, rgba(20, 28, 54, 0.98), rgba(8, 14, 28, 0.98));
+}
+
+.european-match-event-card-final,
+.european-match-event-card-champion {
+  border-color: rgba(255, 224, 138, 0.72);
+  background: radial-gradient(circle at top right, rgba(255, 224, 138, 0.28), transparent 42%),
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.1), transparent 46%),
+    linear-gradient(145deg, rgba(58, 37, 8, 0.98), rgba(11, 13, 28, 0.98));
+}
+
+.european-match-event-card-eliminated {
+  border-color: rgba(255, 120, 120, 0.45);
+  filter: saturate(0.9);
+}
+
 .european-match-event-hero {
   display: flex;
   align-items: flex-start;
@@ -89,6 +113,48 @@
   background: rgba(255, 255, 255, 0.08);
   color: rgba(255, 255, 255, 0.86);
   line-height: 1.45;
+}
+
+.european-match-event-knockout {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(255, 224, 138, 0.16), rgba(255, 255, 255, 0.06));
+  border: 1px solid rgba(255, 224, 138, 0.28);
+}
+
+.european-match-event-knockout span {
+  color: #ffe08a;
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.european-match-event-knockout strong {
+  color: #ffffff;
+  font-size: 1.1rem;
+}
+
+.european-match-event-knockout p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.45;
+}
+
+.european-match-event-knockout-outcomes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.european-match-event-knockout-outcomes small {
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.18);
+  color: rgba(255, 255, 255, 0.78);
 }
 
 .european-match-event-scoreboard {
@@ -300,7 +366,8 @@
     font-size: 1.2rem;
   }
 
-  .european-match-event-scoreboard {
+  .european-match-event-scoreboard,
+  .european-match-event-knockout-outcomes {
     grid-template-columns: 1fr;
   }
 

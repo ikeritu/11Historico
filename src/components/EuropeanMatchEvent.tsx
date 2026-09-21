@@ -1,12 +1,17 @@
 // src/components/EuropeanMatchEvent.tsx
 //
-// European UI Matchday View (v0.24.2a) + European Progress UI (v0.24.2b).
+// European UI Matchday View (v0.24.2a) + European Progress UI (v0.24.2b)
+// + European Knockouts (v0.24.3a).
 // Tarjeta visual de evento europeo: competición, fase, rival, rating,
 // progreso, resultado, calendario europeo y copy narrativo. No suma títulos
 // europeos al palmarés todavía.
 
 import { getEuropeanCompetitionLabel } from "../europe/europeanQualification";
-import { getEuropeanTournamentPhaseLabel, getEuropeanTournamentSummary } from "../europe/europeanTournament";
+import {
+  getEuropeanTournamentPhaseLabel,
+  getEuropeanTournamentSummary,
+  isEuropeanKnockoutPhase,
+} from "../europe/europeanTournament";
 import type { EuropeanCompetition, EuropeanTournamentMatch, EuropeanTournamentState } from "../europe/europeanTypes";
 import EuropeanProgressPanel from "./EuropeanProgressPanel";
 
@@ -38,6 +43,18 @@ function getCompetitionClass(competition: EuropeanCompetition): string {
   return "european-match-event-card european-match-event-card-conference";
 }
 
+function getEventClass(tournament: EuropeanTournamentState, match: EuropeanTournamentMatch): string {
+  const classes = [getCompetitionClass(match.competition)];
+
+  if (isEuropeanKnockoutPhase(match.phase)) classes.push("european-match-event-card-knockout");
+  if (match.phase === "semifinal") classes.push("european-match-event-card-semifinal");
+  if (match.phase === "final") classes.push("european-match-event-card-final");
+  if (tournament.eliminated) classes.push("european-match-event-card-eliminated");
+  if (tournament.completed && tournament.champion) classes.push("european-match-event-card-champion");
+
+  return classes.join(" ");
+}
+
 function getCompetitionBadge(competition: EuropeanCompetition): string {
   if (competition === "champions_league") return "CHAMPIONS";
   if (competition === "europa_league") return "EUROPA";
@@ -48,9 +65,12 @@ function getPhaseNarrative(tournament: EuropeanTournamentState, match: EuropeanT
   if (tournament.completed && tournament.champion) {
     return "El Athletic ha conquistado Europa; el título queda pendiente de integrarse en el palmarés histórico.";
   }
+  if (tournament.completed && !tournament.champion) {
+    return "El Athletic ha sido finalista europeo; el resultado queda registrado sin tocar todavía el palmarés.";
+  }
   if (tournament.eliminated) return "El sueño europeo termina aquí, pero la temporada nacional continúa.";
-  if (match.phase === "final") return "Final europea: una noche para entrar en la historia.";
-  if (match.phase === "semifinal") return "Semifinal europea: el Athletic sigue vivo y tiene la final a un paso.";
+  if (match.phase === "final") return "Final europea a partido único: ganar significa ser campeón pendiente de palmarés; perder deja al Athletic como finalista.";
+  if (match.phase === "semifinal") return "Semifinal europea a partido único: ganar abre la final; perder cierra la aventura europea.";
   if (match.isHome) return "Noche grande en San Mamés: Europa vuelve a Bilbao.";
   return "Salida europea exigente: toca competir lejos de San Mamés.";
 }
@@ -59,6 +79,18 @@ function getProgressPercent(tournament: EuropeanTournamentState): number {
   const played = tournament.matches.filter((candidate) => candidate.status === "played").length;
   const total = Math.max(tournament.matches.length, 1);
   return Math.min(100, Math.round((played / total) * 100));
+}
+
+function getKnockoutWinText(match: EuropeanTournamentMatch): string {
+  if (match.phase === "semifinal") return "Victoria: Athletic a la final europea";
+  if (match.phase === "final") return "Victoria: campeón europeo pendiente de palmarés";
+  return "Victoria: suma puntos en fase inicial";
+}
+
+function getKnockoutLossText(match: EuropeanTournamentMatch): string {
+  if (match.phase === "semifinal") return "Derrota: eliminación europea";
+  if (match.phase === "final") return "Derrota: finalista europeo";
+  return "Derrota: sin puntos en fase inicial";
 }
 
 export function EuropeanMatchEvent({
@@ -70,6 +102,7 @@ export function EuropeanMatchEvent({
 }: EuropeanMatchEventProps) {
   const summary = getEuropeanTournamentSummary(tournament);
   const isPlayed = match.status === "played";
+  const isKnockoutMatch = match.phase === "semifinal" || match.phase === "final";
   const homeAwayText = match.isHome
     ? "El Athletic jugará como local"
     : "El Athletic jugará como visitante";
@@ -77,7 +110,7 @@ export function EuropeanMatchEvent({
   const phaseLabel = getEuropeanTournamentPhaseLabel(match.phase);
 
   return (
-    <section className={getCompetitionClass(match.competition)} aria-label="Evento europeo">
+    <section className={getEventClass(tournament, match)} aria-label="Evento europeo">
       <div className="european-match-event-hero">
         <div>
           <p className="european-match-event-eyebrow">Noche europea</p>
@@ -90,6 +123,18 @@ export function EuropeanMatchEvent({
       </div>
 
       <p className="european-match-event-narrative">{getPhaseNarrative(tournament, match)}</p>
+
+      {isKnockoutMatch && (
+        <div className="european-match-event-knockout" aria-label="Contexto de eliminatoria europea">
+          <span>Partido único</span>
+          <strong>{summary.knockoutStageText}</strong>
+          <p>{summary.stakesText}</p>
+          <div className="european-match-event-knockout-outcomes">
+            <small>{getKnockoutWinText(match)}</small>
+            <small>{getKnockoutLossText(match)}</small>
+          </div>
+        </div>
+      )}
 
       <div className="european-match-event-scoreboard" aria-label="Previa europea">
         <article className="european-match-event-team european-match-event-team-user">

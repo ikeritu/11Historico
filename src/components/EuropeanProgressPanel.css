@@ -102,6 +102,37 @@
   line-height: 1.4;
 }
 
+.european-progress-knockout-state {
+  padding: 12px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(255, 224, 138, 0.14), rgba(120, 190, 255, 0.08));
+  border: 1px solid rgba(255, 224, 138, 0.24);
+}
+
+.european-progress-knockout-state span,
+.european-progress-knockout-state strong,
+.european-progress-knockout-state small {
+  display: block;
+}
+
+.european-progress-knockout-state span {
+  color: #ffe08a;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.european-progress-knockout-state strong {
+  margin: 4px 0 2px;
+  color: #ffffff;
+}
+
+.european-progress-knockout-state small {
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.35;
+}
+
 .european-progress-next-match {
   padding: 12px;
   border-radius: 16px;
@@ -153,6 +184,15 @@
 .european-progress-match-current {
   border-color: rgba(255, 224, 138, 0.44);
   background: rgba(255, 224, 138, 0.1);
+}
+
+.european-progress-match-semifinal,
+.european-progress-match-final {
+  border-color: rgba(255, 224, 138, 0.24);
+}
+
+.european-progress-match-final {
+  background: rgba(255, 224, 138, 0.08);
 }
 
 .european-progress-match-played {
