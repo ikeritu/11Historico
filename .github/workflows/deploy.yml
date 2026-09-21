@@ -55,6 +55,8 @@ jobs:
         run: npm run qa:european-matchday-ui
       - name: Run european progress UI QA
         run: npm run qa:european-progress-ui
+      - name: Run european knockouts QA
+        run: npm run qa:european-knockouts
       - name: Run source lint
         run: npm run lint:src
       - name: Build
