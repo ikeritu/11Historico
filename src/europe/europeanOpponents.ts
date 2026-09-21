@@ -90,7 +90,7 @@ class EuropeanRandom {
   }
 
   next(): number {
-    this.state = (this.state * 1103515245 + 12345) >>> 0;
+    this.state = (Math.imul(this.state, 1103515245) + 12345) >>> 0;
     return this.state / 4294967296;
   }
 }

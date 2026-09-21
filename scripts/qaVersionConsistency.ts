@@ -69,7 +69,7 @@ function testAppVersionMetadata(): void {
 }
 
 function testDocsMentionCurrentVersion(): void {
-  const changelog = readFileSync(join(ROOT, "CHANGELOG.md"), "utf8");
+  const changelog = readFileSync(join(ROOT, "CHANGELOG.md"), "utf8").replace(/\r\n/g, "\n");
   const readme = readFileSync(join(ROOT, "README.md"), "utf8");
   const releaseDocPath = join(ROOT, "docs", "v0_24_2a_EUROPEAN_UI_MATCHDAY_VIEW.md");
 

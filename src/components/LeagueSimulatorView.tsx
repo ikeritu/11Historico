@@ -39,7 +39,7 @@ import {
   type SeasonLuckWheelState,
 } from "../career/seasonLuckWheel";
 import SeasonLuckWheelModal from "./SeasonLuckWheelModal";
-import { shouldPlayEuropeanMatchAtLeagueMatchday } from "../europe/europeanCalendar";
+import { EUROPEAN_DEFAULT_LEAGUE_MATCHDAYS, shouldPlayEuropeanMatchAtLeagueMatchday } from "../europe/europeanCalendar";
 import { simulateEuropeanMatch } from "../europe/europeanMatchEngine";
 import { applyEuropeanMatchResult } from "../europe/europeanTournament";
 import type { EuropeanTournamentMatch, EuropeanTournamentState } from "../europe/europeanTypes";
@@ -424,7 +424,12 @@ export function LeagueSimulatorView({
       seed: `${gameId}_${pendingEuropeanMatch.id}`,
     });
 
-    const nextTournament = applyEuropeanMatchResult(europeanTournament, pendingEuropeanMatch.id, outcome);
+    const nextTournament = applyEuropeanMatchResult(
+      europeanTournament,
+      pendingEuropeanMatch.id,
+      outcome,
+      EUROPEAN_DEFAULT_LEAGUE_MATCHDAYS,
+    );
     onEuropeanTournamentChange?.(nextTournament);
 
     const playedMatch = nextTournament.matches.find((match) => match.id === pendingEuropeanMatch.id);

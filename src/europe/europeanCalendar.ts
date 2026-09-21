@@ -47,14 +47,26 @@ export function getEuropeanMatchdaySlots(totalLeagueMatchdays: number = EUROPEAN
     };
   }
 
-  const leaguePhase = LEAGUE_PHASE_RATIOS.map((ratio) =>
-    clampMatchday(totalLeagueMatchdays * ratio, totalLeagueMatchdays)
-  );
+  // Cada hueco debe caer en una jornada distinta y posterior a la anterior:
+  // `shouldPlayEuropeanMatchAtLeagueMatchday` solo devuelve un partido por
+  // jornada, así que dos partidos en la misma jornada dejarían uno sin jugar.
+  const maxMatchday = Math.max(totalLeagueMatchdays - 1, 2);
+  let previous = 1;
+  const nextSlot = (ratio: number): number => {
+    const slot = Math.min(
+      Math.max(clampMatchday(totalLeagueMatchdays * ratio, totalLeagueMatchdays), previous + 1),
+      maxMatchday,
+    );
+    previous = slot;
+    return slot;
+  };
+
+  const leaguePhase = LEAGUE_PHASE_RATIOS.map(nextSlot);
 
   return {
     leaguePhase,
-    semifinal: clampMatchday(totalLeagueMatchdays * SEMIFINAL_RATIO, totalLeagueMatchdays),
-    final: clampMatchday(totalLeagueMatchdays * FINAL_RATIO, totalLeagueMatchdays),
+    semifinal: nextSlot(SEMIFINAL_RATIO),
+    final: nextSlot(FINAL_RATIO),
   };
 }
 

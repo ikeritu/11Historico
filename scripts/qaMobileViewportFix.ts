@@ -120,7 +120,7 @@ function testDeployWorkflow(): void {
 }
 
 function testDocs(): void {
-  const changelog = readText("CHANGELOG.md");
+  const changelog = readText("CHANGELOG.md").replace(/\r\n/g, "\n");
   const readme = readText("README.md");
 
   assert(changelog.startsWith("# Changelog\n\n## v0.24.2a"), "CHANGELOG debe empezar por v0.24.2a.");

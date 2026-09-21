@@ -93,7 +93,7 @@ function testSetStateInEffectCleanups(): void {
 }
 
 function testDocs(): void {
-  const changelog = readText("CHANGELOG.md");
+  const changelog = readText("CHANGELOG.md").replace(/\r\n/g, "\n");
   const readme = readText("README.md");
   const doc = readText(CURRENT_DOC);
 

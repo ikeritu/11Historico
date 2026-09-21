@@ -100,7 +100,7 @@ function testGitignore(): void {
 }
 
 function testDocs(): void {
-  const changelog = readText("CHANGELOG.md");
+  const changelog = readText("CHANGELOG.md").replace(/\r\n/g, "\n");
   const readme = readText("README.md");
   const docPath = "docs/v0_24_2a_EUROPEAN_UI_MATCHDAY_VIEW.md";
 

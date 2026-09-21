@@ -4,7 +4,7 @@ import { APP_STATUS, APP_VERSION, APP_VERSION_NAME } from "../src/config/appVers
 
 const ROOT = process.cwd();
 const CURRENT_PUBLIC_VERSION = "v0.24.2a";
-const CURRENT_RELEASE_TAG = "v0.24.2a_EUROPEAN_TOURNAMENT_CALENDAR";
+const CURRENT_RELEASE_TAG = "v0.24.2a_EUROPEAN_UI_MATCHDAY_VIEW";
 const REAL_APPS_SCRIPT_ID_PATTERN = /AKfycb[a-zA-Z0-9_-]{20,}/;
 const LOCAL_ENV_FILES = [".env", ".env.local", ".env.development.local", ".env.production.local"];
 const TEXT_FILE_EXTENSIONS = new Set([
@@ -112,12 +112,12 @@ function testGlobalRankingDocsAreSafe(): void {
 }
 
 function testReleaseDocsArePresent(): void {
-  const changelog = readText("CHANGELOG.md");
+  const changelog = readText("CHANGELOG.md").replace(/\r\n/g, "\n");
   const readme = readText("README.md");
   const releaseDocPath = "docs/v0_24_2a_EUROPEAN_UI_MATCHDAY_VIEW.md";
 
   assert(changelog.startsWith("# Changelog\n\n## v0.24.2a"), "CHANGELOG debe empezar por v0.24.2a.");
-  assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), "README debe apuntar a v0.24.2a_EUROPEAN_TOURNAMENT_CALENDAR.");
+  assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), "README debe apuntar a v0.24.2a_EUROPEAN_UI_MATCHDAY_VIEW.");
   assert(existsSync(join(ROOT, releaseDocPath)), "Debe existir docs/v0_24_2a_EUROPEAN_UI_MATCHDAY_VIEW.md.");
   logOk("README, CHANGELOG y doc de release apuntan a v0.24.2a");
 }
