@@ -87,10 +87,13 @@ function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
 }
 
+// Solo se usa como sal de temporada de reserva para contextos guardados sin
+// `leagueSeasonSalt`. `seededRandom` NO la suma: debe ser determinista para que
+// una partida recargada conserve la forma de los equipos y los resultados.
 const SIMULATION_SESSION_SALT = Date.now() + Math.floor(Math.random() * 1000000);
 
 function seededRandom(seed: number): number {
-  const x = Math.sin(seed + SIMULATION_SESSION_SALT) * 10000;
+  const x = Math.sin(seed) * 10000;
   return x - Math.floor(x);
 }
 
@@ -884,15 +887,18 @@ function simulateRivalVsRivalMatch(params: {
   const homeExpected = clamp(1.15 + homeDiff / 38 + 0.16, 0.25, 3.1);
   const awayExpected = clamp(1.05 + awayDiff / 38 - 0.14, 0.2, 2.9);
 
-  const matchSeed = fixture.matchday * 101 + seedOffset + Math.floor(seasonSalt % 100000);
+  // Cada partido reserva un bloque de 211 semillas (offsets usados: 0, 5, 9, 13,
+  // 17, 26 y 31) para que ninguna tirada se reutilice ni se solape con otro
+  // partido de la misma jornada.
+  const matchSeed = fixture.matchday * 1009 + seedOffset * 211 + Math.floor(seasonSalt % 100000);
   const homeExpectedWithNoise = clamp(homeExpected + getMatchNoise(matchSeed + 5), 0.2, 3.25);
-  const awayExpectedWithNoise = clamp(awayExpected + getMatchNoise(matchSeed + 17), 0.18, 3.05);
+  const awayExpectedWithNoise = clamp(awayExpected + getMatchNoise(matchSeed + 13), 0.18, 3.05);
 
   let homeGoals = sampleGoals(homeExpectedWithNoise, matchSeed);
   let awayGoals = sampleGoals(awayExpectedWithNoise, matchSeed + 17);
 
   if (Math.abs(homeGoals - awayGoals) >= 4) {
-    const normalizeRoll = seededRandom(matchSeed + fixture.matchday * 37);
+    const normalizeRoll = seededRandom(matchSeed + 31);
     if (normalizeRoll < 0.55) {
       if (homeGoals > awayGoals) homeGoals -= 1;
       else awayGoals -= 1;
@@ -1343,7 +1349,7 @@ function getCupTeamExpectedGoals(params: {
   const teamIsUnderdog = teamAverage + 3 < opponentAverage;
   const teamIsFavorite = teamAverage > opponentAverage + 3;
   const roundChaos = getCupRoundChaos(roundId);
-  const chaosRoll = seededRandom(seed);
+  const chaosRoll = seededRandom(seed + 53);
 
   let expected = 1.02 + ratingDiff / 48 + (isHome ? 0.16 : -0.05);
 
@@ -1596,6 +1602,10 @@ export function simulateNextCupMatch(
     return { context };
   }
 
+  // Sin semilla explícita, la Copa restante necesita una aleatoria: al no sumar
+  // `seededRandom` una sal de sesión, un valor fijo daría siempre el mismo campeón.
+  const cupSimulationSeed = seed ?? createCupPathSeed();
+
   const { rival, venue } = getCupRivalFromFixture(pendingCupFixture);
   const cupContext = applyCupRivalContext({
     rival,
@@ -1679,7 +1689,7 @@ export function simulateNextCupMatch(
       },
       eliminatedBy,
       eliminatedRoundIndex: context.cupState.currentRoundIndex,
-      seed,
+      seed: cupSimulationSeed,
     });
 
     if (pendingCupFixture.roundId === "final") {
