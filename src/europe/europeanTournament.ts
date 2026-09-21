@@ -1,9 +1,9 @@
 // src/europe/europeanTournament.ts
 //
-// European Tournament Skeleton (v0.24.1a) — funciones puras del torneo
-// europeo simplificado: fase inicial de 6 partidos, semifinal y final a
-// partido único. No incluye todavía formato UEFA completo de 36 equipos ni
-// eliminatorias ida/vuelta.
+// European Tournament Skeleton (v0.24.1a) + European Knockouts (v0.24.3a)
+// — funciones puras del torneo europeo simplificado: fase inicial de 6
+// partidos, semifinal y final a partido único. No incluye todavía formato
+// UEFA completo de 36 equipos ni eliminatorias ida/vuelta.
 //
 // Reglas de avance:
 // - Fase inicial (6 partidos): 10+ puntos -> semifinal. Menos de 10 -> eliminado.
@@ -266,6 +266,31 @@ export function getEuropeanTournamentPhaseLabel(phase: EuropeanTournamentPhase):
   return "Sin empezar";
 }
 
+export function isEuropeanKnockoutPhase(phase: EuropeanTournamentPhase): boolean {
+  return phase === "semifinal" || phase === "final" || phase === "completed" || phase === "eliminated";
+}
+
+export function getEuropeanKnockoutStageText(tournament: EuropeanTournamentState): string {
+  if (tournament.eliminated) return "Eliminado en partido único europeo";
+  if (tournament.completed && tournament.champion) return "Campeón europeo pendiente de palmarés";
+  if (tournament.completed) return "Finalista europeo pendiente de palmarés";
+  if (tournament.phase === "final") return "Final europea a partido único";
+  if (tournament.phase === "semifinal") return "Semifinal europea a partido único";
+  if (tournament.phase === "league_phase" && tournament.qualifiedForSemifinal) return "Clasificado a semifinales";
+  return "Fase inicial europea";
+}
+
+export function getEuropeanKnockoutStakesText(tournament: EuropeanTournamentState): string {
+  if (tournament.eliminated) return "La aventura europea ha terminado; la temporada nacional continúa.";
+  if (tournament.completed && tournament.champion) {
+    return "Título europeo conseguido, todavía sin sumarse al palmarés hasta la fase de trofeos.";
+  }
+  if (tournament.completed) return "Final disputada; el subcampeonato europeo queda registrado solo como estado del torneo.";
+  if (tournament.phase === "final") return "Si ganas, serás campeón europeo pendiente de palmarés; si pierdes, quedarás como finalista.";
+  if (tournament.phase === "semifinal") return "Si ganas, jugarás la final europea; si pierdes, quedarás eliminado.";
+  return `Necesitas ${EUROPEAN_LEAGUE_PHASE_QUALIFICATION_POINTS} puntos en la fase inicial para alcanzar semifinales.`;
+}
+
 /**
  * Texto de estado del torneo. Deliberadamente NO dice que un título europeo
  * ya se ha sumado al palmarés (eso llega en v0.24.3b).
@@ -273,9 +298,9 @@ export function getEuropeanTournamentPhaseLabel(phase: EuropeanTournamentPhase):
 export function getEuropeanTournamentStatusText(tournament: EuropeanTournamentState): string {
   if (tournament.eliminated) return "Eliminado de Europa";
   if (tournament.completed && tournament.champion) return "Campeón europeo pendiente de integración en palmarés";
-  if (tournament.completed && !tournament.champion) return "Finalista europeo";
-  if (tournament.phase === "final") return "Final europea alcanzada";
-  if (tournament.phase === "semifinal") return "Clasificado a semifinales";
+  if (tournament.completed && !tournament.champion) return "Finalista europeo pendiente de palmarés";
+  if (tournament.phase === "final") return "Final europea a partido único";
+  if (tournament.phase === "semifinal") return "Semifinal europea a partido único";
   return "Fase inicial en marcha";
 }
 
@@ -293,6 +318,8 @@ export interface EuropeanTournamentSummary {
   goalsFor: number;
   goalsAgainst: number;
   statusText: string;
+  knockoutStageText: string;
+  stakesText: string;
 }
 
 /**
@@ -316,5 +343,7 @@ export function getEuropeanTournamentSummary(tournament: EuropeanTournamentState
     goalsFor: tournament.goalsFor,
     goalsAgainst: tournament.goalsAgainst,
     statusText: getEuropeanTournamentStatusText(tournament),
+    knockoutStageText: getEuropeanKnockoutStageText(tournament),
+    stakesText: getEuropeanKnockoutStakesText(tournament),
   };
 }
