@@ -37,6 +37,8 @@ import {
 } from "./europe/europeanCareerState";
 import { createEuropeanTournamentForQualification } from "./europe/europeanTournament";
 import { awardEuropeanTrophyToCareer } from "./career/europeanTrophies";
+import { awardEuropeanPrestigeToCareer } from "./career/europeanPrestige";
+import type { EuropeanPrestigeReward } from "./career/europeanPrestige";
 
 import { getPlayerIdentityKey, resolvePlayerSlotPlacement } from "./domain/positionRules";
 
@@ -410,6 +412,9 @@ export default function App() {
   const [europeanCareerState, setEuropeanCareerState] = useState<EuropeanCareerState>(() =>
     normalizeEuropeanCareerState(savedGame?.europeanCareer)
   );
+  const [careerEuropeanPrestigeReward, setCareerEuropeanPrestigeReward] = useState<EuropeanPrestigeReward | undefined>(
+    () => savedGame?.careerEuropeanPrestigeReward
+  );
 
   const [gameId, setGameId] = useState<string>(() => savedGame?.gameId ?? createGameId());
   const [phase, setPhase] = useState<GamePhase>(() => savedGame?.phase ?? "formation_selection");
@@ -486,6 +491,7 @@ export default function App() {
       careerRewardSnapshot,
       careerCurrentRankingEntry,
       europeanCareer: europeanCareerState,
+      careerEuropeanPrestigeReward,
     });
   }, [
     gameId,
@@ -519,6 +525,7 @@ export default function App() {
     careerRewardSnapshot,
     careerCurrentRankingEntry,
     europeanCareerState,
+    careerEuropeanPrestigeReward,
   ]);
 
   const careerEuropeanQualification = useMemo<EuropeanQualificationResult | undefined>(() => {
@@ -584,6 +591,7 @@ export default function App() {
     setCareerRewardSnapshot(undefined);
     setCareerCurrentRankingEntry(undefined);
     setEuropeanCareerState(createEmptyEuropeanCareerState());
+    setCareerEuropeanPrestigeReward(undefined);
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
     setReplacementOriginalFormation(undefined);
@@ -668,6 +676,7 @@ export default function App() {
     setCareerRewardSnapshot(loadedGame.careerRewardSnapshot);
     setCareerCurrentRankingEntry(loadedGame.careerCurrentRankingEntry);
     setEuropeanCareerState(normalizeEuropeanCareerState(loadedGame.europeanCareer));
+    setCareerEuropeanPrestigeReward(loadedGame.careerEuropeanPrestigeReward);
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
     setReplacementOriginalFormation(undefined);
@@ -940,9 +949,21 @@ export default function App() {
       tournament: europeanCareerState.currentTournament,
     });
     const nextTrophyCounts = getFinalCareerTrophyCounts(europeanTrophyAward.trophyCounts, careerSeasonResult);
-    const europeanCareerStateWithAward = europeanTrophyAward.awarded
-      ? setEuropeanCurrentTournament(europeanCareerState, europeanTrophyAward.tournament ?? null)
-      : europeanCareerState;
+
+    // Encadena el prestigio europeo (v0.24.4a) sobre el mismo torneo que ya
+    // llevó el título al palmarés, para que ambas marcas de "ya otorgado"
+    // (europeanTrophyAwarded y europeanPrestigeAwarded) queden en el mismo
+    // objeto y no se pierda ninguna al sustituir currentTournament.
+    const europeanPrestigeAward = awardEuropeanPrestigeToCareer({
+      previousRatingBonus: careerSeasonRatingBonus,
+      tournament: europeanTrophyAward.tournament,
+    });
+    const nextCareerSeasonRatingBonus = europeanPrestigeAward.nextRatingBonus;
+
+    const europeanCareerStateWithAward =
+      europeanTrophyAward.awarded || europeanPrestigeAward.awarded
+        ? setEuropeanCurrentTournament(europeanCareerState, europeanPrestigeAward.tournament ?? null)
+        : europeanCareerState;
 
     const latestEuropeanQualification = getLatestEuropeanQualification(europeanCareerStateWithAward);
     const alreadyHasTournamentForNextSeason = europeanCareerStateWithAward.currentTournament?.seasonNumber === nextCompletedSeasons;
@@ -992,7 +1013,7 @@ export default function App() {
       selectedPlayers,
       selectedCoach,
       teamRating,
-      careerSeasonRatingBonus,
+      careerSeasonRatingBonus: nextCareerSeasonRatingBonus,
       careerSeasonLabel: nextSeasonLabel,
       careerCompletedSeasons: nextCompletedSeasons,
       careerTrophyCounts: nextTrophyCounts,
@@ -1009,6 +1030,8 @@ export default function App() {
     setCareerSeasonLabel(nextSeasonLabel);
     setCareerTrophyCounts(nextTrophyCounts);
     setEuropeanCareerState(nextEuropeanCareerState);
+    setCareerSeasonRatingBonus(nextCareerSeasonRatingBonus);
+    setCareerEuropeanPrestigeReward(europeanPrestigeAward.reward ?? undefined);
     setCareerLeagueRivals(nextCareerLeagueRivals);
     setCareerSecondDivisionPool(nextCareerSecondDivisionPool);
     setCareerPromotionTransition(nextCareerPromotionTransition);
@@ -1726,6 +1749,7 @@ export default function App() {
           trophyCounts={careerTrophyCounts}
           promotionTransition={careerPromotionTransition}
           pendingSupercopa={careerPendingSupercopa}
+          europeanPrestigeReward={careerEuropeanPrestigeReward}
           onChoosePlayerChange={handleChooseCareerPlayerChange}
           onChooseCoachChange={handleChooseCareerCoachChange}
           onChooseFormationChange={handleChooseCareerFormationChange}

@@ -1,6 +1,7 @@
 import type { Formation, SelectedCoach, SelectedPlayer } from "../types/game";
 import type { CareerObjectiveResult, CareerPromotionTransition, CareerSeasonResult, CareerSupercopaQualification, CareerTrophyCounts } from "../types/career";
 import { calculatePalmaresScore, canUnlockCareerFormationChange, getCareerFormationChangeUnlockReason } from "../career/careerRules";
+import type { EuropeanPrestigeReward } from "../career/europeanPrestige";
 
 import "./CareerInterseasonReward.css";
 
@@ -15,6 +16,7 @@ interface CareerInterseasonRewardProps {
   trophyCounts: CareerTrophyCounts;
   promotionTransition?: CareerPromotionTransition;
   pendingSupercopa?: CareerSupercopaQualification;
+  europeanPrestigeReward?: EuropeanPrestigeReward;
   onChoosePlayerChange: () => void;
   onChooseCoachChange: () => void;
   onChooseFormationChange: () => void;
@@ -119,6 +121,7 @@ export function CareerInterseasonReward({
   trophyCounts,
   promotionTransition,
   pendingSupercopa,
+  europeanPrestigeReward,
   onChoosePlayerChange,
   onChooseCoachChange,
   onChooseFormationChange,
@@ -197,6 +200,20 @@ export function CareerInterseasonReward({
               <span>Participantes</span>
               <strong>{pendingSupercopa.participants.map((team) => team.teamName).join(" · ")}</strong>
               <small>1.º y 2.º de Liga + finalistas de Copa; duplicados se rellenan por Liga.</small>
+            </div>
+          </section>
+        )}
+
+        {europeanPrestigeReward && (
+          <section className="career-european-prestige-panel" aria-label="Prestigio europeo">
+            <div>
+              <span>Prestigio europeo · {europeanPrestigeReward.competitionLabel}</span>
+              <strong>
+                {europeanPrestigeReward.ratingBonus > 0
+                  ? `+${europeanPrestigeReward.ratingBonus.toFixed(2).replace(/\.?0+$/, "")} de forma para ${nextSeasonLabel}`
+                  : "Sin bonus de forma"}
+              </strong>
+              <small>{europeanPrestigeReward.narrative}</small>
             </div>
           </section>
         )}

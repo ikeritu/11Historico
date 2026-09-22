@@ -45,6 +45,10 @@ function normalizeEuropeanTournament(
     completed: tournament.completed ?? false,
     champion: tournament.champion ?? false,
     currentMatchId: tournament.currentMatchId ?? null,
+    europeanTrophyAwarded: tournament.europeanTrophyAwarded ?? false,
+    europeanTrophyAwardedAt: tournament.europeanTrophyAwardedAt,
+    europeanPrestigeAwarded: tournament.europeanPrestigeAwarded ?? false,
+    europeanPrestigeAwardedAt: tournament.europeanPrestigeAwardedAt,
   };
 
   // Normalizador defensivo: rellena matchday en partidos que no lo tengan
