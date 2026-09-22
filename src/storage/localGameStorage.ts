@@ -16,6 +16,7 @@ import type {
 import type { CareerLocalRankingEntry, CareerObjectiveResult, CareerPromotionTransition, CareerRewardFlow, CareerRewardSnapshot, CareerSeasonResult, CareerSupercopaQualification, CareerSupercopaResult, CareerTrophyCounts } from "../types/career";
 import type { UserLeagueSimulationContext } from "../simulation/leagueSimulator";
 import type { EuropeanCareerState } from "../europe/europeanTypes";
+import type { SeasonLuckWheelOffer } from "../career/seasonLuckWheel";
 
 const STORAGE_KEY = "once_historico_zurigorri_saved_game_v1";
 
@@ -34,6 +35,11 @@ export interface SavedGameState {
   teamRating?: TeamRating;
 
   leagueContext?: UserLeagueSimulationContext;
+  // Oferta de ruleta de temporada pendiente de resolver. Sin persistirla,
+  // recargar la página con el modal abierto (o justo tras cruzar el
+  // disparador de mitad de temporada) pierde la ruleta el resto de la
+  // temporada, porque el disparador es un evento puntual que no se repite.
+  pendingSeasonLuckWheelOffer?: SeasonLuckWheelOffer;
   finalSummary?: FinalGameSummary;
   isCareerMode?: boolean;
   careerSeasonResult?: CareerSeasonResult;

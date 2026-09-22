@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import {
+  SEASON_LUCK_WHEEL_PRECISION_ZONES,
   SEASON_LUCK_WHEEL_PRIZE_SEGMENTS,
   declineSeasonLuckWheel,
   resolveSeasonLuckWheel,
   type SeasonLuckWheelOffer,
+  type SeasonLuckWheelPrecisionZone,
   type SeasonLuckWheelResolvedResult,
   type SeasonLuckWheelState,
 } from "../career/seasonLuckWheel";
@@ -18,6 +20,26 @@ interface SeasonLuckWheelModalProps {
 }
 
 const MAX_FRAME_DELTA_MS = 50;
+
+function getZoneWidth(zoneId: SeasonLuckWheelPrecisionZone["id"]): number {
+  const zone = SEASON_LUCK_WHEEL_PRECISION_ZONES.find((candidate) => candidate.id === zoneId);
+  return zone ? zone.maxDistanceFromCenter - zone.minDistanceFromCenter : 0;
+}
+
+/**
+ * Anchos reales (en fracciones, usables como `fr` de grid) de las 5 bandas
+ * "Malo / Neutro / Bueno / Neutro / Malo" que se ven sobre la barra de
+ * precisión. Se calculan a partir de SEASON_LUCK_WHEEL_PRECISION_ZONES en
+ * vez de repartir la barra en quintos iguales: las zonas reales no miden lo
+ * mismo (el centro "Bueno" es casi el triple de ancho que cada "Neutro").
+ */
+const ZONE_LABEL_GRID_TEMPLATE = (() => {
+  const bad = getZoneWidth("outer") + getZoneWidth("edge");
+  const neutral = getZoneWidth("balanced");
+  const good = (getZoneWidth("perfect_center") + getZoneWidth("good_center")) * 2;
+
+  return [bad, neutral, good, neutral, bad].map((width) => `${width}fr`).join(" ");
+})();
 
 function getPrizeClass(group: string): string {
   if (group === "positive") return "season-wheel-prize-positive";
@@ -251,7 +273,11 @@ export default function SeasonLuckWheelModal({
           </div>
 
           <div className="season-wheel-precision-panel">
-            <div className="season-wheel-zone-labels" aria-hidden="true">
+            <div
+              className="season-wheel-zone-labels"
+              aria-hidden="true"
+              style={{ gridTemplateColumns: ZONE_LABEL_GRID_TEMPLATE }}
+            >
               <span>Malo</span>
               <span>Neutro</span>
               <span>Bueno</span>

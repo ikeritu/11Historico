@@ -63,6 +63,15 @@ interface LeagueSimulatorViewProps {
   onFinishLeague?: (summary: ReturnType<typeof createFinalLeagueSummary>) => void;
   europeanTournament?: EuropeanTournamentState | null;
   onEuropeanTournamentChange?: (tournament: EuropeanTournamentState) => void;
+  /**
+   * Oferta de ruleta pendiente de una sesión anterior (partida guardada).
+   * Sin esto, recargar la página mientras el modal de la ruleta está
+   * abierto (o justo después de cruzar el disparador de mitad de temporada)
+   * pierde la oportunidad para el resto de la temporada: el disparador es
+   * un evento puntual al cruzar la jornada, no se repite.
+   */
+  initialPendingSeasonLuckWheelOffer?: SeasonLuckWheelOffer;
+  onPendingSeasonLuckWheelOfferChange?: (offer: SeasonLuckWheelOffer | undefined) => void;
 }
 
 const AUTO_SIMULATION_DELAY_MS = 1300;
@@ -223,6 +232,8 @@ export function LeagueSimulatorView({
   onFinishLeague,
   europeanTournament,
   onEuropeanTournamentChange,
+  initialPendingSeasonLuckWheelOffer,
+  onPendingSeasonLuckWheelOfferChange,
 }: LeagueSimulatorViewProps) {
   const [context, setContext] = useState<UserLeagueSimulationContext>(
     () => normalizeLeagueContext(initialContext, selectedCoach, leagueRivals)
@@ -230,8 +241,17 @@ export function LeagueSimulatorView({
 
   const [lastResult, setLastResult] = useState<MatchResult | undefined>(undefined);
   const [isAutoSimulating, setIsAutoSimulating] = useState(false);
-  const [pendingWheelOffer, setPendingWheelOffer] = useState<SeasonLuckWheelOffer | undefined>();
+  const [pendingWheelOffer, setPendingWheelOfferState] = useState<SeasonLuckWheelOffer | undefined>(
+    () => initialPendingSeasonLuckWheelOffer
+  );
   const [justPlayedEuropeanMatch, setJustPlayedEuropeanMatch] = useState<EuropeanTournamentMatch | undefined>();
+
+  // Envuelve el setter de estado para que la oferta pendiente también se
+  // persista fuera de este componente (ver `initialPendingSeasonLuckWheelOffer`).
+  const setPendingWheelOffer = useCallback((offer: SeasonLuckWheelOffer | undefined) => {
+    setPendingWheelOfferState(offer);
+    onPendingSeasonLuckWheelOfferChange?.(offer);
+  }, [onPendingSeasonLuckWheelOfferChange]);
 
   const teamRatingWithLuckWheel = useMemo(
     () => applySeasonLuckWheelRatingDelta(teamRating, context.seasonLuckWheel?.accepted ? context.seasonLuckWheel.ratingDelta ?? 0 : 0),
@@ -344,7 +364,7 @@ export function LeagueSimulatorView({
     setPendingWheelOffer(offer);
     setIsAutoSimulating(false);
     return true;
-  }, [careerSeasonKey, gameId, getLeagueMatchesPlayed, isCareerMode, isWithinSeasonLuckWheelTriggerWindow, pendingWheelOffer]);
+  }, [careerSeasonKey, gameId, getLeagueMatchesPlayed, isCareerMode, isWithinSeasonLuckWheelTriggerWindow, pendingWheelOffer, setPendingWheelOffer]);
 
   function applySeasonLuckWheelState(nextState: SeasonLuckWheelState) {
     const nextContext = {

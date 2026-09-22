@@ -17,6 +17,7 @@ import type {
 } from "./types/game";
 
 import type { UserLeagueSimulationContext } from "./simulation/leagueSimulator";
+import type { SeasonLuckWheelOffer } from "./career/seasonLuckWheel";
 import { calculateTeamRating } from "./simulation/teamRating";
 import { applyCareerRatingBonus } from "./career/teamPower";
 import {
@@ -434,6 +435,9 @@ export default function App() {
   const [selectedCoach, setSelectedCoach] = useState<SelectedCoach | undefined>(() => savedGame?.selectedCoach);
   const [teamRating, setTeamRating] = useState<TeamRating | undefined>(() => savedGame?.teamRating);
   const [leagueContext, setLeagueContext] = useState<UserLeagueSimulationContext | undefined>(() => savedGame?.leagueContext);
+  const [pendingSeasonLuckWheelOffer, setPendingSeasonLuckWheelOffer] = useState<SeasonLuckWheelOffer | undefined>(
+    () => savedGame?.pendingSeasonLuckWheelOffer
+  );
   const [finalSummary, setFinalSummary] = useState<FinalGameSummary | undefined>(() => savedGame?.finalSummary);
   const [lastSelection, setLastSelection] = useState<SelectedPlayer | undefined>();
   const [teamValidationErrors, setTeamValidationErrors] = useState<string[]>([]);
@@ -473,6 +477,7 @@ export default function App() {
       selectedCoach,
       teamRating,
       leagueContext,
+      pendingSeasonLuckWheelOffer,
       finalSummary,
       isCareerMode,
       careerSeasonResult,
@@ -505,6 +510,7 @@ export default function App() {
     selectedCoach,
     teamRating,
     leagueContext,
+    pendingSeasonLuckWheelOffer,
     finalSummary,
     isCareerMode,
     careerSeasonResult,
@@ -567,6 +573,7 @@ export default function App() {
     setSelectedCoach(undefined);
     setTeamRating(undefined);
     setLeagueContext(undefined);
+    setPendingSeasonLuckWheelOffer(undefined);
     setFinalSummary(undefined);
     setLastSelection(undefined);
     setTeamValidationErrors([]);
@@ -652,6 +659,7 @@ export default function App() {
     setSelectedCoach(loadedGame.selectedCoach);
     setTeamRating(loadedGame.teamRating);
     setLeagueContext(loadedGame.leagueContext);
+    setPendingSeasonLuckWheelOffer(loadedGame.pendingSeasonLuckWheelOffer);
     setFinalSummary(loadedGame.finalSummary);
     setIsCareerMode(loadedGame.isCareerMode ?? false);
     setCareerSeasonResult(loadedGame.careerSeasonResult);
@@ -682,6 +690,7 @@ export default function App() {
     setSelectedCoach(undefined);
     setTeamRating(undefined);
     setLeagueContext(undefined);
+    setPendingSeasonLuckWheelOffer(undefined);
     setFinalSummary(undefined);
     setLastSelection(undefined);
     setTeamValidationErrors([]);
@@ -823,6 +832,7 @@ export default function App() {
     setTeamRating(ratingWithCareerBonus);
     setCareerSeasonRatingBonus(0);
     setLeagueContext(undefined);
+    setPendingSeasonLuckWheelOffer(undefined);
 
     if (isCareerMode && careerPendingSupercopa?.userQualified) {
       setPhase("team_summary");
@@ -850,6 +860,7 @@ export default function App() {
   function handleContinueAfterSupercopa() {
     setCareerPendingSupercopa(undefined);
     setLeagueContext(undefined);
+    setPendingSeasonLuckWheelOffer(undefined);
     setPhase("league_simulation");
     setScreen("league_simulation");
   }
@@ -980,6 +991,7 @@ export default function App() {
     setCareerCurrentSupercopaResult(undefined);
     setCareerRewardSnapshot(rewardSnapshot);
     setLeagueContext(undefined);
+    setPendingSeasonLuckWheelOffer(undefined);
     setFinalSummary(undefined);
     setTeamRating(undefined);
     setReplacementDraftSeason(undefined);
@@ -1042,6 +1054,7 @@ export default function App() {
     setCareerRewardSnapshot(undefined);
     setTeamValidationErrors([]);
     setLeagueContext(undefined);
+    setPendingSeasonLuckWheelOffer(undefined);
     setFinalSummary(undefined);
     setCareerSeasonResult(undefined);
     setCareerObjectiveResult(undefined);
@@ -1119,6 +1132,7 @@ export default function App() {
     setSelectedCoach(undefined);
     setTeamRating(undefined);
     setLeagueContext(undefined);
+    setPendingSeasonLuckWheelOffer(undefined);
     setFinalSummary(undefined);
     setCareerSeasonResult(undefined);
     setCareerObjectiveResult(undefined);
@@ -1144,6 +1158,7 @@ export default function App() {
     setCareerRewardSnapshot(undefined);
     setCoachBeforeReward(undefined);
     setLeagueContext(undefined);
+    setPendingSeasonLuckWheelOffer(undefined);
     setFinalSummary(undefined);
     setPhase("team_summary");
     setScreen("team_summary");
@@ -1156,6 +1171,7 @@ export default function App() {
     setCareerRewardFlow("standard_player");
     setTeamRating(undefined);
     setLeagueContext(undefined);
+    setPendingSeasonLuckWheelOffer(undefined);
     setFinalSummary(undefined);
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
@@ -1171,6 +1187,7 @@ export default function App() {
     setCareerRewardFlow("player_formation");
     setTeamRating(undefined);
     setLeagueContext(undefined);
+    setPendingSeasonLuckWheelOffer(undefined);
     setFinalSummary(undefined);
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
@@ -1226,6 +1243,7 @@ export default function App() {
       selectedCoach,
     });
     setLeagueContext(undefined);
+    setPendingSeasonLuckWheelOffer(undefined);
     setFinalSummary(undefined);
     setCareerSeasonResult(undefined);
     setCareerObjectiveResult(undefined);
@@ -1321,6 +1339,7 @@ export default function App() {
     setTeamValidationErrors([]);
     if (!isLuckWheelPlayerFlow) {
       setLeagueContext(undefined);
+      setPendingSeasonLuckWheelOffer(undefined);
     }
     setFinalSummary(undefined);
     setCareerSeasonResult(undefined);
@@ -1638,6 +1657,8 @@ export default function App() {
           leagueRivals={isCareerMode ? careerLeagueRivals : undefined}
           initialContext={leagueContext}
           onContextChange={setLeagueContext}
+          initialPendingSeasonLuckWheelOffer={pendingSeasonLuckWheelOffer}
+          onPendingSeasonLuckWheelOfferChange={setPendingSeasonLuckWheelOffer}
           onSeasonLuckWheelPlayerChange={handleSeasonLuckWheelPlayerChange}
           onSeasonLuckWheelCoachChange={handleSeasonLuckWheelCoachChange}
           onFinishLeague={handleFinishLeague}
