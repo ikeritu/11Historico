@@ -1,6 +1,8 @@
 import { APP_VERSION } from "../config/appVersion";
 import { calculatePalmaresScore } from "./careerRules";
+import { addEuropeanTrophyToCounts } from "./europeanTrophies";
 import type { CareerLocalRankingEntry, CareerSeasonResult, CareerTrophyCounts } from "../types/career";
+import type { EuropeanTournamentState } from "../europe/europeanTypes";
 
 export const CAREER_LOCAL_RANKING_LIMIT = 100;
 
@@ -18,15 +20,18 @@ export function createEmptyCareerRankingTrophyCounts(): CareerTrophyCounts {
 export function getFinalCareerTrophyCounts(
   trophyCounts: CareerTrophyCounts | undefined,
   seasonResult: CareerSeasonResult,
+  europeanTournament?: EuropeanTournamentState | null,
 ): CareerTrophyCounts {
   const base = trophyCounts ?? createEmptyCareerRankingTrophyCounts();
 
-  return {
+  const nationalTrophies = {
     ...base,
     liga: base.liga + (seasonResult.wonLeague ? 1 : 0),
     copa: base.copa + (seasonResult.wonCopa ? 1 : 0),
     supercopa: base.supercopa + (seasonResult.wonSupercopa ? 1 : 0),
   };
+
+  return addEuropeanTrophyToCounts(nationalTrophies, europeanTournament);
 }
 
 export function calculateCareerArcadeScore(params: {
@@ -92,11 +97,12 @@ export function buildCareerLocalRankingEntry(params: {
   trophyCounts: CareerTrophyCounts | undefined;
   seasonResult: CareerSeasonResult;
   bestLeaguePosition?: number;
+  europeanTournament?: EuropeanTournamentState | null;
   gameVersion?: string;
   createdAt?: string;
 }): CareerLocalRankingEntry {
   const createdAt = params.createdAt ?? new Date().toISOString();
-  const finalTrophyCounts = getFinalCareerTrophyCounts(params.trophyCounts, params.seasonResult);
+  const finalTrophyCounts = getFinalCareerTrophyCounts(params.trophyCounts, params.seasonResult, params.europeanTournament);
   const score = calculateCareerArcadeScore({
     completedSeasons: params.completedSeasons,
     trophyCounts: finalTrophyCounts,
