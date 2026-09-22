@@ -99,6 +99,8 @@ export interface EuropeanTournamentState {
   eliminated: boolean;
   completed: boolean;
   champion: boolean;
+  europeanTrophyAwarded?: boolean;
+  europeanTrophyAwardedAt?: string;
   currentMatchId?: string | null;
 }
 
