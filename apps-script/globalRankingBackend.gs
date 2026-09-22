@@ -1,5 +1,7 @@
 /**
  * Futbol11 v0.23.0b — Global Ranking Backend Apps Script
+ * (hardening pass: puntuación recalculada en servidor, tope de entradas,
+ * columnas a prueba de auto-conversión de Sheets — ver notas junto a cada cambio)
  *
  * Deploy as Web app:
  * - Execute as: Me
@@ -12,6 +14,26 @@
 const SHEET_NAME = 'RankingGlobal';
 const TOP_LIMIT = 100;
 const MAX_NICK_LENGTH = 24;
+// El endpoint es público ("Anyone"): estos topes evitan que un envío con
+// datos absurdos (temporadas o posiciones fuera de rango) infle el ranking
+// o rompa el orden, y que la hoja crezca sin límite.
+const MAX_TOTAL_ENTRIES = 5000;
+const MAX_COMPLETED_SEASONS = 500;
+const MAX_LEAGUE_POSITION = 64;
+// Debe reflejar src/career/careerRules.ts CAREER_PALMARES_POINTS. Si cambia
+// ahí, cambia aquí también.
+const PALMARES_POINTS = {
+  champions: 10,
+  liga: 8,
+  europaLeague: 6,
+  copa: 5,
+  conference: 4,
+  supercopa: 2,
+};
+// Columnas (1-based, ver HEADERS) que deben guardarse como texto plano para
+// que Sheets no las reinterprete como número o fecha (p. ej. un nick "007"
+// pasando a 7, o un ISO 8601 pasando a fecha de Sheets).
+const TEXT_COLUMNS = [1, 2, 3, 10, 12, 13, 14, 15];
 const HEADERS = [
   'id',
   'careerId',
@@ -71,7 +93,15 @@ function doPost(event) {
       });
     }
 
-    sheet.appendRow(toRow_(entry));
+    if (existingEntries.length >= MAX_TOTAL_ENTRIES) {
+      return jsonOutput_({
+        ok: false,
+        status: 'server_error',
+        message: 'El ranking global ha alcanzado su límite de entradas.',
+      });
+    }
+
+    appendEntryRow_(sheet, entry);
 
     return jsonOutput_({
       ok: true,
@@ -113,18 +143,38 @@ function normalizePayload_(payload) {
   const careerId = String(payload.careerId || '').trim();
   const submittedAt = String(payload.submittedAt || new Date().toISOString());
   const createdAt = String(payload.createdAt || '');
+  const completedSeasons = clampInt_(
+    toNonNegativeNumber_(payload.completedSeasons, 'completedSeasons'),
+    0,
+    MAX_COMPLETED_SEASONS,
+  );
+  const trophyCounts = normalizeTrophyCounts_(payload.trophyCounts);
+  // El servidor recalcula la puntuación a partir de temporadas + palmarés en
+  // vez de confiar en el arcadeScore/palmaresScore/survivalScore que manda el
+  // cliente: el endpoint es público, así que un payload manual no puede
+  // inflarse el marcador.
+  const scores = computeScores_(completedSeasons, trophyCounts);
+
   const entry = {
     id: careerId,
     careerId,
     nick,
-    completedSeasons: toNonNegativeNumber_(payload.completedSeasons, 'completedSeasons'),
-    arcadeScore: toNonNegativeNumber_(payload.arcadeScore, 'arcadeScore'),
-    palmaresScore: toNonNegativeNumber_(payload.palmaresScore, 'palmaresScore'),
-    survivalScore: toNonNegativeNumber_(payload.survivalScore, 'survivalScore'),
-    trophyCounts: normalizeTrophyCounts_(payload.trophyCounts),
-    bestLeaguePosition: toPositiveNumber_(payload.bestLeaguePosition, 'bestLeaguePosition'),
+    completedSeasons,
+    arcadeScore: scores.arcadeScore,
+    palmaresScore: scores.palmaresScore,
+    survivalScore: scores.survivalScore,
+    trophyCounts,
+    bestLeaguePosition: clampInt_(
+      toPositiveNumber_(payload.bestLeaguePosition, 'bestLeaguePosition'),
+      1,
+      MAX_LEAGUE_POSITION,
+    ),
     lastSeasonLabel: String(payload.lastSeasonLabel || '').trim(),
-    lastLeaguePosition: toPositiveNumber_(payload.lastLeaguePosition, 'lastLeaguePosition'),
+    lastLeaguePosition: clampInt_(
+      toPositiveNumber_(payload.lastLeaguePosition, 'lastLeaguePosition'),
+      1,
+      MAX_LEAGUE_POSITION,
+    ),
     gameVersion: String(payload.gameVersion || '').trim(),
     createdAt,
     submittedAt,
@@ -138,6 +188,23 @@ function normalizePayload_(payload) {
   if (!entry.createdAt) throw new Error('createdAt obligatorio.');
 
   return entry;
+}
+
+function computeScores_(completedSeasons, trophyCounts) {
+  const palmaresScore =
+    trophyCounts.champions * PALMARES_POINTS.champions +
+    trophyCounts.liga * PALMARES_POINTS.liga +
+    trophyCounts.europaLeague * PALMARES_POINTS.europaLeague +
+    trophyCounts.copa * PALMARES_POINTS.copa +
+    trophyCounts.conference * PALMARES_POINTS.conference +
+    trophyCounts.supercopa * PALMARES_POINTS.supercopa;
+  const survivalScore = Math.max(0, completedSeasons) * 10;
+
+  return {
+    arcadeScore: survivalScore + palmaresScore,
+    palmaresScore,
+    survivalScore,
+  };
 }
 
 function sanitizeNick_(value) {
@@ -175,6 +242,39 @@ function getRankingSheet_() {
   }
 
   return sheet;
+}
+
+// Sheets decide el tipo de una celda por el formato que tenga *antes* de
+// escribir el valor: formatear después de escribir no deshace la conversión.
+// Por eso cada fila nueva se formatea como texto plano antes de rellenarla.
+function formatTextColumns_(sheet, row) {
+  TEXT_COLUMNS.forEach((column) => {
+    sheet.getRange(row, column).setNumberFormat('@');
+  });
+}
+
+function appendEntryRow_(sheet, entry) {
+  const targetRow = sheet.getLastRow() + 1;
+  formatTextColumns_(sheet, targetRow);
+  sheet.getRange(targetRow, 1, 1, HEADERS.length).setValues([toRow_(entry)]);
+}
+
+/**
+ * Migración de un solo uso: aplica formato de texto a las columnas sensibles
+ * de todas las filas ya existentes. Las filas antiguas cuyo nick o fecha ya
+ * se convirtieron (p. ej. "007" -> 7) no recuperan el valor original; esto
+ * solo evita que se sigan corrompiendo al reescribirse. Ejecutar una vez a
+ * mano desde el editor de Apps Script tras desplegar esta versión.
+ */
+function migrateExistingColumnFormats_() {
+  const sheet = getRankingSheet_();
+  const lastRow = sheet.getLastRow();
+
+  if (lastRow < 2) return;
+
+  TEXT_COLUMNS.forEach((column) => {
+    sheet.getRange(2, column, lastRow - 1).setNumberFormat('@');
+  });
 }
 
 function readEntries_(sheet) {
@@ -225,24 +325,32 @@ function toRow_(entry) {
 function rowToEntry_(row) {
   try {
     return {
-      id: String(row[0] || ''),
-      careerId: String(row[1] || ''),
-      nick: sanitizeNick_(row[2]),
+      id: cellToString_(row[0]),
+      careerId: cellToString_(row[1]),
+      nick: sanitizeNick_(cellToString_(row[2])),
       completedSeasons: toSafeInteger_(row[3]),
       arcadeScore: toSafeInteger_(row[4]),
       palmaresScore: toSafeInteger_(row[5]),
       survivalScore: toSafeInteger_(row[6]),
       trophyCounts: parseTrophyCountsCell_(row[7]),
       bestLeaguePosition: toSafeInteger_(row[8]),
-      lastSeasonLabel: String(row[9] || ''),
+      lastSeasonLabel: cellToString_(row[9]),
       lastLeaguePosition: toSafeInteger_(row[10]),
-      gameVersion: String(row[11] || ''),
-      createdAt: String(row[12] || ''),
-      submittedAt: String(row[13] || ''),
+      gameVersion: cellToString_(row[11]),
+      createdAt: cellToString_(row[12]),
+      submittedAt: cellToString_(row[13]),
     };
   } catch (_error) {
     return null;
   }
+}
+
+// Defensa ante filas escritas antes de este arreglo (o si Sheets vuelve a
+// convertir algo igualmente): una celda que Sheets ya trate como fecha llega
+// aquí como objeto Date, no como el string ISO original.
+function cellToString_(value) {
+  if (value instanceof Date) return value.toISOString();
+  return String(value || '');
 }
 
 function parseTrophyCountsCell_(value) {
@@ -272,6 +380,10 @@ function toPositiveNumber_(value, label) {
 function toSafeInteger_(value) {
   const number = Number(value);
   return Number.isFinite(number) && number > 0 ? Math.floor(number) : 0;
+}
+
+function clampInt_(value, min, max) {
+  return Math.max(min, Math.min(max, value));
 }
 
 function clampNumber_(value, min, max) {
