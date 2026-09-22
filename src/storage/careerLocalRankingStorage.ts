@@ -40,15 +40,18 @@ export function loadCareerLocalRanking(): CareerLocalRankingEntry[] {
 }
 
 export function saveCareerLocalRankingEntry(entry: CareerLocalRankingEntry): CareerLocalRankingEntry[] {
-  try {
-    const previousEntries = loadCareerLocalRanking();
-    const nextEntries = limitCareerLocalRanking([entry, ...previousEntries]);
+  const previousEntries = loadCareerLocalRanking();
+  const nextEntries = limitCareerLocalRanking([entry, ...previousEntries]);
 
+  try {
     window.localStorage.setItem(CAREER_LOCAL_RANKING_STORAGE_KEY, JSON.stringify(nextEntries));
     return nextEntries;
   } catch (error) {
     console.warn("No se pudo guardar la carrera en el ranking local.", error);
-    return [];
+    // Si falla la escritura (p. ej. cuota de localStorage llena), no hay que
+    // devolver [] : eso borraría de la vista el ranking ya guardado de
+    // verdad. Se devuelven las entradas previas, que sí siguen en disco.
+    return previousEntries;
   }
 }
 
