@@ -3,7 +3,8 @@
 // European Progress UI (v0.24.2b) + European Knockouts (v0.24.3a).
 // Panel consultivo del estado completo del torneo europeo: fase, progreso,
 // puntos, balance, calendario, resultados y lectura clara de semifinal/final.
-// No suma títulos europeos al palmarés todavía.
+// Desde v0.24.3b los títulos europeos sí se suman al palmarés, al cerrar la
+// temporada (ver src/career/europeanTrophies.ts).
 
 import { getEuropeanCompetitionLabel } from "../europe/europeanQualification";
 import {
@@ -68,12 +69,12 @@ function getNextMatch(tournament: EuropeanTournamentState): EuropeanTournamentMa
 function getPhaseObjectiveText(tournament: EuropeanTournamentState): string {
   if (tournament.eliminated) return "Objetivo cerrado: el Athletic está eliminado de Europa.";
   if (tournament.completed && tournament.champion) {
-    return "Objetivo logrado: campeón europeo pendiente de integrarse en palmarés.";
+    return "Objetivo logrado: campeón europeo, se suma al palmarés al cerrar la temporada.";
   }
   if (tournament.completed) return "Objetivo cerrado: final europea disputada.";
   if (tournament.phase === "league_phase") return "Objetivo fase inicial: alcanzar 10 puntos para entrar en semifinales.";
   if (tournament.phase === "semifinal") return "Objetivo semifinal: ganar para alcanzar la final europea; perder significa eliminación.";
-  if (tournament.phase === "final") return "Objetivo final: ganar para levantar el título europeo pendiente de palmarés.";
+  if (tournament.phase === "final") return "Objetivo final: ganar para levantar el título europeo, que se sumará al palmarés al cerrar la temporada.";
   return "Objetivo europeo pendiente de comenzar.";
 }
 
