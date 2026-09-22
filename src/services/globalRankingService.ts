@@ -4,6 +4,9 @@ export const GLOBAL_RANKING_ENDPOINT = (import.meta.env.VITE_GLOBAL_RANKING_ENDP
 export const GLOBAL_RANKING_ENDPOINT_STORAGE_KEY = "futbol11.globalRankingEndpoint.v1";
 export const GLOBAL_RANKING_BACKEND = "google_apps_script";
 export const GLOBAL_RANKING_TIMEOUT_MS = 6000;
+// Apps Script puede tardar en arrancar en frío. Un timeout corto en el envío
+// haría parecer fallida una carrera que el servidor sí llega a guardar.
+export const GLOBAL_RANKING_SUBMIT_TIMEOUT_MS = 20000;
 export const GLOBAL_RANKING_LIMIT = 100;
 
 export type GlobalRankingStatus =
@@ -71,8 +74,21 @@ export function validateGlobalRankingEndpoint(value: string): string | undefined
 
   if (!endpoint) return "Pega la URL /exec del despliegue de Apps Script.";
   if (!endpoint.startsWith("https://")) return "El endpoint debe empezar por https://.";
-  if (!endpoint.includes("script.google.com/macros/s/")) return "El endpoint debe ser una URL de Apps Script.";
-  if (!endpoint.endsWith("/exec")) return "Usa la URL pública que termina en /exec, no /dev.";
+
+  let url: URL;
+
+  try {
+    url = new URL(endpoint);
+  } catch {
+    return "El endpoint no es una URL válida.";
+  }
+
+  // Se comprueba el host (no un simple `includes`): una URL ajena que solo
+  // contuviera el texto de Apps Script en su ruta enviaría los nicks a un tercero.
+  if (url.hostname !== "script.google.com" || !url.pathname.startsWith("/macros/s/")) {
+    return "El endpoint debe ser una URL de Apps Script.";
+  }
+  if (!url.pathname.endsWith("/exec")) return "Usa la URL pública que termina en /exec, no /dev.";
 
   return undefined;
 }
@@ -402,7 +418,7 @@ export async function submitGlobalRankingEntry(
   }
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), options.timeoutMs ?? GLOBAL_RANKING_TIMEOUT_MS);
+  const timeout = setTimeout(() => controller.abort(), options.timeoutMs ?? GLOBAL_RANKING_SUBMIT_TIMEOUT_MS);
 
   try {
     const fetcher = options.fetcher ?? fetch;

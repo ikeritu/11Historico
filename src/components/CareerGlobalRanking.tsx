@@ -30,6 +30,7 @@ export function CareerGlobalRanking({ onNewCareer, onViewLocalRanking, onBack }:
   const [entries, setEntries] = useState<CareerGlobalRankingEntry[]>([]);
   const [message, setMessage] = useState("Cargando ranking global...");
   const [isLoading, setIsLoading] = useState(true);
+  const [loadFailed, setLoadFailed] = useState(false);
   const [endpointRevision, setEndpointRevision] = useState(0);
 
   const configured = isGlobalRankingConfigured();
@@ -45,6 +46,7 @@ export function CareerGlobalRanking({ onNewCareer, onViewLocalRanking, onBack }:
 
       setEntries(result.entries);
       setMessage(result.message);
+      setLoadFailed(!result.ok && result.status !== "not_configured");
       setIsLoading(false);
     }
 
@@ -55,7 +57,11 @@ export function CareerGlobalRanking({ onNewCareer, onViewLocalRanking, onBack }:
     };
   }, [endpointRevision]);
 
-  const emptyTitle = configured ? "Aún no hay carreras globales" : "Conecta el ranking global";
+  const emptyTitle = !configured
+    ? "Conecta el ranking global"
+    : loadFailed
+      ? "No se pudo cargar el ranking global"
+      : "Aún no hay carreras globales";
   const emptyDescription = configured
     ? message
     : "Guarda la URL /exec de Apps Script para cargar el Top 100 online desde este navegador.";

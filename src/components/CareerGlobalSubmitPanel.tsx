@@ -67,7 +67,9 @@ export function CareerGlobalSubmitPanel({ entry, onViewGlobalRanking }: CareerGl
     setIsSending(false);
     setMessage(result.message);
 
-    if (result.ok) {
+    // "duplicate" significa que el servidor ya tiene la carrera (por ejemplo, un
+    // envío anterior que tardó más que el timeout): cuenta como enviada.
+    if (result.ok || result.status === "duplicate") {
       markCareerGlobalRankingEntrySubmitted(entry.id);
       setSubmitted(true);
       onViewGlobalRanking();

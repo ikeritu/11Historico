@@ -17,6 +17,8 @@ interface SeasonLuckWheelModalProps {
   onResolve: (result: SeasonLuckWheelResolvedResult) => void;
 }
 
+const MAX_FRAME_DELTA_MS = 50;
+
 function getPrizeClass(group: string): string {
   if (group === "positive") return "season-wheel-prize-positive";
   if (group === "negative") return "season-wheel-prize-negative";
@@ -146,7 +148,9 @@ export default function SeasonLuckWheelModal({
 
     const animate = (timestamp: number) => {
       const previousTimestamp = lastFrameRef.current ?? timestamp;
-      const deltaMs = timestamp - previousTimestamp;
+      // Tras una pausa (pestaña oculta o tirón de fotogramas) el salto sería enorme
+      // y la flecha acabaría en un extremo, la zona con más riesgo de castigo.
+      const deltaMs = Math.min(timestamp - previousTimestamp, MAX_FRAME_DELTA_MS);
       lastFrameRef.current = timestamp;
       playingStartedAtRef.current ??= timestamp;
 
