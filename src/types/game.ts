@@ -131,9 +131,16 @@ export interface PlayerSeason {
   positions: PlayerPosition[];
 
   /**
-   * Afinidad táctica fina para slots concretos de una formación.
-   * Ejemplo: un DFC zurdo puede aceptar ["DFC-I", "DFC-C"], pero no "DFC-D".
-   * Si no se informa, se considera que el jugador puede ocupar cualquier slot compatible
+   * Afinidad táctica fina para slots concretos de una formación (p. ej. distinguir
+   * DFC-I de DFC-D dentro de la familia genérica "DFC" de `positions`).
+   * IMPORTANTE (desde v0.12.26, ver docs/v0_12_26_position_rules_engine.md): esta lista
+   * es puramente ADITIVA, nunca restrictiva. `resolvePlayerSlotPlacement` la une con
+   * `positions`, así que declarar aquí solo ["DFC-I", "DFC-C"] NO impide que el jugador
+   * ocupe un slot "DFC-D": su posición genérica "DFC" ya lo permite por sí sola, porque
+   * cada slot DFC-* acepta explícitamente la etiqueta "DFC" (ver `getExplicitAcceptedLabelsForSlot`
+   * en src/domain/positionRules.ts). Es deliberado: v0.12.26 eliminó la validación dura
+   * basada en tacticalSlotLabels precisamente porque rechazaba jugadores que sí debían
+   * poder jugar ahí. Si no se informa, el jugador puede ocupar cualquier slot compatible
    * con sus posiciones generales.
    */
   tacticalSlotLabels?: TacticalSlotLabel[];
