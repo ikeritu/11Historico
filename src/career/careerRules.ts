@@ -26,11 +26,19 @@ export function getEuropeanQualification(
 ): EuropeanCompetition {
   if (leaguePosition >= 1 && leaguePosition <= 4) return "champions";
 
-  const europaLeagueSlots = wonCopa ? [5, 6] : [5];
-  if (europaLeagueSlots.includes(leaguePosition)) return "europa_league";
+  // Regla documentada en docs/v0_11_2_european_qualification_rules.md: ganar
+  // la Copa del Rey garantiza como mínimo Europa League, sea cual sea la
+  // posición de Liga (ejemplo del propio doc: "Athletic gana Copa y queda
+  // 8º -> Athletic: Europa League por campeón de Copa"). Antes, esta función
+  // solo aplicaba el ascenso a las posiciones 5-6, así que un campeón de
+  // Copa que acababa 7º o peor se mostraba sin plaza europea, contradiciendo
+  // tanto el doc como `resolveEuropeanQualification` en
+  // src/europe/europeanQualification.ts (que sí implementa la regla bien y
+  // es el módulo que de verdad decide el torneo europeo jugable).
+  if (wonCopa) return "europa_league";
 
-  const conferenceSlot = wonCopa ? 7 : 6;
-  if (leaguePosition === conferenceSlot) return "conference";
+  if (leaguePosition === 5) return "europa_league";
+  if (leaguePosition === 6) return "conference";
 
   return "none";
 }
