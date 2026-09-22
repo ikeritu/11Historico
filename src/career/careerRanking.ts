@@ -48,6 +48,42 @@ export function calculateCareerArcadeScore(params: {
   };
 }
 
+export interface EuropeanTrophyBreakdown {
+  champions: number;
+  europaLeague: number;
+  conference: number;
+  total: number;
+}
+
+/**
+ * Desglose de títulos europeos por competición, calculado a partir del
+ * mismo `CareerTrophyCounts` que ya viaja en la entrada de ranking local y
+ * en el payload de ranking global (v0.24.5a: no añade campos nuevos al
+ * envío al backend, solo expone lo que ya existe de forma consistente para
+ * la UI en vez de que cada pantalla sume los tres contadores a mano).
+ */
+export function getEuropeanTrophyBreakdown(trophyCounts: CareerTrophyCounts): EuropeanTrophyBreakdown {
+  return {
+    champions: trophyCounts.champions,
+    europaLeague: trophyCounts.europaLeague,
+    conference: trophyCounts.conference,
+    total: trophyCounts.champions + trophyCounts.europaLeague + trophyCounts.conference,
+  };
+}
+
+export function formatEuropeanTrophyBreakdownLabel(trophyCounts: CareerTrophyCounts): string {
+  const breakdown = getEuropeanTrophyBreakdown(trophyCounts);
+  const parts: Array<[string, number]> = [
+    ["Champions", breakdown.champions],
+    ["Europa Lg", breakdown.europaLeague],
+    ["Conference", breakdown.conference],
+  ];
+
+  const labels = parts.filter(([, count]) => count > 0).map(([label, count]) => `${label} ${count}`);
+
+  return labels.length > 0 ? labels.join(" · ") : "Sin títulos europeos";
+}
+
 export function getBestCareerLeaguePosition(
   previousBestPosition: number | undefined,
   nextPosition: number,
