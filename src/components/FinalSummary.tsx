@@ -136,8 +136,16 @@ function buildLeagueQualificationMap(
     qualificationMap.set(key, { zone: "middle" });
   });
 
-  const leagueEuropaIndex = 4; // 5º clasificado.
-  if (table[leagueEuropaIndex]) {
+  // 5º y 6º clasificado van directos a Europa League vía Liga (mismos
+  // umbrales que getLeaguePositionCompetition en
+  // src/europe/europeanQualification.ts: "5º-6º -> Europa League, 7º ->
+  // Conference League"). Antes solo se reservaba el 5º, así que el 6º
+  // aparecía como Conference (o heredaba la plaza de Copa) en vez de Europa
+  // League directa.
+  const leagueEuropaIndexes = [4, 5];
+  for (const leagueEuropaIndex of leagueEuropaIndexes) {
+    if (!table[leagueEuropaIndex]) continue;
+
     qualificationMap.set(getRowKey(table[leagueEuropaIndex], leagueEuropaIndex), {
       zone: "europa",
       label: "Europa League",
@@ -163,7 +171,7 @@ function buildLeagueQualificationMap(
       const passedEuropaIndex = findNextLeagueIndexForEurope({
         table,
         reservedIndexes: reservedEuropeanIndexes,
-        startIndex: 5,
+        startIndex: 6, // ambas plazas directas de Liga (5º y 6º) ya están reservadas
       });
 
       if (typeof passedEuropaIndex === "number") {
@@ -187,7 +195,7 @@ function buildLeagueQualificationMap(
   const conferenceIndex = findNextLeagueIndexForEurope({
     table,
     reservedIndexes: reservedEuropeanIndexes,
-    startIndex: 5,
+    startIndex: 6,
   });
 
   if (typeof conferenceIndex === "number") {
@@ -343,8 +351,10 @@ function getFinalOutcomeSubtitle(summary: FinalGameSummary, isCareerReturn: bool
 
   if (summary.cupTrophyWon) return "Objetivo cumplido: Copa del Rey";
   if (summary.leaguePosition <= 4) return "Objetivo cumplido: Champions League";
-  if (summary.leaguePosition === 5) return "Objetivo cumplido: Europa League";
-  if (summary.leaguePosition === 6) return "Objetivo cumplido: Conference League";
+  // 5º-6º Europa League, 7º Conference League: mismos umbrales que
+  // getLeaguePositionCompetition en src/europe/europeanQualification.ts.
+  if (summary.leaguePosition === 5 || summary.leaguePosition === 6) return "Objetivo cumplido: Europa League";
+  if (summary.leaguePosition === 7) return "Objetivo cumplido: Conference League";
 
   return "Objetivo cumplido: clasificación europea";
 }
