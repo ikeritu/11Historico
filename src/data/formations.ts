@@ -724,8 +724,8 @@ export const FORMATIONS: Formation[] = [
     slots: [
       { id: "gk", label: "POR", allowedPositions: ["POR"], line: "goalkeeper" },
       { id: "rb", label: "LD", allowedPositions: ["LD", "CAD"], line: "defense" },
-      { id: "cb_1", label: "DFC-I", allowedPositions: ["DFC"], line: "defense" },
-      { id: "cb_2", label: "DFC-D", allowedPositions: ["DFC"], line: "defense" },
+      { id: "cb_1", label: "DFC-D", allowedPositions: ["DFC"], line: "defense" },
+      { id: "cb_2", label: "DFC-I", allowedPositions: ["DFC"], line: "defense" },
       { id: "lb", label: "LI", allowedPositions: ["LI", "CAI"], line: "defense" },
       { id: "cm_1", label: "MCD", allowedPositions: ["MCD", "MC"], line: "midfield" },
       { id: "cm_2", label: "MC", allowedPositions: ["MC", "MCD", "MP"], line: "midfield" },
@@ -761,8 +761,8 @@ export const FORMATIONS: Formation[] = [
     slots: [
       { id: "gk", label: "POR", allowedPositions: ["POR"], line: "goalkeeper" },
       { id: "rb", label: "LD", allowedPositions: ["LD", "CAD"], line: "defense" },
-      { id: "cb_1", label: "DFC-I", allowedPositions: ["DFC"], line: "defense" },
-      { id: "cb_2", label: "DFC-D", allowedPositions: ["DFC"], line: "defense" },
+      { id: "cb_1", label: "DFC-D", allowedPositions: ["DFC"], line: "defense" },
+      { id: "cb_2", label: "DFC-I", allowedPositions: ["DFC"], line: "defense" },
       { id: "lb", label: "LI", allowedPositions: ["LI", "CAI"], line: "defense" },
       { id: "dm_1", label: "MCD", allowedPositions: ["MCD", "MC"], line: "midfield" },
       { id: "dm_2", label: "MC", allowedPositions: ["MC", "MCD"], line: "midfield" },

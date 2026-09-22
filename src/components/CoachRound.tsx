@@ -131,6 +131,25 @@ function getAllCoachPool(): CoachSeason[] {
   return ATHLETIC_SEASONS.map((squad) => squad.coach).filter(Boolean);
 }
 
+/**
+ * El mismo entrenador real dirige varias temporadas del Athletic (30
+ * entrenadores distintos repartidos en 95 temporadas). Sin esto, la ruleta
+ * podía sortear a la misma persona dos veces (solo cambia la temporada de
+ * origen), como si fueran dos candidatos independientes.
+ */
+function dedupeByCoachId(coaches: CoachSeason[]): CoachSeason[] {
+  const seenCoachIds = new Set<string>();
+  const unique: CoachSeason[] = [];
+
+  for (const coach of coaches) {
+    if (seenCoachIds.has(coach.coachId)) continue;
+    seenCoachIds.add(coach.coachId);
+    unique.push(coach);
+  }
+
+  return unique;
+}
+
 function buildInitialCoachOptions(params: {
   availableSeasonIds?: SeasonId[];
   alreadyUsedSeasonIds?: SeasonId[];
@@ -141,12 +160,14 @@ function buildInitialCoachOptions(params: {
   const baseSeasonIds = availableSeasonIds ?? getAvailableAthleticSeasons();
   const blockedSeasonIds = new Set(alreadyUsedSeasonIds);
 
-  const candidateCoaches = baseSeasonIds
-    .filter((seasonId) => !blockedSeasonIds.has(seasonId))
-    .map((seasonId) => getCoachBySeason(seasonId))
-    .filter((coach): coach is CoachSeason => Boolean(coach));
+  const candidateCoaches = dedupeByCoachId(
+    baseSeasonIds
+      .filter((seasonId) => !blockedSeasonIds.has(seasonId))
+      .map((seasonId) => getCoachBySeason(seasonId))
+      .filter((coach): coach is CoachSeason => Boolean(coach))
+  );
 
-  const fallbackCoaches = getAllCoachPool();
+  const fallbackCoaches = dedupeByCoachId(getAllCoachPool());
   const source = candidateCoaches.length >= optionsCount ? candidateCoaches : fallbackCoaches;
 
   return pickRandomItems(source, Math.min(optionsCount, source.length));
