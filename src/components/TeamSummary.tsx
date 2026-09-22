@@ -132,7 +132,12 @@ function getSafeTeamRating(
       ...fallback,
       ...rating,
       strengths: Array.isArray(rating.strengths) ? rating.strengths : fallback.strengths,
-      risks: Array.isArray(rating.risks) ? rating.risks : fallback.risks,
+      // calculateTeamRating (el motor real, src/simulation/teamRating.ts) devuelve
+      // `weaknesses`, no `risks` — TeamRating no tiene ningún campo `risks`. Leer
+      // `rating.risks` aquí siempre daba undefined, así que la tarjeta "Riesgos"
+      // nunca mostraba el análisis real de detectWeaknesses() y caía siempre al
+      // fallback genérico de 2 frases.
+      risks: Array.isArray(rating.weaknesses) ? rating.weaknesses : fallback.risks,
     };
   } catch (error) {
     console.error("Error calculando el rating del equipo:", error);

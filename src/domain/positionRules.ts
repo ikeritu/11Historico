@@ -137,7 +137,18 @@ function getExplicitAcceptedLabelsForSlot(slot: FormationSlot): string[] {
     "DC-D": ["DC", "SD", "ED"],
   };
 
-  return rules[slot.label] ?? [slot.label, ...slot.allowedPositions.map(String)];
+  const baseRule = rules[slot.label] ?? [slot.label, ...slot.allowedPositions.map(String)];
+
+  // `rules` es una tabla genérica por etiqueta (p.ej. toda etiqueta "MC" usa
+  // la misma lista, en cualquier formación). Pero formations.ts autoriza,
+  // hueco a hueco, posiciones adicionales pensadas para esa formación
+  // concreta (un DFC reconvertido a MCD en el 3-5-2, un lateral cubriendo de
+  // carrilero, un MP entrando en un hueco "MC"...). Sin esta unión, esas
+  // decisiones explícitas del formation.slots.allowedPositions de cada hueco
+  // quedaban silenciosamente ignoradas y jugadores legítimos —incluidas
+  // leyendas como Chirri II o Iraragorri, con posiciones MP/SD— eran
+  // rechazados en huecos que su propia formación decía que sí aceptaban.
+  return Array.from(new Set([...baseRule, ...slot.allowedPositions.map(String)]));
 }
 
 function getAssignedPosition(
