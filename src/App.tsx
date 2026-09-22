@@ -710,6 +710,25 @@ export default function App() {
   function handleSelectPlayer(selection: SelectedPlayer) {
     if (!selectedFormation) return;
 
+    // Comprobación directa de encaje táctico para el jugador recién elegido,
+    // en vez de buscar el error dentro del texto de `validateSelectedTeam`:
+    // el filtro anterior buscaba "no puede jugar"/"solo acepta", frases que
+    // `resolvePlayerSlotPlacement` ya no produce desde el motor único de
+    // posiciones (v0.12.26/v0.12.28) — así que un jugador incompatible con
+    // su puesto nunca bloqueaba la selección en el momento, solo al final
+    // de la ronda 13/13.
+    const selectedSlot = selectedFormation.slots.find((item) => item.id === selection.slotId);
+    const selectedPlacement = selectedSlot
+      ? resolvePlayerSlotPlacement(selection.playerSeason, selectedSlot)
+      : undefined;
+
+    if (!selectedPlacement?.canPlace) {
+      setTeamValidationErrors([
+        selectedPlacement?.reason ?? `${selection.playerSeason.name} no puede ocupar este puesto.`,
+      ]);
+      return;
+    }
+
     const nextPlayers = [...selectedPlayers, selection];
     const validation = validateSelectedTeam({
       formation: selectedFormation,
@@ -719,9 +738,7 @@ export default function App() {
     const duplicateOrCriticalErrors = validation.errors.filter(
       (error) =>
         error.includes("Jugador repetido") ||
-        error.includes("Puesto ocupado dos veces") ||
-        error.includes("no puede jugar") ||
-        error.includes("solo acepta")
+        error.includes("Puesto ocupado dos veces")
     );
 
     if (duplicateOrCriticalErrors.length > 0) {
