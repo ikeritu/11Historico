@@ -623,7 +623,7 @@ export const ATHLETIC_SEASONS: AthleticSeasonSquad[] = [
   {
     season: "2011/12",
     coach: makeCoach({
-      name: "Marcelo Alberto Bielsa",
+      name: "Marcelo Bielsa",
       coachId: "marcelo_bielsa",
       season: "2011/12",
       overall: 87,
@@ -2546,7 +2546,7 @@ export const ATHLETIC_SEASONS: AthleticSeasonSquad[] = [
   {
     season: "1996/97",
     coach: makeCoach({
-      name: "Luis Fernandez",
+      name: "Luis Fernández",
       coachId: "luis_fernandez",
       season: "1996/97",
       overall: 82,
@@ -2576,7 +2576,7 @@ export const ATHLETIC_SEASONS: AthleticSeasonSquad[] = [
   {
     season: "1998/99",
     coach: makeCoach({
-      name: "Luis Fernandez",
+      name: "Luis Fernández",
       coachId: "luis_fernandez",
       season: "1998/99",
       overall: 84,
@@ -2606,7 +2606,7 @@ export const ATHLETIC_SEASONS: AthleticSeasonSquad[] = [
   {
     season: "1999/00",
     coach: makeCoach({
-      name: "Luis Fernandez",
+      name: "Luis Fernández",
       coachId: "luis_fernandez",
       season: "1999/00",
       overall: 82,
@@ -3116,7 +3116,7 @@ export const ATHLETIC_SEASONS: AthleticSeasonSquad[] = [
   {
     season: "2021/22",
     coach: makeCoach({
-      name: "Marcelino",
+      name: "Marcelino García Toral",
       coachId: "marcelino_garcia_toral",
       season: "2021/22",
       overall: 83,
