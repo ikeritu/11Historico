@@ -3,8 +3,9 @@
 // European UI Matchday View (v0.24.2a) + European Progress UI (v0.24.2b)
 // + European Knockouts (v0.24.3a).
 // Tarjeta visual de evento europeo: competición, fase, rival, rating,
-// progreso, resultado, calendario europeo y copy narrativo. No suma títulos
-// europeos al palmarés todavía.
+// progreso, resultado, calendario europeo y copy narrativo. Desde v0.24.3b
+// los títulos europeos sí se suman al palmarés, al cerrar la temporada
+// (ver src/career/europeanTrophies.ts).
 
 import { getEuropeanCompetitionLabel } from "../europe/europeanQualification";
 import {
@@ -63,13 +64,13 @@ function getCompetitionBadge(competition: EuropeanCompetition): string {
 
 function getPhaseNarrative(tournament: EuropeanTournamentState, match: EuropeanTournamentMatch): string {
   if (tournament.completed && tournament.champion) {
-    return "El Athletic ha conquistado Europa; el título queda pendiente de integrarse en el palmarés histórico.";
+    return "El Athletic ha conquistado Europa; el título se sumará al palmarés histórico al cerrar la temporada.";
   }
   if (tournament.completed && !tournament.champion) {
-    return "El Athletic ha sido finalista europeo; el resultado queda registrado sin tocar todavía el palmarés.";
+    return "El Athletic ha sido finalista europeo; el resultado queda registrado sin sumar título al palmarés.";
   }
   if (tournament.eliminated) return "El sueño europeo termina aquí, pero la temporada nacional continúa.";
-  if (match.phase === "final") return "Final europea a partido único: ganar significa ser campeón pendiente de palmarés; perder deja al Athletic como finalista.";
+  if (match.phase === "final") return "Final europea a partido único: ganar significa ser campeón y sumar el título al palmarés al cerrar la temporada; perder deja al Athletic como finalista.";
   if (match.phase === "semifinal") return "Semifinal europea a partido único: ganar abre la final; perder cierra la aventura europea.";
   if (match.isHome) return "Noche grande en San Mamés: Europa vuelve a Bilbao.";
   return "Salida europea exigente: toca competir lejos de San Mamés.";
@@ -83,7 +84,7 @@ function getProgressPercent(tournament: EuropeanTournamentState): number {
 
 function getKnockoutWinText(match: EuropeanTournamentMatch): string {
   if (match.phase === "semifinal") return "Victoria: Athletic a la final europea";
-  if (match.phase === "final") return "Victoria: campeón europeo pendiente de palmarés";
+  if (match.phase === "final") return "Victoria: campeón europeo, se suma al palmarés al cerrar la temporada";
   return "Victoria: suma puntos en fase inicial";
 }
 

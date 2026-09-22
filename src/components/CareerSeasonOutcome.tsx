@@ -1,6 +1,6 @@
 import type { FinalGameSummary, SelectedPlayer, TeamRating } from "../types/game";
 import type { CareerLocalRankingEntry, CareerObjectiveResult, CareerSeasonResult, CareerTrophyCounts } from "../types/career";
-import type { EuropeanQualificationResult } from "../europe/europeanTypes";
+import type { EuropeanQualificationResult, EuropeanTournamentState } from "../europe/europeanTypes";
 import { calculateCareerArcadeScore, getFinalCareerTrophyCounts } from "../career/careerRanking";
 
 import CareerGlobalSubmitPanel from "./CareerGlobalSubmitPanel";
@@ -24,6 +24,8 @@ interface CareerSeasonOutcomeProps {
   completedSeasons?: number;
   trophyCounts?: CareerTrophyCounts;
   europeanQualification?: EuropeanQualificationResult;
+  /** Torneo europeo de la temporada que acaba de cerrarse (para integrar un título pendiente en el palmarés mostrado aquí). */
+  europeanTournament?: EuropeanTournamentState | null;
 }
 
 function getSelectedPlayersAverage(selectedPlayers: SelectedPlayer[] = []): number | undefined {
@@ -66,13 +68,15 @@ function CareerGameOverArcadeSummary({
   objectiveResult,
   completedSeasons = 0,
   trophyCounts,
+  europeanTournament,
 }: {
   seasonResult: CareerSeasonResult;
   objectiveResult: CareerObjectiveResult;
   completedSeasons?: number;
   trophyCounts?: CareerTrophyCounts;
+  europeanTournament?: EuropeanTournamentState | null;
 }) {
-  const finalTrophies = getFinalCareerTrophyCounts(trophyCounts, seasonResult);
+  const finalTrophies = getFinalCareerTrophyCounts(trophyCounts, seasonResult, europeanTournament);
   const { arcadeScore, palmaresScore, survivalScore } = calculateCareerArcadeScore({
     completedSeasons,
     trophyCounts: finalTrophies,
@@ -141,10 +145,11 @@ export function CareerSeasonOutcome({
   completedSeasons = 0,
   trophyCounts,
   europeanQualification,
+  europeanTournament,
 }: CareerSeasonOutcomeProps) {
   const survived = objectiveResult.survives;
   const xiAverage = getSelectedPlayersAverage(selectedPlayers);
-  const finalTrophies = getFinalCareerTrophyCounts(trophyCounts, seasonResult);
+  const finalTrophies = getFinalCareerTrophyCounts(trophyCounts, seasonResult, europeanTournament);
 
   return (
     <main className={`career-outcome-screen ${survived ? "career-outcome-success" : "career-outcome-game-over"}`}>
@@ -202,6 +207,7 @@ export function CareerSeasonOutcome({
               objectiveResult={objectiveResult}
               completedSeasons={completedSeasons}
               trophyCounts={trophyCounts}
+              europeanTournament={europeanTournament}
             />
 
             <section className="career-game-over-palmares-showcase" aria-label="Vitrina de palmarés de carrera">

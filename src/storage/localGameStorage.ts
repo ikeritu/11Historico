@@ -17,6 +17,7 @@ import type { CareerLocalRankingEntry, CareerObjectiveResult, CareerPromotionTra
 import type { UserLeagueSimulationContext } from "../simulation/leagueSimulator";
 import type { EuropeanCareerState } from "../europe/europeanTypes";
 import type { SeasonLuckWheelOffer } from "../career/seasonLuckWheel";
+import type { EuropeanPrestigeReward } from "../career/europeanPrestige";
 
 const STORAGE_KEY = "once_historico_zurigorri_saved_game_v1";
 
@@ -58,6 +59,12 @@ export interface SavedGameState {
   careerRewardSnapshot?: CareerRewardSnapshot;
   careerCurrentRankingEntry?: CareerLocalRankingEntry;
   europeanCareer?: EuropeanCareerState;
+  // Recompensa de prestigio europeo (v0.24.4a) recién otorgada en la última
+  // transición de temporada, mostrada una única vez en la pantalla de
+  // recompensa entre temporadas. Sin persistirla, recargar la página en esa
+  // pantalla perdería el texto narrativo (el bonus de rating en sí ya vive
+  // en careerSeasonRatingBonus y no depende de esto).
+  careerEuropeanPrestigeReward?: EuropeanPrestigeReward;
 
   savedAt: string;
 }

@@ -10,10 +10,12 @@
 // - Semifinal (partido único): gana -> final. Pierde -> eliminado.
 // - Final (partido único): gana -> campeón. Pierde -> finalista.
 //
-// Importante: un "campeón europeo" en esta fase queda registrado solo como
-// resultado interno del torneo (`tournament.champion`). NO se suma todavía
-// al palmarés histórico (`CareerTrophyCounts`) — esa integración queda para
-// v0.24.3b, tal y como pide el encargo de esta fase.
+// Un "campeón europeo" se registra aquí como resultado interno del torneo
+// (`tournament.champion`). Desde v0.24.3b, ese título sí se suma al
+// palmarés histórico (`CareerTrophyCounts`) vía
+// `src/career/europeanTrophies.ts` — pero no en el instante de ganar la
+// final, sino al cerrar la temporada (App.tsx `handleContinueCareerAfterSeason`
+// / Game Over), igual que Liga, Copa y Supercopa.
 
 import { getEuropeanMatchdaySlots } from "./europeanCalendar";
 import { pickEuropeanOpponents, pickSingleEuropeanOpponent } from "./europeanOpponents";
@@ -272,8 +274,8 @@ export function isEuropeanKnockoutPhase(phase: EuropeanTournamentPhase): boolean
 
 export function getEuropeanKnockoutStageText(tournament: EuropeanTournamentState): string {
   if (tournament.eliminated) return "Eliminado en partido único europeo";
-  if (tournament.completed && tournament.champion) return "Campeón europeo pendiente de palmarés";
-  if (tournament.completed) return "Finalista europeo pendiente de palmarés";
+  if (tournament.completed && tournament.champion) return "Campeón europeo: se suma al palmarés al cerrar la temporada";
+  if (tournament.completed) return "Finalista europeo";
   if (tournament.phase === "final") return "Final europea a partido único";
   if (tournament.phase === "semifinal") return "Semifinal europea a partido único";
   if (tournament.phase === "league_phase" && tournament.qualifiedForSemifinal) return "Clasificado a semifinales";
@@ -283,22 +285,24 @@ export function getEuropeanKnockoutStageText(tournament: EuropeanTournamentState
 export function getEuropeanKnockoutStakesText(tournament: EuropeanTournamentState): string {
   if (tournament.eliminated) return "La aventura europea ha terminado; la temporada nacional continúa.";
   if (tournament.completed && tournament.champion) {
-    return "Título europeo conseguido, todavía sin sumarse al palmarés hasta la fase de trofeos.";
+    return "Título europeo conseguido: se sumará al palmarés al cerrar la temporada.";
   }
-  if (tournament.completed) return "Final disputada; el subcampeonato europeo queda registrado solo como estado del torneo.";
-  if (tournament.phase === "final") return "Si ganas, serás campeón europeo pendiente de palmarés; si pierdes, quedarás como finalista.";
+  if (tournament.completed) return "Final disputada; el subcampeonato europeo queda registrado como estado del torneo.";
+  if (tournament.phase === "final") return "Si ganas, serás campeón europeo y sumará al palmarés al cerrar la temporada; si pierdes, quedarás como finalista.";
   if (tournament.phase === "semifinal") return "Si ganas, jugarás la final europea; si pierdes, quedarás eliminado.";
   return `Necesitas ${EUROPEAN_LEAGUE_PHASE_QUALIFICATION_POINTS} puntos en la fase inicial para alcanzar semifinales.`;
 }
 
 /**
- * Texto de estado del torneo. Deliberadamente NO dice que un título europeo
- * ya se ha sumado al palmarés (eso llega en v0.24.3b).
+ * Texto de estado del torneo. Desde v0.24.3b, ganar la final sí suma el
+ * título al palmarés — pero no en el instante de ganar el partido, sino al
+ * cerrar la temporada (handleContinueCareerAfterSeason/Game Over en
+ * App.tsx), así que el texto lo deja claro sin decir "pendiente" a secas.
  */
 export function getEuropeanTournamentStatusText(tournament: EuropeanTournamentState): string {
   if (tournament.eliminated) return "Eliminado de Europa";
-  if (tournament.completed && tournament.champion) return "Campeón europeo pendiente de integración en palmarés";
-  if (tournament.completed && !tournament.champion) return "Finalista europeo pendiente de palmarés";
+  if (tournament.completed && tournament.champion) return "Campeón europeo: se suma al palmarés al cerrar la temporada";
+  if (tournament.completed && !tournament.champion) return "Finalista europeo";
   if (tournament.phase === "final") return "Final europea a partido único";
   if (tournament.phase === "semifinal") return "Semifinal europea a partido único";
   return "Fase inicial en marcha";

@@ -36,7 +36,10 @@ function testGameOverShowsPalmaresShowcase(): void {
 
   assert(outcome.includes("PalmaresTrophyCase"), "Game Over debe importar la vitrina de palmarés.");
   assert(outcome.includes("career-game-over-palmares-showcase"), "Game Over debe renderizar un bloque de vitrina de palmarés.");
-  assert(outcome.includes("getFinalCareerTrophyCounts(trophyCounts, seasonResult)"), "Game Over debe sumar la temporada actual antes de mostrar palmarés.");
+  assert(
+    outcome.includes("getFinalCareerTrophyCounts(trophyCounts, seasonResult, europeanTournament)"),
+    "Game Over debe sumar la temporada actual (incluido un título europeo pendiente) antes de mostrar palmarés.",
+  );
   assert(outcome.includes("trophyCounts={finalTrophies}"), "La vitrina de Game Over debe recibir los trofeos finales acumulados.");
   assert(outcome.includes("variant=\"career\""), "La vitrina de Game Over debe usar modo carrera.");
   logOk("Game Over muestra vitrina de palmarés con la temporada actual incluida");
@@ -49,7 +52,10 @@ function testFinalSummaryUsesCareerPalmaresWhenAvailable(): void {
   assert(finalSummary.includes("careerTrophyCounts?: CareerTrophyCounts"), "FinalSummary debe aceptar palmarés acumulado de carrera.");
   assert(finalSummary.includes("trophyCounts={careerTrophyCounts}"), "FinalSummary debe pasar el palmarés acumulado a PalmaresTrophyCase.");
   assert(app.includes("displayedCareerTrophyCounts"), "App debe calcular el palmarés visible de carrera.");
-  assert(app.includes("addCareerTrophiesFromSeason(careerTrophyCounts, careerSeasonResult)"), "App debe sumar la temporada actual para el palmarés visible.");
+  assert(
+    app.includes("getFinalCareerTrophyCounts(careerTrophyCounts, careerSeasonResult, europeanCareerState.currentTournament)"),
+    "App debe sumar la temporada actual (incluido un título europeo pendiente) para el palmarés visible.",
+  );
   assert(app.includes("careerTrophyCounts={displayedCareerTrophyCounts}"), "App debe pasar el palmarés acumulado al resumen completo.");
   logOk("Resumen completo usa palmarés acumulado de carrera cuando existe");
 }

@@ -97,7 +97,10 @@ function testSemifinalWinCreatesSingleFinal(): void {
   assert(tournament.phase === "final", "Ganar la semifinal debe llevar a la final.");
   assert(tournament.matches.filter((match) => match.phase === "final").length === 1, "Debe generarse una única final.");
   assert(replay.matches.filter((match) => match.phase === "final").length === 1, "Reaplicar la semifinal no debe duplicar la final.");
-  assert(getEuropeanTournamentSummary(tournament).stakesText.includes("serás campeón europeo pendiente de palmarés"), "La final debe explicar que el campeón queda pendiente de palmarés.");
+  assert(
+    getEuropeanTournamentSummary(tournament).stakesText.includes("serás campeón europeo y sumará al palmarés al cerrar la temporada"),
+    "La final debe explicar que ganar suma el título al palmarés al cerrar la temporada.",
+  );
 }
 
 function testSemifinalLossEliminates(): void {
@@ -125,7 +128,10 @@ function testFinalOutcomesDoNotTouchPalmares(): void {
   assert(champion.phase === "completed", "Ganar la final debe completar el torneo.");
   assert(champion.completed, "Ganar la final debe marcar completed.");
   assert(champion.champion, "Ganar la final debe marcar champion true.");
-  assert(getEuropeanTournamentSummary(champion).statusText.includes("pendiente de integración en palmarés"), "El texto de campeón no debe afirmar que el título ya está en palmarés.");
+  assert(
+    getEuropeanTournamentSummary(champion).statusText.includes("se suma al palmarés al cerrar la temporada"),
+    "El texto de campeón debe decir que el título se suma al palmarés al cerrar la temporada, no que ya está sumado.",
+  );
 
   let finalist = playLeaguePhase(makeTournament("knockout_finalist"), ["win", "win", "win", "draw", "loss", "loss"]);
   const finalistSemi = finalist.matches.find((match) => match.phase === "semifinal");

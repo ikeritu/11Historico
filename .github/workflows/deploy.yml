@@ -59,6 +59,8 @@ jobs:
         run: npm run qa:european-knockouts
       - name: Run european trophies palmares QA
         run: npm run qa:european-trophies-palmares
+      - name: Run european rewards prestige QA
+        run: npm run qa:european-rewards-prestige
       - name: Run source lint
         run: npm run lint:src
       - name: Build
