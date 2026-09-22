@@ -115,7 +115,12 @@ export const LALIGA_2526_TEAMS: RivalTeam[] = [
       defense: 88,
       goalkeeping: 86,
       mentality: 92,
-      overall: 94,
+      // overall alineado con la media ponderada real de estas sub-ratings
+      // (getAverageRivalRating: 95*.24+93*.22+88*.22+86*.16+92*.16=91.1);
+      // antes era 94, 2.9 puntos por encima sin motivo aparente en el resto
+      // del archivo. No cambia de tramo en getTeamSeasonForm (sigue >=86,
+      // "Elite"), así que no afecta al balance de descensos/título.
+      overall: 91,
     },
   },
   {
