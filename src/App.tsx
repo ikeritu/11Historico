@@ -676,6 +676,8 @@ export default function App() {
     setCareerRewardFlow(loadedGame.careerRewardFlow);
     setCareerSeasonRatingBonus(loadedGame.careerSeasonRatingBonus ?? 0);
     setCareerRewardSnapshot(loadedGame.careerRewardSnapshot);
+    setCareerCurrentRankingEntry(loadedGame.careerCurrentRankingEntry);
+    setEuropeanCareerState(normalizeEuropeanCareerState(loadedGame.europeanCareer));
     setReplacementDraftSeason(undefined);
     setReplacementRemovedPlayer(undefined);
     setReplacementOriginalFormation(undefined);
