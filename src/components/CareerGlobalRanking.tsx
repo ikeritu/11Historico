@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { formatCareerRangeLabel } from "../career/careerRanking";
+import { formatCareerRangeLabel, formatEuropeanTrophyBreakdownLabel } from "../career/careerRanking";
 import { getGlobalRankingBackendLabel, isGlobalRankingConfigured, loadGlobalRanking } from "../services/globalRankingService";
 import CareerGlobalEndpointConfig from "./CareerGlobalEndpointConfig";
 import type { CareerGlobalRankingEntry } from "../types/career";
@@ -103,6 +103,7 @@ export function CareerGlobalRanking({ onNewCareer, onViewLocalRanking, onBack }:
                   <th>Carrera</th>
                   <th>Puntos</th>
                   <th>Temp.</th>
+                  <th>Europa</th>
                   <th>Mejor Liga</th>
                   <th>Fecha</th>
                 </tr>
@@ -118,6 +119,7 @@ export function CareerGlobalRanking({ onNewCareer, onViewLocalRanking, onBack }:
                     </td>
                     <td data-label="Puntos"><strong>{entry.arcadeScore}</strong></td>
                     <td data-label="Temp.">{entry.completedSeasons}</td>
+                    <td data-label="Europa">{formatEuropeanTrophyBreakdownLabel(entry.trophyCounts)}</td>
                     <td data-label="Mejor Liga">{entry.bestLeaguePosition}.º</td>
                     <td data-label="Fecha">{formatRankingDate(entry.submittedAt)}</td>
                   </tr>

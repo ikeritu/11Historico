@@ -1,4 +1,4 @@
-import { formatCareerRangeLabel } from "../career/careerRanking";
+import { formatCareerRangeLabel, formatEuropeanTrophyBreakdownLabel, getEuropeanTrophyBreakdown } from "../career/careerRanking";
 import type { CareerLocalRankingEntry } from "../types/career";
 
 import "./CareerLocalRanking.css";
@@ -29,7 +29,7 @@ function getTrophySummary(entry: CareerLocalRankingEntry): string {
     ["Liga", entry.trophyCounts.liga],
     ["Copa", entry.trophyCounts.copa],
     ["Supercopa", entry.trophyCounts.supercopa],
-    ["Europa", entry.trophyCounts.champions + entry.trophyCounts.europaLeague + entry.trophyCounts.conference],
+    ["Europa", getEuropeanTrophyBreakdown(entry.trophyCounts).total],
   ]
     .filter(([, count]) => Number(count) > 0)
     .map(([label, count]) => `${label} ${count}`);
@@ -69,6 +69,7 @@ export function CareerLocalRanking({
                   <th>Puntos</th>
                   <th>Temp.</th>
                   <th>Palmarés</th>
+                  <th>Europa</th>
                   <th>Mejor Liga</th>
                   <th>Fecha</th>
                 </tr>
@@ -87,6 +88,7 @@ export function CareerLocalRanking({
                       <span>{entry.palmaresScore} pts</span>
                       <small>{getTrophySummary(entry)}</small>
                     </td>
+                    <td data-label="Europa">{formatEuropeanTrophyBreakdownLabel(entry.trophyCounts)}</td>
                     <td data-label="Mejor Liga">{entry.bestLeaguePosition}.º</td>
                     <td data-label="Fecha">{formatRankingDate(entry.createdAt)}</td>
                   </tr>
