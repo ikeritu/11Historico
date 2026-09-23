@@ -277,6 +277,10 @@
 }
 
 .career-share-preview {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
   max-height: 260px;
   overflow: auto;
   margin: 0 0 12px;
