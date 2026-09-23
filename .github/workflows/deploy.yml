@@ -71,6 +71,8 @@ jobs:
         run: npm run qa:european-mobile-polish
       - name: Run european visual polish QA
         run: npm run qa:european-visual-polish
+      - name: Run public release UX QA
+        run: npm run qa:public-release-ux
       - name: Run source lint
         run: npm run lint:src
       - name: Build
