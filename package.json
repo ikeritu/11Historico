@@ -1,7 +1,7 @@
 {
   "name": "futbol11",
   "private": true,
-  "version": "0.24.2-a.0",
+  "version": "0.24.7",
   "type": "module",
   "scripts": {
     "dev": "vite",

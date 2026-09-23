@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { APP_STATUS, APP_VERSION, APP_VERSION_NAME } from "../src/config/appVersion";
+import { APP_STATUS, APP_VERSION, APP_VERSION_NAME, CURRENT_RELEASE_DOC, CURRENT_RELEASE_TAG } from "../src/config/appVersion";
 
 type PackageJson = {
   name?: string;
@@ -60,7 +60,7 @@ function testPackageLockMatchesPackageJson(): void {
 }
 
 function testAppVersionMetadata(): void {
-  assert(APP_VERSION === "v0.24.2a", `APP_VERSION debe ser v0.24.2a, pero es ${APP_VERSION}`);
+  assert(APP_VERSION === "v0.24.7", `APP_VERSION debe ser v0.24.7, pero es ${APP_VERSION}`);
   assert(APP_VERSION_NAME.trim().length > 0, "APP_VERSION_NAME no puede estar vacío.");
   assert(APP_STATUS.trim().length > 0, "APP_STATUS no puede estar vacío.");
   assertNoMojibake("APP_VERSION_NAME", APP_VERSION_NAME);
@@ -71,12 +71,12 @@ function testAppVersionMetadata(): void {
 function testDocsMentionCurrentVersion(): void {
   const changelog = readFileSync(join(ROOT, "CHANGELOG.md"), "utf8").replace(/\r\n/g, "\n");
   const readme = readFileSync(join(ROOT, "README.md"), "utf8");
-  const releaseDocPath = join(ROOT, "docs", "v0_24_2a_EUROPEAN_UI_MATCHDAY_VIEW.md");
+  const releaseDocPath = join(ROOT, CURRENT_RELEASE_DOC);
 
-  assert(changelog.startsWith("# Changelog\n\n## v0.24.2a"), "CHANGELOG debe empezar por v0.24.2a.");
-  assert(readme.includes("Versión pública actual: `v0.24.2a_EUROPEAN_UI_MATCHDAY_VIEW`."), "README debe apuntar a v0.24.2a_EUROPEAN_UI_MATCHDAY_VIEW.");
-  assert(existsSync(releaseDocPath), "Debe existir docs/v0_24_2a_EUROPEAN_UI_MATCHDAY_VIEW.md.");
-  logOk("README, CHANGELOG y doc de fase apuntan a v0.24.2a");
+  assert(changelog.startsWith(`# Changelog\n\n## ${APP_VERSION}`), `CHANGELOG debe empezar por ${APP_VERSION}.`);
+  assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), `README debe apuntar a ${CURRENT_RELEASE_TAG}.`);
+  assert(existsSync(releaseDocPath), `Debe existir ${CURRENT_RELEASE_DOC}.`);
+  logOk(`README, CHANGELOG y doc de fase apuntan a ${APP_VERSION}`);
 }
 
 function testQaScriptsAreRegistered(): void {
@@ -100,6 +100,16 @@ function testQaScriptsAreRegistered(): void {
   assert(packageJson.scripts?.["qa:european-tournament"], "Debe existir script qa:european-tournament.");
   assert(packageJson.scripts?.["qa:european-match-engine"], "Debe existir script qa:european-match-engine.");
   assert(packageJson.scripts?.["qa:european-calendar"], "Debe existir script qa:european-calendar.");
+  assert(packageJson.scripts?.["qa:european-matchday-ui"], "Debe existir script qa:european-matchday-ui.");
+  assert(packageJson.scripts?.["qa:european-progress-ui"], "Debe existir script qa:european-progress-ui.");
+  assert(packageJson.scripts?.["qa:european-knockouts"], "Debe existir script qa:european-knockouts.");
+  assert(packageJson.scripts?.["qa:european-trophies-palmares"], "Debe existir script qa:european-trophies-palmares.");
+  assert(packageJson.scripts?.["qa:european-rewards-prestige"], "Debe existir script qa:european-rewards-prestige.");
+  assert(packageJson.scripts?.["qa:european-balance"], "Debe existir script qa:european-balance.");
+  assert(packageJson.scripts?.["qa:global-ranking-europa-fields"], "Debe existir script qa:global-ranking-europa-fields.");
+  assert(packageJson.scripts?.["qa:global-ranking-backend-migration"], "Debe existir script qa:global-ranking-backend-migration.");
+  assert(packageJson.scripts?.["qa:european-mobile-polish"], "Debe existir script qa:european-mobile-polish.");
+  assert(packageJson.scripts?.["qa:european-visual-polish"], "Debe existir script qa:european-visual-polish.");
   assert(packageJson.scripts?.["qa:tech-debt"]?.includes("qa:tech-health-baseline"), "qa:tech-debt debe incluir qa:tech-health-baseline.");
   assert(packageJson.scripts?.["qa:tech-debt"]?.includes("qa:hooks-simulation-deps"), "qa:tech-debt debe incluir qa:hooks-simulation-deps.");
   assert(packageJson.scripts?.["qa:tech-debt"]?.includes("qa:agentjacking"), "qa:tech-debt debe incluir qa:agentjacking.");

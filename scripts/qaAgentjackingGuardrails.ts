@@ -1,10 +1,9 @@
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
-import { APP_STATUS, APP_VERSION, APP_VERSION_NAME } from "../src/config/appVersion";
+import { APP_STATUS, APP_VERSION, APP_VERSION_NAME, CURRENT_RELEASE_DOC, CURRENT_RELEASE_TAG } from "../src/config/appVersion";
 
 const ROOT = process.cwd();
-const CURRENT_PUBLIC_VERSION = "v0.24.2a";
-const CURRENT_RELEASE_TAG = "v0.24.2a_EUROPEAN_UI_MATCHDAY_VIEW";
+const CURRENT_PUBLIC_VERSION = APP_VERSION;
 const REAL_APPS_SCRIPT_ID_PATTERN = /AKfycb[a-zA-Z0-9_-]{20,}/;
 const LOCAL_ENV_FILES = [".env", ".env.local", ".env.development.local", ".env.production.local"];
 const TEXT_FILE_EXTENSIONS = new Set([
@@ -68,7 +67,7 @@ function walkTextFiles(dir: string, results: string[] = []): string[] {
 
 function testVersionMetadata(): void {
   assert(APP_VERSION === CURRENT_PUBLIC_VERSION, `APP_VERSION debe ser ${CURRENT_PUBLIC_VERSION}, pero es ${APP_VERSION}.`);
-  assert(APP_VERSION_NAME === "European UI Matchday View", `APP_VERSION_NAME inesperado: ${APP_VERSION_NAME}.`);
+  assert(APP_VERSION_NAME === "Europa Career Release Stabilization", `APP_VERSION_NAME inesperado: ${APP_VERSION_NAME}.`);
   assert(APP_STATUS.includes("Europa Career") && APP_STATUS.includes("clasificación"), "APP_STATUS debe mencionar la base de Europa Career.");
   logOk("appVersion.ts apunta a la fase actual");
 }
@@ -152,12 +151,11 @@ function testDangerousGitCommandsAreNotRecommended(): void {
 function testDocsArePresent(): void {
   const changelog = readText("CHANGELOG.md").replace(/\r\n/g, "\n");
   const readme = readText("README.md");
-  const phaseDocPath = "docs/v0_24_2a_EUROPEAN_UI_MATCHDAY_VIEW.md";
 
-  assert(changelog.startsWith("# Changelog\n\n## v0.24.2a"), "CHANGELOG debe empezar por v0.24.2a.");
-  assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), "README debe apuntar a v0.24.2a_EUROPEAN_UI_MATCHDAY_VIEW.");
-  assert(existsSync(join(ROOT, phaseDocPath)), "Debe existir docs/v0_24_2a_EUROPEAN_UI_MATCHDAY_VIEW.md.");
-  logOk("README, CHANGELOG y doc de fase apuntan a v0.24.2a");
+  assert(changelog.startsWith(`# Changelog\n\n## ${APP_VERSION}`), `CHANGELOG debe empezar por ${APP_VERSION}.`);
+  assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), `README debe apuntar a ${CURRENT_RELEASE_TAG}.`);
+  assert(existsSync(join(ROOT, CURRENT_RELEASE_DOC)), `Debe existir ${CURRENT_RELEASE_DOC}.`);
+  logOk(`README, CHANGELOG y doc de fase apuntan a ${APP_VERSION}`);
 }
 
 function testQaScriptsAreRegistered(): void {

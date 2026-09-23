@@ -1,6 +1,6 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { APP_STATUS, APP_VERSION, APP_VERSION_NAME } from "../src/config/appVersion";
+import { APP_STATUS, APP_VERSION, APP_VERSION_NAME, CURRENT_RELEASE_DOC, CURRENT_RELEASE_TAG } from "../src/config/appVersion";
 
 type PackageJson = {
   version?: string;
@@ -13,10 +13,12 @@ type PackageLockJson = {
 };
 
 const ROOT = process.cwd();
-const CURRENT_PUBLIC_VERSION = "v0.24.2a";
-const CURRENT_PACKAGE_VERSION = "0.24.2-a.0";
-const CURRENT_RELEASE_TAG = "v0.24.2a_EUROPEAN_UI_MATCHDAY_VIEW";
-const CURRENT_DOC = "docs/v0_24_2a_EUROPEAN_UI_MATCHDAY_VIEW.md";
+const CURRENT_PUBLIC_VERSION = APP_VERSION;
+const CURRENT_PACKAGE_VERSION = "0.24.7";
+// Doc histórico de v0.24.2a (no el release actual): esta QA nació en esa
+// fase y sigue comprobando que ese documento concreto siga describiendo la
+// UI de jornada europea, independientemente de cuál sea la fase actual.
+const MATCHDAY_UI_DOC = "docs/v0_24_2a_EUROPEAN_UI_MATCHDAY_VIEW.md";
 
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) {
@@ -41,7 +43,7 @@ function testVersionMetadata(): void {
   const packageLock = readJson<PackageLockJson>("package-lock.json");
 
   assert(APP_VERSION === CURRENT_PUBLIC_VERSION, `APP_VERSION debe ser ${CURRENT_PUBLIC_VERSION}, pero es ${APP_VERSION}.`);
-  assert(APP_VERSION_NAME === "European UI Matchday View", `APP_VERSION_NAME inesperado: ${APP_VERSION_NAME}.`);
+  assert(APP_VERSION_NAME === "Europa Career Release Stabilization", `APP_VERSION_NAME inesperado: ${APP_VERSION_NAME}.`);
   assert(APP_STATUS.includes("Europa Career") && APP_STATUS.includes("clasificación"), "APP_STATUS debe describir la base de Europa Career y su clasificación.");
   assert(packageJson.version === CURRENT_PACKAGE_VERSION, `package.json debe usar ${CURRENT_PACKAGE_VERSION}, pero usa ${packageJson.version}.`);
   assert(packageLock.version === packageJson.version, "package-lock.json version debe coincidir con package.json.");
@@ -95,18 +97,19 @@ function testSetStateInEffectCleanups(): void {
 function testDocs(): void {
   const changelog = readText("CHANGELOG.md").replace(/\r\n/g, "\n");
   const readme = readText("README.md");
-  const doc = readText(CURRENT_DOC);
+  const matchdayDoc = readText(MATCHDAY_UI_DOC);
 
-  assert(changelog.startsWith("# Changelog\n\n## v0.24.2a"), "CHANGELOG debe empezar por v0.24.2a.");
-  assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), "README debe apuntar a v0.24.2a_EUROPEAN_UI_MATCHDAY_VIEW.");
+  assert(changelog.startsWith(`# Changelog\n\n## ${APP_VERSION}`), `CHANGELOG debe empezar por ${APP_VERSION}.`);
+  assert(readme.includes(`Versión pública actual: \`${CURRENT_RELEASE_TAG}\`.`), `README debe apuntar a ${CURRENT_RELEASE_TAG}.`);
+  assert(existsSync(join(ROOT, CURRENT_RELEASE_DOC)), `Debe existir ${CURRENT_RELEASE_DOC}.`);
   assert(
-    doc.includes("Europa") && doc.includes("Noche europea") && doc.includes("EuropeanMatchEvent"),
-    "El documento de fase debe explicar la UI de jornada europea."
+    matchdayDoc.includes("Europa") && matchdayDoc.includes("Noche europea") && matchdayDoc.includes("EuropeanMatchEvent"),
+    `${MATCHDAY_UI_DOC} debe seguir explicando la UI de jornada europea.`,
   );
   logOk("documentación de fase alineada");
 }
 
-console.log("QA Luck Wheel Real Rewards");
+console.log("QA Hooks Simulation Deps");
 
 testVersionMetadata();
 testScriptsAndWorkflow();
@@ -114,4 +117,4 @@ testLeagueSimulatorHookDeps();
 testSetStateInEffectCleanups();
 testDocs();
 
-console.log("QA luck wheel real rewards OK");
+console.log("QA hooks simulation deps OK");
