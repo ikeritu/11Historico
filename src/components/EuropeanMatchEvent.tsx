@@ -66,10 +66,14 @@ function getPhaseNarrative(tournament: EuropeanTournamentState, match: EuropeanT
   if (tournament.completed && tournament.champion) {
     return "El Athletic ha conquistado Europa; el título se sumará al palmarés histórico al cerrar la temporada.";
   }
+  // eliminated se comprueba antes que "completed && !champion": una
+  // eliminación en fase inicial o semifinal también deja completed=true, y
+  // sin este orden el texto decía "ha sido finalista europeo" para una
+  // eliminación en fase de grupos que nunca llegó a la final.
+  if (tournament.eliminated) return "El sueño europeo termina aquí, pero la temporada nacional continúa.";
   if (tournament.completed && !tournament.champion) {
     return "El Athletic ha sido finalista europeo; el resultado queda registrado sin sumar título al palmarés.";
   }
-  if (tournament.eliminated) return "El sueño europeo termina aquí, pero la temporada nacional continúa.";
   if (match.phase === "final") return "Final europea a partido único: ganar significa ser campeón y sumar el título al palmarés al cerrar la temporada; perder deja al Athletic como finalista.";
   if (match.phase === "semifinal") return "Semifinal europea a partido único: ganar abre la final; perder cierra la aventura europea.";
   if (match.isHome) return "Noche grande en San Mamés: Europa vuelve a Bilbao.";
