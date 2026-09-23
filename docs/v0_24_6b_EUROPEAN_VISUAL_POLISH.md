@@ -21,7 +21,7 @@ Coherencia visual entre pantallas europeas, no responsive (eso ya lo cubrió [v0
 ## Verificación
 
 - **En vivo**: columna "Europa" del ranking local, comprobada con una entrada de prueba sembrada y luego limpiada de `localStorage` — el texto pasa de blanco/rosa uniforme a azul `#cfe0ff`, distinguible de un vistazo.
-- **Por código, no en vivo**: `EuropeanQualificationCard`/`EuropeanProgressPanel` reutilizan exactamente el mismo patrón de clase condicional (`getCompetitionClass`/`getEventClass`) ya usado y en producción en `EuropeanMatchEvent.tsx`, y los mismos valores de color exactos que ese archivo ya tiene desplegados. Alcanzar esas dos pantallas en vivo requiere progresar una carrera completa hasta clasificación/torneo europeo, lo cual no se ha hecho en esta fase; la confianza viene de reutilizar un patrón y unos valores ya probados en el mismo código base, no de una verificación visual directa de esas dos pantallas.
+- **En vivo (cerrado tras v0.24.7)**: `EuropeanQualificationCard` y `EuropeanProgressPanel` se verificaron con un arnés de previsualización temporal (montado en vez de `<App />` en `main.tsx`, revertido inmediatamente después, sin quedar en el repositorio): los tres componentes de competición se renderizaron con datos construidos vía las funciones de producción reales (`createEuropeanTournamentForQualification`, `applyEuropeanMatchResult`), y se leyó el `border-color` computado real de cada tarjeta/panel en el navegador. Resultado: Champions `rgba(128, 190, 255, ...)`, Europa League `rgba(255, 185, 105, ...)`, Conference `rgba(95, 225, 160, ...)` en ambos componentes, coincidiendo exactamente con lo esperado. Ya no queda como verificación solo por código.
 
 ## Fuera de alcance
 
