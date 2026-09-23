@@ -1733,6 +1733,7 @@ export default function App() {
           completedSeasons={careerCompletedSeasons}
           trophyCounts={careerTrophyCounts}
           europeanQualification={careerEuropeanQualification}
+          europeanCareerState={europeanCareerState}
           europeanTournament={europeanCareerState.currentTournament}
         />
       )}

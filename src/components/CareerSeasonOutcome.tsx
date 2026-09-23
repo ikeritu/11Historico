@@ -1,7 +1,16 @@
+import { useState } from "react";
 import type { FinalGameSummary, SelectedPlayer, TeamRating } from "../types/game";
+import type { CareerAchievement } from "../career/shareRetention";
 import type { CareerLocalRankingEntry, CareerObjectiveResult, CareerSeasonResult, CareerTrophyCounts } from "../types/career";
-import type { EuropeanQualificationResult, EuropeanTournamentState } from "../europe/europeanTypes";
+import type { EuropeanCareerState, EuropeanQualificationResult, EuropeanTournamentState } from "../europe/europeanTypes";
 import { calculateCareerArcadeScore, getFinalCareerTrophyCounts } from "../career/careerRanking";
+import {
+  buildCareerShareText,
+  getCareerAchievements,
+  getCareerRankingPosition,
+  isNewCareerPersonalRecord,
+} from "../career/shareRetention";
+import { loadCareerLocalRanking } from "../storage/careerLocalRankingStorage";
 
 import CareerGlobalSubmitPanel from "./CareerGlobalSubmitPanel";
 import PalmaresTrophyCase from "./PalmaresTrophyCase";
@@ -24,6 +33,7 @@ interface CareerSeasonOutcomeProps {
   completedSeasons?: number;
   trophyCounts?: CareerTrophyCounts;
   europeanQualification?: EuropeanQualificationResult;
+  europeanCareerState?: EuropeanCareerState;
   /** Torneo europeo de la temporada que acaba de cerrarse (para integrar un título pendiente en el palmarés mostrado aquí). */
   europeanTournament?: EuropeanTournamentState | null;
 }
@@ -60,8 +70,6 @@ function getCareerOutcomeNote(seasonResult: CareerSeasonResult, objectiveResult:
 
   return "Temporada salvada por Europa. Elige cambiar 1 jugador o cambiar entrenador antes de seguir.";
 }
-
-
 
 function CareerGameOverArcadeSummary({
   seasonResult,
@@ -123,6 +131,65 @@ function CareerGameOverArcadeSummary({
   );
 }
 
+function CareerShareRetentionPanel({
+  shareText,
+  achievements,
+  rankingPosition,
+  isNewRecord,
+}: {
+  shareText: string;
+  achievements: CareerAchievement[];
+  rankingPosition?: number;
+  isNewRecord: boolean;
+}) {
+  const [shareStatus, setShareStatus] = useState("");
+  async function handleShareCareer() {
+    try {
+      if (!navigator.clipboard?.writeText) throw new Error("Clipboard unavailable");
+      await navigator.clipboard.writeText(shareText);
+      setShareStatus("Texto copiado. Ya puedes compartirlo.");
+    } catch {
+      setShareStatus("No se pudo copiar automáticamente. Selecciona y copia el texto de arriba.");
+    }
+  }
+
+  return (
+    <section className="career-share-retention-card" aria-label="Compartir carrera">
+      <div className="career-share-retention-header">
+        <div>
+          <span>Share & retention</span>
+          <h2>Compartir mi carrera</h2>
+        </div>
+        {rankingPosition && <strong>Top #{rankingPosition}</strong>}
+      </div>
+
+      {isNewRecord && (
+        <p className="career-new-record-badge">
+          ⭐ Nuevo récord personal en este navegador
+        </p>
+      )}
+
+      {achievements.length > 0 && (
+        <div className="career-achievements-list" aria-label="Logros desbloqueados">
+          {achievements.map((achievement) => (
+            <article key={achievement.id}>
+              <strong>{achievement.label}</strong>
+              <small>{achievement.description}</small>
+            </article>
+          ))}
+        </div>
+      )}
+
+      <textarea className="career-share-preview" aria-label="Texto para compartir" readOnly value={shareText} rows={9} />
+
+      <button type="button" className="primary-home-button" onClick={handleShareCareer}>
+        Compartir mi carrera
+      </button>
+      <p role="status" aria-live="polite">{shareStatus}</p>
+    </section>
+  );
+}
+
 function getEuropeanLabel(result: CareerSeasonResult): string {
   if (result.europeanQualification === "champions") return "Champions League";
   if (result.europeanQualification === "europa_league") return "Europa League";
@@ -145,11 +212,23 @@ export function CareerSeasonOutcome({
   completedSeasons = 0,
   trophyCounts,
   europeanQualification,
+  europeanCareerState,
   europeanTournament,
 }: CareerSeasonOutcomeProps) {
   const survived = objectiveResult.survives;
   const xiAverage = getSelectedPlayersAverage(selectedPlayers);
   const finalTrophies = getFinalCareerTrophyCounts(trophyCounts, seasonResult, europeanTournament);
+  const localRankingEntries = !survived && rankingEntry ? loadCareerLocalRanking() : [];
+  const rankingPosition = getCareerRankingPosition(rankingEntry, localRankingEntries);
+  const newPersonalRecord = isNewCareerPersonalRecord(rankingEntry, localRankingEntries);
+  const achievements = getCareerAchievements({
+    completedSeasons,
+    trophyCounts: finalTrophies,
+    qualifiedForEurope: Boolean(europeanCareerState?.totalQualifications) || objectiveResult.qualifiedForEurope,
+    reachedEuropeanFinal: Boolean(europeanTournament?.matches.some((match) => match.phase === "final" && match.status === "played")),
+    rankingPosition,
+  });
+  const careerShareText = rankingEntry ? buildCareerShareText(rankingEntry) : undefined;
 
   return (
     <main className={`career-outcome-screen ${survived ? "career-outcome-success" : "career-outcome-game-over"}`}>
@@ -217,6 +296,15 @@ export function CareerSeasonOutcome({
                 variant="career"
               />
             </section>
+
+            {careerShareText && (
+              <CareerShareRetentionPanel
+                shareText={careerShareText}
+                achievements={achievements}
+                rankingPosition={rankingPosition}
+                isNewRecord={newPersonalRecord}
+              />
+            )}
           </>
         )}
 
