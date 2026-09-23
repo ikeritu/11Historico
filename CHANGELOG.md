@@ -1,5 +1,86 @@
 # Changelog
 
+## v0.24.7 — Europa Career Release Stabilization
+
+- Cierra el arco completo de "Europa Career" (v0.24.0a–v0.24.6b) como versión pública estable.
+- Corrige `APP_VERSION`/`APP_VERSION_NAME`/`APP_STATUS` (`src/config/appVersion.ts`), que seguían apuntando a `v0.24.2a` diez fases por detrás, y su comprobación en `qa:release-stabilization`.
+- Corrige `CHANGELOG.md`: eliminadas 6 cabeceras `# Changelog` repetidas y 3 bloques de entradas duplicadas (`v0.23.3b`, `v0.23.2b6`, `v0.23.2b` aparecían cada una 3 veces); verificado que el conjunto de versiones documentadas es idéntico antes y después, sin pérdida de historial. Añadidas las 9 entradas que faltaban entre `v0.24.2b` y `v0.24.6b`.
+- Añade `docs/v0_24_7_EUROPA_CAREER_RELEASE_STABILIZATION.md` como resumen de referencia único de todo el arco europeo (hasta ahora cada fase solo enlazaba a la inmediatamente anterior, sin un punto de entrada común).
+- No cambia probabilidades, ratings históricos, balance de Liga/Copa/Supercopa, la Ruleta de la Suerte ni funcionalidades existentes: es una fase de higiene de release, no de producto.
+- Actualiza versionado a `v0.24.7` / `0.24.7`.
+
+## v0.24.6b — European Visual Polish
+
+- Extiende el sistema de color por competición (azul Champions / naranja Europa League / verde Conference), que ya existía en `EuropeanMatchEvent.css`, a `EuropeanQualificationCard` y `EuropeanProgressPanel`, que hasta entonces mostraban las tres competiciones de forma idéntica.
+- Da a la columna "Europa" de los rankings local y global (v0.24.5a) un acento de color propio (`#cfe0ff`), distinguiéndola de un vistazo de Liga/Copa/Supercopa.
+- Añade `qa:european-visual-polish` e integra la QA en `qa:tech-debt` y GitHub Actions.
+- No cambia responsive/móvil (v0.24.6a), estructura de datos, backend, Ruleta de la Suerte, Liga, Copa ni Supercopa.
+- Actualiza versionado a `v0.24.6b` / `0.24.6-b.0`.
+
+## v0.24.6a — European Mobile Polish
+
+- Corrige 3 huecos de responsive/móvil en pantallas europeas recientes: la columna "Europa" de los rankings sin `<span>` (rompía el alineado móvil apilado), el grid de KPIs de `EuropeanMatchEvent` sin colapso forzado a una columna en móvil estrecho, y su botón de acción sin ancho completo en móvil.
+- No duplica la cobertura móvil ya existente (`v0.23.3a`, `@media` ya presentes en las pantallas europeas).
+- Añade `qa:european-mobile-polish` e integra la QA en `qa:tech-debt` y GitHub Actions.
+- No cambia estructura de datos, backend, Ruleta de la Suerte, Liga, Copa ni Supercopa.
+- Actualiza versionado a `v0.24.6a` / `0.24.6-a.0`.
+
+## v0.24.5b — Backend Ranking Migration
+
+- Migra `apps-script/globalRankingBackend.gs` para exponer el desglose de títulos por competición (`championsTitles`...`supercopaTitles`) como columnas propias en Sheets, añadidas al final de `HEADERS` sin desplazar índices existentes.
+- `trophyCounts` (JSON) sigue siendo la fuente de verdad y el formato que recibe el cliente no cambia; la fórmula de puntuación (`PALMARES_POINTS`/`computeScores_`) tampoco se toca.
+- Añade `migrateExistingTrophyColumns_()`, migración de un solo uso para rellenar las columnas nuevas en filas ya existentes (requiere ejecución manual del usuario en Apps Script tras desplegar).
+- Añade `qa:global-ranking-backend-migration` e integra la QA en `qa:tech-debt` y GitHub Actions.
+- Actualiza versionado a `v0.24.5b` / `0.24.5-b.0`.
+
+## v0.24.5a — Global Ranking Europa Fields
+
+- Expone en la UI de ranking (local y global) el desglose de títulos europeos por competición, que ya viajaba dentro de `trophyCounts` en cada entrada pero no se mostraba de forma diferenciada.
+- Nuevos helpers `getEuropeanTrophyBreakdown`/`formatEuropeanTrophyBreakdownLabel` en `careerRanking.ts`, usados por `CareerLocalRanking.tsx` (sustituye la suma manual anterior) y `CareerGlobalRanking.tsx` (antes no mostraba nada de Europa).
+- No añade campos nuevos al payload ni toca `apps-script/globalRankingBackend.gs`; eso queda para v0.24.5b.
+- Añade `qa:global-ranking-europa-fields` e integra la QA en `qa:tech-debt` y GitHub Actions.
+- Actualiza versionado a `v0.24.5a` / `0.24.5-a.0`.
+
+## v0.24.4b — European Balance QA
+
+- Añade `scripts/qaEuropeanBalance.ts`, QA de balance dedicada a los riesgos concretos que introdujo el bonus de prestigio de v0.24.4a: que se acumulara temporada tras temporada, y que el bonus máximo dejara las competiciones triviales o superara el techo de rating de 100.
+- No modifica ningún archivo de producción: es QA pura sobre mecánica ya existente.
+- Integra la QA en `qa:tech-debt` y GitHub Actions.
+- Actualiza versionado a `v0.24.4b` / `0.24.4-b.0`.
+
+## v0.24.4a — European Rewards / Prestige
+
+- Añade recompensa de prestigio europeo tras cada campaña europea, integrada en la transición entre temporadas: campeón de Champions/Europa League/Conference da +1.0/+0.75/+0.5 de bonus de rating; final perdida da +0.25; semifinal o fase inicial perdida solo dan narrativa, sin bonus.
+- El bonus se combina con `Math.max` (nunca se acumula) y nunca puede reclamarse dos veces sobre el mismo torneo (`europeanPrestigeAwarded`).
+- Corrige de paso el cableado de v0.24.3b: los títulos europeos no llegaban a sumarse al palmarés real en `App.tsx`/`CareerSeasonOutcome.tsx` pese a que la infraestructura ya existía; y corrige que `normalizeEuropeanTournament` no conservaba las marcas de título/prestigio ya otorgados al recargar una partida guardada.
+- Añade `qa:european-rewards-prestige` e integra la QA en `qa:tech-debt` y GitHub Actions.
+- Actualiza versionado a `v0.24.4a` / `0.24.4-a.0`.
+
+## v0.24.3b — European Trophies + Palmarés
+
+- Los títulos europeos (Champions League, Europa League, Conference League) se suman por fin al palmarés de carrera al cerrar la temporada, con guardarraíl anti-duplicado (`europeanTrophyAwarded`).
+- Nuevo módulo `src/career/europeanTrophies.ts` y extensión de `careerRanking.ts`/`getFinalCareerTrophyCounts` para aceptar el torneo europeo pendiente.
+- Añade `qa:european-trophies-palmares` e integra la QA en `qa:tech-debt` y GitHub Actions.
+- No cambia el ranking global, la Ruleta de la Suerte, Liga, Copa ni Supercopa.
+- Actualiza versionado a `v0.24.3b` / `0.24.3-b.0`.
+
+## v0.24.3a — European Knockouts
+
+- Mejora la experiencia de semifinal y final europea como partidos únicos, con consecuencias claras y mayor jerarquía visual.
+- Nuevo bloque narrativo de eliminatoria en `EuropeanMatchEvent`, estado de eliminatoria visible en `EuropeanProgressPanel`.
+- Nuevos helpers puros en `europeanTournament.ts`: `isEuropeanKnockoutPhase`, `getEuropeanKnockoutStageText`, `getEuropeanKnockoutStakesText`.
+- Mantiene el título europeo como estado interno del torneo; la integración real en palmarés queda para v0.24.3b.
+- Añade `qa:european-knockouts` e integra la QA en `qa:tech-debt` y GitHub Actions.
+- Actualiza versionado a `v0.24.3a` / `0.24.3-a.0`.
+
+## v0.24.2b — European Progress UI
+
+- Añade `EuropeanProgressPanel`, vista consultiva del progreso europeo completo: partidos jugados/totales, puntos, V/E/D, goles a favor/en contra, objetivo contextual por fase, próxima noche europea y calendario europeo completo.
+- Integra el panel dentro de `EuropeanMatchEvent`.
+- Añade `qa:european-progress-ui` e integra la QA en `qa:tech-debt` y GitHub Actions.
+- No se añaden títulos europeos al palmarés, no se modifica el motor de simulación europeo ni las reglas de clasificación.
+- Actualiza versionado a `v0.24.2b` / `0.24.2-b.0`.
+
 ## v0.24.2a — European UI Matchday View
 
 - Mejora visualmente la tarjeta de evento europeo "Noche europea".
@@ -26,8 +107,6 @@
 - Añade `qa:european-tournament`, `qa:european-match-engine` y `qa:european-calendar`, integradas en `qa:tech-debt` y en el workflow de GitHub Pages antes del build.
 - Actualiza versionado a `v0.24.1c` / `0.24.1-c.0`.
 
-# Changelog
-
 ## v0.24.0c — Europa Qualification Foundation
 
 - Añade la base de reglas puras de clasificación europea (`src/europe/europeanTypes.ts`, `europeanQualification.ts`): 1º-4º Champions League, 5º-6º Europa League, 7º Conference League, 8º o peor sin Europa.
@@ -40,8 +119,6 @@
 - Añade `qa:european-qualification`, `qa:european-qualification-ui` y `qa:european-persistence`, integradas en `qa:tech-debt` y en el workflow de GitHub Pages antes del build.
 - Actualiza versionado a `v0.24.0c` / `0.24.0-c.0`.
 
-# Changelog
-
 ## v0.23.2c — Luck Wheel Real Rewards
 
 - Ejecuta de verdad los premios de ruleta de cambio de jugador y cambio de entrenador.
@@ -51,8 +128,6 @@
 - No cambia probabilidades, ratings históricos, palmarés, ranking ni Europa Career.
 - Añade `qa:luck-wheel-real-rewards` e integra la QA en `qa:tech-debt`.
 - Actualiza versionado a `v0.23.2c` / `0.23.2-c.0`.
-
-# Changelog
 
 ## v0.23.3b — Hooks Simulation Deps Cleanup
 
@@ -368,43 +443,6 @@
 - Apoyo, feedback y versión quedan más discretos.
 - No se toca la lógica de simulación, carrera, ascensos/descensos ni rating efectivo.
 
-# Changelog
-
-## v0.23.3b — Hooks Simulation Deps Cleanup
-
-- Corrige deuda de hooks marcada por la auditoría: elimina errores `react-hooks/set-state-in-effect` y dependencias obsoletas en el bucle de simulación.
-- Estabiliza `LeagueSimulatorView` con callbacks memoizados para `commitContext`, `finishIfReady` y `maybeOfferSeasonLuckWheel`, evitando closures obsoletos en la simulación automática.
-- Limpia avisos de hooks en paneles auxiliares y evita efectos usados solo para derivar estado local.
-- Activa `lint:src` como paso de GitHub Actions tras dejarlo sin errores/warnings.
-- Añade `qa:hooks-simulation-deps` y lo integra en `qa:tech-debt` y en el workflow de deploy.
-- Actualiza versionado a `v0.23.3b` / `0.23.3-b.0`.
-- No toca probabilidades, balance, ratings históricos, ruleta, palmarés, ranking ni Europa Career.
-
-## v0.23.2b6 — Luck Wheel Label Fit
-
-- Acorta etiquetas internas de la ruleta para que encajen mejor en cada quesito: `Jug.`, `Entr.`, `+1`, `+0.5`, `-0.5`, `-1`.
-- Mantiene la leyenda externa con el nombre completo de los premios.
-- Ajusta CSS de tamaño, ancho, interlineado y sombra para mejorar nitidez.
-- Refuerza `qa:season-luck-wheel-ui` con etiquetas ultracortas y comprobación explícita de aplicación de `ratingDelta`.
-- Documenta que `+0.5`, `+1`, `-0.5` y `-1` ya tienen efecto real en el rating de temporada usado por simulación.
-- Actualiza versionado a `v0.23.2b6` / `0.23.2-b6.0`.
-- No toca probabilidades, balance, ratings históricos, plantillas base, palmarés, ranking ni Europa Career.
-
-## v0.23.2b — Season Luck Wheel UI
-
-- Añade `SeasonLuckWheelModal` con modal narrativo para la ruleta de temporada.
-- Muestra premios visibles en la ruleta: `+0.5`, cambio de jugador, cambio de entrenador, `+1.0`, `+1.0` + jugador, sin efecto, `-0.5` y `-1.0`.
-- Añade animación de giro con segmentos visuales.
-- Añade barra de precisión con flecha móvil y botón `Parar flecha`.
-- Integra botones `Jugar ruleta` y `No jugar`; rechazar consume la oportunidad sin efecto.
-- Pausa la simulación automática cuando aparece la oferta de ruleta.
-- Añade triggers iniciales por mitad de temporada y eliminación en Copa del Rey.
-- Persiste el estado de ruleta en el contexto de liga.
-- Aplica los efectos de media al rating que usa la simulación durante la temporada.
-- Añade `npm run qa:season-luck-wheel-ui` e integra la QA en `npm run qa:tech-debt`.
-- Actualiza versionado a `v0.23.2b` / `0.23.2-b.0`.
-- No toca ratings históricos, plantillas base, ranking local, ranking global ni Europa Career.
-
 ## v0.22.4 — Career exit copy and coach layout fix
 
 - Refuerza el copy de salida de carrera como `Salir`.
@@ -427,43 +465,6 @@
 - Los ascendidos salen de la bolsa mientras juegan en Primera.
 - Añadido bloque visual de ascensos y descensos en pantalla entre temporadas.
 - No se toca rating efectivo, Supercopa, Europa ni partida rápida.
-
-# Changelog
-
-## v0.23.3b — Hooks Simulation Deps Cleanup
-
-- Corrige deuda de hooks marcada por la auditoría: elimina errores `react-hooks/set-state-in-effect` y dependencias obsoletas en el bucle de simulación.
-- Estabiliza `LeagueSimulatorView` con callbacks memoizados para `commitContext`, `finishIfReady` y `maybeOfferSeasonLuckWheel`, evitando closures obsoletos en la simulación automática.
-- Limpia avisos de hooks en paneles auxiliares y evita efectos usados solo para derivar estado local.
-- Activa `lint:src` como paso de GitHub Actions tras dejarlo sin errores/warnings.
-- Añade `qa:hooks-simulation-deps` y lo integra en `qa:tech-debt` y en el workflow de deploy.
-- Actualiza versionado a `v0.23.3b` / `0.23.3-b.0`.
-- No toca probabilidades, balance, ratings históricos, ruleta, palmarés, ranking ni Europa Career.
-
-## v0.23.2b6 — Luck Wheel Label Fit
-
-- Acorta etiquetas internas de la ruleta para que encajen mejor en cada quesito: `Jug.`, `Entr.`, `+1`, `+0.5`, `-0.5`, `-1`.
-- Mantiene la leyenda externa con el nombre completo de los premios.
-- Ajusta CSS de tamaño, ancho, interlineado y sombra para mejorar nitidez.
-- Refuerza `qa:season-luck-wheel-ui` con etiquetas ultracortas y comprobación explícita de aplicación de `ratingDelta`.
-- Documenta que `+0.5`, `+1`, `-0.5` y `-1` ya tienen efecto real en el rating de temporada usado por simulación.
-- Actualiza versionado a `v0.23.2b6` / `0.23.2-b6.0`.
-- No toca probabilidades, balance, ratings históricos, plantillas base, palmarés, ranking ni Europa Career.
-
-## v0.23.2b — Season Luck Wheel UI
-
-- Añade `SeasonLuckWheelModal` con modal narrativo para la ruleta de temporada.
-- Muestra premios visibles en la ruleta: `+0.5`, cambio de jugador, cambio de entrenador, `+1.0`, `+1.0` + jugador, sin efecto, `-0.5` y `-1.0`.
-- Añade animación de giro con segmentos visuales.
-- Añade barra de precisión con flecha móvil y botón `Parar flecha`.
-- Integra botones `Jugar ruleta` y `No jugar`; rechazar consume la oportunidad sin efecto.
-- Pausa la simulación automática cuando aparece la oferta de ruleta.
-- Añade triggers iniciales por mitad de temporada y eliminación en Copa del Rey.
-- Persiste el estado de ruleta en el contexto de liga.
-- Aplica los efectos de media al rating que usa la simulación durante la temporada.
-- Añade `npm run qa:season-luck-wheel-ui` e integra la QA en `npm run qa:tech-debt`.
-- Actualiza versionado a `v0.23.2b` / `0.23.2-b.0`.
-- No toca ratings históricos, plantillas base, ranking local, ranking global ni Europa Career.
 
 ## v0.21.0f — Career promotion and summary fix
 

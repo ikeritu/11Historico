@@ -176,6 +176,10 @@ Pages, antes del `build`.
   recomienda ejecutar `npm run qa:tech-debt` y `npm run build` en la
   máquina Windows habitual antes de publicar, tal como se detalla en las
   instrucciones de prueba del informe de entrega.
+  - **Cerrado en v0.24.7**: `npm run qa:tech-debt` y `npm run build` se han
+    ejecutado con éxito de forma nativa en Windows repetidamente en todas
+    las fases europeas posteriores (hasta v0.24.6b); este riesgo ya no
+    aplica.
 
 ## Próximos pasos
 
