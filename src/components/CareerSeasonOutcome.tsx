@@ -1,7 +1,15 @@
 import type { FinalGameSummary, SelectedPlayer, TeamRating } from "../types/game";
+import type { CareerAchievement } from "../career/shareRetention";
 import type { CareerLocalRankingEntry, CareerObjectiveResult, CareerSeasonResult, CareerTrophyCounts } from "../types/career";
 import type { EuropeanQualificationResult, EuropeanTournamentState } from "../europe/europeanTypes";
 import { calculateCareerArcadeScore, getFinalCareerTrophyCounts } from "../career/careerRanking";
+import {
+  buildCareerShareText,
+  getCareerAchievements,
+  getCareerRankingPosition,
+  isNewCareerPersonalRecord,
+} from "../career/shareRetention";
+import { loadCareerLocalRanking } from "../storage/careerLocalRankingStorage";
 
 import CareerGlobalSubmitPanel from "./CareerGlobalSubmitPanel";
 import PalmaresTrophyCase from "./PalmaresTrophyCase";
@@ -60,8 +68,6 @@ function getCareerOutcomeNote(seasonResult: CareerSeasonResult, objectiveResult:
 
   return "Temporada salvada por Europa. Elige cambiar 1 jugador o cambiar entrenador antes de seguir.";
 }
-
-
 
 function CareerGameOverArcadeSummary({
   seasonResult,
@@ -123,6 +129,64 @@ function CareerGameOverArcadeSummary({
   );
 }
 
+function CareerShareRetentionPanel({
+  shareText,
+  achievements,
+  rankingPosition,
+  isNewRecord,
+}: {
+  shareText: string;
+  achievements: CareerAchievement[];
+  rankingPosition?: number;
+  isNewRecord: boolean;
+}) {
+  function handleShareCareer() {
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      void navigator.clipboard.writeText(shareText);
+      return;
+    }
+
+    if (typeof window !== "undefined") {
+      window.alert(shareText);
+    }
+  }
+
+  return (
+    <section className="career-share-retention-card" aria-label="Compartir carrera">
+      <div className="career-share-retention-header">
+        <div>
+          <span>Share & retention</span>
+          <h2>Compartir mi carrera</h2>
+        </div>
+        {rankingPosition && <strong>Top #{rankingPosition}</strong>}
+      </div>
+
+      {isNewRecord && (
+        <p className="career-new-record-badge">
+          ⭐ Nuevo récord personal en este navegador
+        </p>
+      )}
+
+      {achievements.length > 0 && (
+        <div className="career-achievements-list" aria-label="Logros desbloqueados">
+          {achievements.map((achievement) => (
+            <article key={achievement.id}>
+              <strong>{achievement.label}</strong>
+              <small>{achievement.description}</small>
+            </article>
+          ))}
+        </div>
+      )}
+
+      <pre className="career-share-preview">{shareText}</pre>
+
+      <button type="button" className="primary-home-button" onClick={handleShareCareer}>
+        Compartir mi carrera
+      </button>
+    </section>
+  );
+}
+
 function getEuropeanLabel(result: CareerSeasonResult): string {
   if (result.europeanQualification === "champions") return "Champions League";
   if (result.europeanQualification === "europa_league") return "Europa League";
@@ -150,6 +214,16 @@ export function CareerSeasonOutcome({
   const survived = objectiveResult.survives;
   const xiAverage = getSelectedPlayersAverage(selectedPlayers);
   const finalTrophies = getFinalCareerTrophyCounts(trophyCounts, seasonResult, europeanTournament);
+  const localRankingEntries = !survived && rankingEntry ? loadCareerLocalRanking() : [];
+  const rankingPosition = getCareerRankingPosition(rankingEntry, localRankingEntries);
+  const newPersonalRecord = isNewCareerPersonalRecord(rankingEntry, localRankingEntries);
+  const achievements = getCareerAchievements({
+    completedSeasons,
+    trophyCounts: finalTrophies,
+    qualifiedForEurope: objectiveResult.qualifiedForEurope,
+    rankingPosition,
+  });
+  const careerShareText = rankingEntry ? buildCareerShareText(rankingEntry) : undefined;
 
   return (
     <main className={`career-outcome-screen ${survived ? "career-outcome-success" : "career-outcome-game-over"}`}>
@@ -217,6 +291,15 @@ export function CareerSeasonOutcome({
                 variant="career"
               />
             </section>
+
+            {careerShareText && (
+              <CareerShareRetentionPanel
+                shareText={careerShareText}
+                achievements={achievements}
+                rankingPosition={rankingPosition}
+                isNewRecord={newPersonalRecord}
+              />
+            )}
           </>
         )}
 
