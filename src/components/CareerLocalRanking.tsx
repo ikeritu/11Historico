@@ -88,7 +88,7 @@ export function CareerLocalRanking({
                       <span>{entry.palmaresScore} pts</span>
                       <small>{getTrophySummary(entry)}</small>
                     </td>
-                    <td data-label="Europa"><span>{formatEuropeanTrophyBreakdownLabel(entry.trophyCounts)}</span></td>
+                    <td data-label="Europa" className="career-ranking-europa-cell"><span>{formatEuropeanTrophyBreakdownLabel(entry.trophyCounts)}</span></td>
                     <td data-label="Mejor Liga">{entry.bestLeaguePosition}.º</td>
                     <td data-label="Fecha">{formatRankingDate(entry.createdAt)}</td>
                   </tr>

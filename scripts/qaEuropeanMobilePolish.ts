@@ -40,12 +40,12 @@ function testRankingEuropaColumnWrappedInSpan(): void {
 
   assertIncludes(
     local,
-    '<td data-label="Europa"><span>{formatEuropeanTrophyBreakdownLabel(entry.trophyCounts)}</span></td>',
+    "<span>{formatEuropeanTrophyBreakdownLabel(entry.trophyCounts)}</span>",
     "La celda Europa del ranking local debe envolver el texto en <span> para heredar el alineado móvil.",
   );
   assertIncludes(
     global,
-    '<td data-label="Europa"><span>{formatEuropeanTrophyBreakdownLabel(entry.trophyCounts)}</span></td>',
+    "<span>{formatEuropeanTrophyBreakdownLabel(entry.trophyCounts)}</span>",
     "La celda Europa del ranking global debe envolver el texto en <span> para heredar el alineado móvil.",
   );
   logOk("La columna Europa de ambos rankings envuelve su texto en <span> (alineado móvil consistente)");

@@ -119,7 +119,7 @@ export function CareerGlobalRanking({ onNewCareer, onViewLocalRanking, onBack }:
                     </td>
                     <td data-label="Puntos"><strong>{entry.arcadeScore}</strong></td>
                     <td data-label="Temp.">{entry.completedSeasons}</td>
-                    <td data-label="Europa"><span>{formatEuropeanTrophyBreakdownLabel(entry.trophyCounts)}</span></td>
+                    <td data-label="Europa" className="career-global-ranking-europa-cell"><span>{formatEuropeanTrophyBreakdownLabel(entry.trophyCounts)}</span></td>
                     <td data-label="Mejor Liga">{entry.bestLeaguePosition}.º</td>
                     <td data-label="Fecha">{formatRankingDate(entry.submittedAt)}</td>
                   </tr>
