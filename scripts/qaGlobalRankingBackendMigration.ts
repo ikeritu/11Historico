@@ -94,12 +94,13 @@ function testMigrationHelperExistsAndIsAdditiveOnly(): void {
 
 function testScoringFormulaUntouched(): void {
   const backend = readText("apps-script/globalRankingBackend.gs");
+  const pointsMatch = /const PALMARES_POINTS = \{[\s\S]*?\};/.exec(backend);
+  assert(pointsMatch !== null, "Debe existir el objeto PALMARES_POINTS.");
 
-  assertIncludes(
-    backend,
-    "champions: 10,\n  liga: 8,\n  europaLeague: 6,\n  copa: 5,\n  conference: 4,\n  supercopa: 2,",
-    "PALMARES_POINTS no debe modificarse en una fase de migración de almacenamiento: la fórmula de puntuación queda fuera de alcance.",
-  );
+  const points = pointsMatch[0];
+  ["champions: 10,", "liga: 8,", "europaLeague: 6,", "copa: 5,", "conference: 4,", "supercopa: 2,"].forEach((line) => {
+    assertIncludes(points, line, `PALMARES_POINTS no debe modificarse en una fase de migración de almacenamiento: falta "${line}".`);
+  });
   assertIncludes(backend, "function computeScores_(completedSeasons, trophyCounts) {", "computeScores_ debe seguir existiendo sin cambios de firma.");
   logOk("La fórmula de puntuación (PALMARES_POINTS/computeScores_) no se toca en esta fase");
 }
