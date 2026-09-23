@@ -20,6 +20,24 @@
   border-color: rgba(255, 255, 255, 0.12);
 }
 
+/* Mismos tonos por competición que .european-match-event-card-champions/
+   -europa/-conference (EuropeanMatchEvent.css): azul Champions, naranja
+   Europa League, verde Conference. Mantener sincronizados si cambian ahí. */
+.european-qualification-card-champions {
+  background: radial-gradient(circle at top left, rgba(84, 140, 255, 0.22), transparent 60%), rgba(255, 255, 255, 0.09);
+  border-color: rgba(128, 190, 255, 0.55);
+}
+
+.european-qualification-card-europa {
+  background: radial-gradient(circle at top left, rgba(255, 126, 55, 0.18), transparent 60%), rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 185, 105, 0.48);
+}
+
+.european-qualification-card-conference {
+  background: radial-gradient(circle at top left, rgba(47, 205, 125, 0.18), transparent 60%), rgba(255, 255, 255, 0.09);
+  border-color: rgba(95, 225, 160, 0.48);
+}
+
 .european-qualification-eyebrow {
   margin: 0;
   color: #f2d2d7;

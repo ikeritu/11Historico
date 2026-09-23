@@ -22,6 +22,13 @@ function getReasonLabel(result: EuropeanQualificationResult): string {
   return "";
 }
 
+function getCompetitionModifierClass(result: EuropeanQualificationResult): string {
+  if (!result.qualified || !result.competition) return "";
+  if (result.competition === "champions_league") return " european-qualification-card-champions";
+  if (result.competition === "europa_league") return " european-qualification-card-europa";
+  return " european-qualification-card-conference";
+}
+
 function getNarrative(result: EuropeanQualificationResult): string {
   if (result.competition === "champions_league") {
     return "El Athletic jugará la Champions League la próxima temporada.";
@@ -42,7 +49,7 @@ export function EuropeanQualificationCard({ result }: EuropeanQualificationCardP
     <section
       className={`european-qualification-card ${
         result.qualified ? "european-qualification-card-qualified" : "european-qualification-card-none"
-      }`}
+      }${getCompetitionModifierClass(result)}`}
       aria-label="Clasificación europea"
     >
       <p className="european-qualification-eyebrow">

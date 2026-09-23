@@ -97,6 +97,13 @@
   font-weight: 650;
 }
 
+/* Mismo azul "identidad europea" que EuropeanMatchEvent/EuropeanProgressPanel
+   (#cfe0ff), para que los títulos continentales se distingan de un vistazo
+   de Liga/Copa/Supercopa en la misma fila. */
+.career-global-ranking-europa-cell span {
+  color: #cfe0ff;
+}
+
 .career-global-ranking-table tr:last-child td {
   border-bottom: 0;
 }

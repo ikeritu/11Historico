@@ -66,6 +66,12 @@ function getNextMatch(tournament: EuropeanTournamentState): EuropeanTournamentMa
   return tournament.matches.find((match) => match.status === "scheduled");
 }
 
+function getCompetitionModifierClass(tournament: EuropeanTournamentState): string {
+  if (tournament.competition === "champions_league") return " european-progress-panel-champions";
+  if (tournament.competition === "europa_league") return " european-progress-panel-europa";
+  return " european-progress-panel-conference";
+}
+
 function getPhaseObjectiveText(tournament: EuropeanTournamentState): string {
   if (tournament.eliminated) return "Objetivo cerrado: el Athletic está eliminado de Europa.";
   if (tournament.completed && tournament.champion) {
@@ -84,7 +90,7 @@ export function EuropeanProgressPanel({ tournament, currentMatchId }: EuropeanPr
   const nextMatch = getNextMatch(tournament);
 
   return (
-    <section className="european-progress-panel" aria-label="Progreso del torneo europeo">
+    <section className={`european-progress-panel${getCompetitionModifierClass(tournament)}`} aria-label="Progreso del torneo europeo">
       <div className="european-progress-header">
         <div>
           <p className="european-progress-eyebrow">Panel europeo</p>
