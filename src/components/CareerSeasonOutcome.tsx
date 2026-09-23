@@ -1,7 +1,8 @@
+import { useState } from "react";
 import type { FinalGameSummary, SelectedPlayer, TeamRating } from "../types/game";
 import type { CareerAchievement } from "../career/shareRetention";
 import type { CareerLocalRankingEntry, CareerObjectiveResult, CareerSeasonResult, CareerTrophyCounts } from "../types/career";
-import type { EuropeanQualificationResult, EuropeanTournamentState } from "../europe/europeanTypes";
+import type { EuropeanCareerState, EuropeanQualificationResult, EuropeanTournamentState } from "../europe/europeanTypes";
 import { calculateCareerArcadeScore, getFinalCareerTrophyCounts } from "../career/careerRanking";
 import {
   buildCareerShareText,
@@ -32,6 +33,7 @@ interface CareerSeasonOutcomeProps {
   completedSeasons?: number;
   trophyCounts?: CareerTrophyCounts;
   europeanQualification?: EuropeanQualificationResult;
+  europeanCareerState?: EuropeanCareerState;
   /** Torneo europeo de la temporada que acaba de cerrarse (para integrar un título pendiente en el palmarés mostrado aquí). */
   europeanTournament?: EuropeanTournamentState | null;
 }
@@ -140,14 +142,14 @@ function CareerShareRetentionPanel({
   rankingPosition?: number;
   isNewRecord: boolean;
 }) {
-  function handleShareCareer() {
-    if (typeof navigator !== "undefined" && navigator.clipboard) {
-      void navigator.clipboard.writeText(shareText);
-      return;
-    }
-
-    if (typeof window !== "undefined") {
-      window.alert(shareText);
+  const [shareStatus, setShareStatus] = useState("");
+  async function handleShareCareer() {
+    try {
+      if (!navigator.clipboard?.writeText) throw new Error("Clipboard unavailable");
+      await navigator.clipboard.writeText(shareText);
+      setShareStatus("Texto copiado. Ya puedes compartirlo.");
+    } catch {
+      setShareStatus("No se pudo copiar automáticamente. Selecciona y copia el texto de arriba.");
     }
   }
 
@@ -178,11 +180,12 @@ function CareerShareRetentionPanel({
         </div>
       )}
 
-      <pre className="career-share-preview">{shareText}</pre>
+      <textarea className="career-share-preview" aria-label="Texto para compartir" readOnly value={shareText} rows={9} />
 
       <button type="button" className="primary-home-button" onClick={handleShareCareer}>
         Compartir mi carrera
       </button>
+      <p role="status" aria-live="polite">{shareStatus}</p>
     </section>
   );
 }
@@ -209,6 +212,7 @@ export function CareerSeasonOutcome({
   completedSeasons = 0,
   trophyCounts,
   europeanQualification,
+  europeanCareerState,
   europeanTournament,
 }: CareerSeasonOutcomeProps) {
   const survived = objectiveResult.survives;
@@ -220,7 +224,8 @@ export function CareerSeasonOutcome({
   const achievements = getCareerAchievements({
     completedSeasons,
     trophyCounts: finalTrophies,
-    qualifiedForEurope: objectiveResult.qualifiedForEurope,
+    qualifiedForEurope: Boolean(europeanCareerState?.totalQualifications) || objectiveResult.qualifiedForEurope,
+    reachedEuropeanFinal: Boolean(europeanTournament?.matches.some((match) => match.phase === "final" && match.status === "played")),
     rankingPosition,
   });
   const careerShareText = rankingEntry ? buildCareerShareText(rankingEntry) : undefined;
