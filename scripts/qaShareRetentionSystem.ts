@@ -96,10 +96,19 @@ function testAchievementsAreUniqueAndScoped(): void {
   const ids = achievements.map((achievement) => achievement.id);
   assert(new Set(ids).size === ids.length, "achievements should not duplicate ids");
   assert(ids.includes("first_european_qualification"), "missing qualification achievement");
+  assert(ids.includes("first_european_final"), "missing final achievement for champion");
   assert(ids.includes("first_european_title"), "missing first European title achievement");
   assert(ids.includes("champions_winner"), "missing Champions achievement");
   assert(ids.includes("five_seasons_survivor"), "missing five seasons achievement");
   assert(ids.includes("local_top_10"), "missing Top 10 achievement");
+}
+
+function testEuropeanMilestones(): void {
+  const priorQualification = getCareerAchievements({ completedSeasons: 2, trophyCounts: emptyTrophies, qualifiedForEurope: true, reachedEuropeanFinal: false });
+  assert(priorQualification.some((item) => item.id === "first_european_qualification"), "historical qualification should be recognized");
+  const finalOnly = getCareerAchievements({ completedSeasons: 2, trophyCounts: emptyTrophies, qualifiedForEurope: false, reachedEuropeanFinal: true });
+  assert(finalOnly.some((item) => item.id === "first_european_final"), "played final should be recognized");
+  assert(!finalOnly.some((item) => item.id === "first_european_title"), "final without title should not produce title");
 }
 
 function testPersonalRecordUsesSortedRanking(): void {
@@ -110,6 +119,9 @@ function testPersonalRecordUsesSortedRanking(): void {
   assert(getCareerRankingPosition(entry, entries) === 1, "new entry should be #1");
   assert(isNewCareerPersonalRecord(entry, entries), "new entry should be personal record");
   assert(!isNewCareerPersonalRecord(older, entries), "older lower entry should not be personal record");
+  assert(!isNewCareerPersonalRecord(buildEntry({ id: "tied", arcadeScore: 100, completedSeasons: 7 }), [entry, buildEntry({ id: "tied", arcadeScore: 100, completedSeasons: 7 })]), "tie must not count as new score record");
+  assert(!isNewCareerPersonalRecord(entry, [older]), "unsaved entry must not count as record");
+  assert(isNewCareerPersonalRecord(entry, [entry]), "first saved entry is a record");
 }
 
 function testUiIntegrationExists(): void {
@@ -120,6 +132,9 @@ function testUiIntegrationExists(): void {
   assertIncludes(outcome, "CareerShareRetentionPanel", "career outcome panel");
   assertIncludes(outcome, "buildCareerShareText", "share helper integration");
   assertIncludes(outcome, "Nuevo récord personal", "record copy");
+  assertIncludes(outcome, "europeanCareerState?.totalQualifications", "historical Europe integration");
+  assertIncludes(outcome, "role=\"status\"", "share feedback");
+  assertIncludes(outcome, "readOnly value={shareText}", "manual copy fallback");
   assertIncludes(css, ".career-share-retention-card", "share retention styles");
   assertIncludes(css, ".career-achievements-list", "achievement styles");
 }
@@ -145,6 +160,7 @@ function run(): void {
   testShareTextDoesNotInventEurope();
   testTrophyFormatting();
   testAchievementsAreUniqueAndScoped();
+  testEuropeanMilestones();
   testPersonalRecordUsesSortedRanking();
   testUiIntegrationExists();
   testScriptsWorkflowAndDocs();
