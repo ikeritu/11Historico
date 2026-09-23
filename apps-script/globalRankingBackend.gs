@@ -3,6 +3,14 @@
  * (hardening pass: puntuación recalculada en servidor, tope de entradas,
  * columnas a prueba de auto-conversión de Sheets — ver notas junto a cada cambio)
  *
+ * v0.24.5b — Backend Ranking Migration: añade columnas estructuradas por
+ * competición europea/nacional (al final de HEADERS, sin tocar las
+ * columnas existentes) para poder filtrar/ordenar directamente en Sheets
+ * sin parsear el JSON de trophyCounts. No cambia el formato que recibe o
+ * devuelve el cliente: trophyCounts sigue viajando igual que siempre: esto
+ * es solo una vista adicional en la hoja. Ver migrateExistingTrophyColumns_
+ * para rellenar filas ya existentes.
+ *
  * Deploy as Web app:
  * - Execute as: Me
  * - Who has access: Anyone
@@ -50,6 +58,16 @@ const HEADERS = [
   'createdAt',
   'submittedAt',
   'serverReceivedAt',
+  // v0.24.5b: desglose de trophyCounts en columnas propias, añadidas al
+  // final para no desplazar los índices ya usados por TEXT_COLUMNS ni por
+  // ningún cliente existente. Son solo para consulta/orden en Sheets: la
+  // fuente de verdad sigue siendo la columna trophyCounts (JSON).
+  'championsTitles',
+  'ligaTitles',
+  'europaLeagueTitles',
+  'copaTitles',
+  'conferenceTitles',
+  'supercopaTitles',
 ];
 
 function doGet(event) {
@@ -277,6 +295,27 @@ function migrateExistingColumnFormats_() {
   });
 }
 
+/**
+ * Migración de un solo uso (v0.24.5b): rellena las columnas estructuradas
+ * de títulos (championsTitles...supercopaTitles) para las filas ya
+ * existentes, leyendo su columna trophyCounts (JSON) tal cual. No toca
+ * trophyCounts ni ninguna otra columna: es puramente aditiva. Ejecutar una
+ * vez a mano desde el editor de Apps Script tras desplegar esta versión.
+ */
+function migrateExistingTrophyColumns_() {
+  const sheet = getRankingSheet_();
+  const lastRow = sheet.getLastRow();
+
+  if (lastRow < 2) return;
+
+  const trophyColumnIndex = HEADERS.indexOf('trophyCounts') + 1;
+  const firstNewColumn = HEADERS.indexOf('championsTitles') + 1;
+  const trophyCells = sheet.getRange(2, trophyColumnIndex, lastRow - 1).getValues();
+  const rows = trophyCells.map((row) => trophyCountsToColumns_(parseTrophyCountsCell_(row[0])));
+
+  sheet.getRange(2, firstNewColumn, rows.length, rows[0].length).setValues(rows);
+}
+
 function readEntries_(sheet) {
   const lastRow = sheet.getLastRow();
 
@@ -319,6 +358,20 @@ function toRow_(entry) {
     entry.createdAt,
     entry.submittedAt,
     entry.serverReceivedAt,
+  ].concat(trophyCountsToColumns_(entry.trophyCounts));
+}
+
+// v0.24.5b: mismo orden que las columnas añadidas al final de HEADERS.
+function trophyCountsToColumns_(trophyCounts) {
+  var counts = normalizeTrophyCounts_(trophyCounts);
+
+  return [
+    counts.champions,
+    counts.liga,
+    counts.europaLeague,
+    counts.copa,
+    counts.conference,
+    counts.supercopa,
   ];
 }
 
