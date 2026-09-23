@@ -30,7 +30,7 @@ No inventa logros europeos si el palmarés no contiene Champions, Europa League 
 
 Incluye:
 
-- Botón `Compartir mi carrera`.
+- Botón `Compartir mi carrera` con confirmación de copia y texto seleccionable si falla el portapapeles.
 - Previsualización del texto que se copiará.
 - Posición en ranking local si está disponible.
 - Aviso de `Nuevo récord personal` si la carrera queda primera en el ranking local.
@@ -43,6 +43,7 @@ Los logros se calculan de forma pura y no se persisten como sistema independient
 Logros iniciales:
 
 - Primera clasificación europea.
+- Primera final europea.
 - Primer título europeo.
 - Campeón de Champions.
 - Campeón de Europa League.
@@ -50,11 +51,11 @@ Logros iniciales:
 - Sobrevive 5 temporadas.
 - Top 10 local.
 
-Los logros se deduplican por `id`.
+La clasificación europea se consulta en el historial de la carrera; una final europea se reconoce si consta disputada en el torneo actual o si existe un título europeo. Las finales antiguas sin título no se conservan en el historial actual. Los logros se deduplican por `id`.
 
 ### Récord personal
 
-El nuevo récord personal se detecta usando el ranking local ya guardado. Si la entrada recién generada ocupa la primera posición del ranking local ordenado, se muestra el aviso.
+El nuevo récord personal se detecta usando el ranking local ya guardado. La entrada debe estar guardada, ocupar la primera posición y superar estrictamente los puntos de todas las carreras anteriores. Un empate no activa el aviso.
 
 ## QA añadida
 
