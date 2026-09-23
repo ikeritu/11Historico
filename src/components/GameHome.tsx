@@ -45,7 +45,7 @@ const DIFFICULTY_OPTIONS: Array<{
 
 const FEEDBACK_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfSHQS1PVKoWNl8u7mTrYO2Fchuj-2UC82Ap4AVktUnBrBZ8A/viewform?usp=publish-editor";
 const PUBLIC_GAME_URL = "https://ikeritu.github.io/11Historico/";
-const SHARE_TEXT = "Prueba Futbol11: crea tu once histórico del Athletic y simula Liga + Copa.";
+const SHARE_TEXT = "Construye tu Athletic histórico, sobrevive temporada a temporada y compite en Liga, Copa y Europa.";
 
 export function GameHome({
   hasSavedGame,
@@ -60,6 +60,7 @@ export function GameHome({
   onViewGlobalRanking,
 }: GameHomeProps) {
   const [shareStatus, setShareStatus] = useState("");
+  const [showHowToPlay, setShowHowToPlay] = useState(false);
 
   const selectedDifficulty = DIFFICULTY_OPTIONS.find((option) => option.id === difficulty);
 
@@ -69,7 +70,7 @@ export function GameHome({
     try {
       if (navigator.share) {
         await navigator.share({
-          title: "Futbol11 — Once histórico Zurigorri",
+          title: "Once histórico Zurigorri",
           text: SHARE_TEXT,
           url: PUBLIC_GAME_URL,
         });
@@ -84,42 +85,108 @@ export function GameHome({
   };
 
   return (
-    <main className="game-home game-home--compact">
-      <section className="game-home-hero" aria-label="Portada Futbol11">
+    <main className="game-home game-home--public-release">
+      <section className="game-home-hero" aria-label="Portada Once histórico Zurigorri">
+        <div className="game-home-top-row">
+          <div className="game-home-badge" aria-label="Versión actual">
+            <span aria-hidden="true">⚪</span>
+            <span aria-hidden="true">🔴</span>
+            <span>{APP_VERSION}</span>
+          </div>
+
+          <a
+            className="game-home-help-link"
+            href={FEEDBACK_URL}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Enviar feedback de Once histórico Zurigorri"
+          >
+            ?
+          </a>
+        </div>
+
         <div className="game-home-main-grid">
           <div className="game-home-intro">
-            <div className="game-home-top-row">
-              <div className="game-home-badge" aria-label="Versión actual">
-                <span aria-hidden="true">⚪</span>
-                <span aria-hidden="true">🔴</span>
-                <span>{APP_VERSION} · beta</span>
-              </div>
-
-              <a
-                className="game-home-help-link"
-                href={FEEDBACK_URL}
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Enviar feedback de Futbol11"
-              >
-                ?
-              </a>
-            </div>
-
-            <h1>Once histórico Zurigorri</h1>
+            <p className="game-home-kicker">Simulador de carrera · Athletic histórico</p>
+            <h1>Construye tu Athletic histórico y sobrevive temporada a temporada</h1>
 
             <p className="game-home-subtitle">
-              Crea tu once histórico del Athletic, mezcla leyendas de distintas épocas y compite en Liga, Copa y modo carrera.
+              Elige jugadores de distintas épocas, compite en Liga, Copa y Europa,
+              gana títulos, acumula palmarés y pelea por entrar en el ranking.
             </p>
 
-            <div className="game-home-feature-chips" aria-label="Competiciones disponibles">
-              <span>🏆 LaLiga 25/26</span>
-              <span>🏵️ Copa del Rey</span>
-              <span>🔥 Modo carrera</span>
+            <div className="game-home-public-pillars" aria-label="Resumen del juego">
+              <article>
+                <strong>1</strong>
+                <span>Elige jugadores históricos</span>
+                <p>Construye un once único con leyendas y temporadas reales del Athletic.</p>
+              </article>
+              <article>
+                <strong>2</strong>
+                <span>Compite en Liga, Copa y Europa</span>
+                <p>Sobrevive a cada temporada y juega noches europeas si te clasificas.</p>
+              </article>
+              <article>
+                <strong>3</strong>
+                <span>Gana títulos y entra al ranking</span>
+                <p>El palmarés suma puntos y convierte cada carrera en una historia distinta.</p>
+              </article>
+            </div>
+
+            <div className="game-home-feature-chips" aria-label="Funciones principales">
+              <span>🏆 Liga, Copa y Supercopa</span>
+              <span>🌍 Champions · Europa League · Conference</span>
+              <span>🎡 Ruleta de la Suerte</span>
+              <span>📈 Ranking local/global</span>
             </div>
           </div>
 
-          <div className="game-home-control-panel">
+          <div className="game-home-control-panel" aria-label="Panel principal">
+            <div className="game-home-actions" aria-label="Acciones principales">
+              <button type="button" className="primary-home-button" onClick={onCareerPreview}>
+                <span aria-hidden="true">▷</span>
+                <span>Jugar carrera</span>
+              </button>
+
+              <button
+                type="button"
+                className="secondary-home-button"
+                onClick={() => setShowHowToPlay((current) => !current)}
+                aria-expanded={showHowToPlay}
+              >
+                Cómo funciona
+              </button>
+
+              <button type="button" className="secondary-home-button" onClick={onViewGlobalRanking}>
+                Ver ranking
+              </button>
+
+              <div className="game-home-secondary-actions">
+                <button type="button" className="secondary-home-button" onClick={onNewGame}>
+                  Partida rápida
+                </button>
+
+                <button
+                  type="button"
+                  className="secondary-home-button"
+                  onClick={onContinueGame}
+                  disabled={!hasSavedGame}
+                >
+                  Continuar
+                </button>
+
+                <button type="button" className="secondary-home-button" onClick={onViewLocalRanking}>
+                  Ranking local
+                </button>
+              </div>
+
+              <button type="button" className="share-home-button" onClick={handleShareGame}>
+                Compartir juego
+              </button>
+
+              {shareStatus && <p className="share-home-message" role="status">{shareStatus}</p>}
+            </div>
+
             <section className="game-home-difficulty-card" aria-label="Seleccionar dificultad">
               <div className="game-home-difficulty-header">
                 <strong>Dificultad</strong>
@@ -141,14 +208,11 @@ export function GameHome({
                 ))}
               </div>
 
-              {selectedDifficulty && (
-                <p className="game-home-difficulty-copy">{selectedDifficulty.description}</p>
-              )}
+              {selectedDifficulty && <p className="game-home-difficulty-copy">{selectedDifficulty.description}</p>}
 
               {difficulty === "normal" && (
                 <details className="game-home-season-range-card">
                   <summary>Rango de temporadas del modo fácil</summary>
-
                   <div className="game-home-season-range-options">
                     {EASY_MODE_SEASON_RANGES.map((range) => (
                       <button
@@ -166,75 +230,25 @@ export function GameHome({
                 </details>
               )}
             </section>
-
-            <div className="game-home-actions" aria-label="Acciones principales">
-              <button type="button" className="primary-home-button" onClick={onNewGame}>
-                <span aria-hidden="true">▷</span>
-                <span>Nueva partida</span>
-              </button>
-
-              <div className="game-home-secondary-actions">
-                <button
-                  type="button"
-                  className="secondary-home-button"
-                  onClick={onContinueGame}
-                  disabled={!hasSavedGame}
-                >
-                  Continuar
-                </button>
-
-                <button
-                  type="button"
-                  className="career-home-button"
-                  onClick={onCareerPreview}
-                >
-                  Modo carrera
-                </button>
-
-                <button
-                  type="button"
-                  className="secondary-home-button"
-                  onClick={onViewLocalRanking}
-                >
-                  Ranking local
-                </button>
-
-                <button
-                  type="button"
-                  className="secondary-home-button"
-                  onClick={onViewGlobalRanking}
-                >
-                  Ranking global
-                </button>
-              </div>
-
-              <button
-                type="button"
-                className="share-home-button"
-                onClick={handleShareGame}
-              >
-                <span aria-hidden="true">⌘</span>
-                <span>Compartir juego</span>
-              </button>
-            </div>
-
-            {shareStatus && (
-              <p className="share-home-message" role="status">{shareStatus}</p>
-            )}
           </div>
         </div>
 
-        <details className="how-to-play-card">
-          <summary>¿Cómo se juega?</summary>
+        {showHowToPlay && (
+          <section className="how-to-play-card" aria-label="Cómo funciona Once histórico Zurigorri">
+            <div className="how-to-play-header">
+              <h2>Cómo funciona</h2>
+              <p>Una carrera se gana sobreviviendo objetivos, acumulando títulos y mejorando tu ranking.</p>
+            </div>
 
-          <div className="how-to-play-steps">
-            <article><strong>1</strong><span>Elige formación</span><p>Decide si quieres atacar, controlar o defender mejor.</p></article>
-            <article><strong>2</strong><span>Salen temporadas aleatorias</span><p>En Modo Fácil puedes limitar el draft a una época concreta del Athletic.</p></article>
-            <article><strong>3</strong><span>Elige jugadores reales</span><p>Cada jugador solo puede usarse una vez y debe jugar en posición válida.</p></article>
-            <article><strong>4</strong><span>Elige entrenador</span><p>El técnico aporta ataque, defensa, gestión y mentalidad.</p></article>
-            <article><strong>5</strong><span>Simula temporada</span><p>Tu Athletic histórico juega LaLiga 25/26 y una Copa del Rey con factor sorpresa.</p></article>
-          </div>
-        </details>
+            <div className="how-to-play-steps">
+              <article><strong>Objetivo</strong><p>Clasifícate para Europa o gana la Copa del Rey. Ese es el mínimo para seguir vivo.</p></article>
+              <article><strong>Game Over</strong><p>Si fallas el objetivo o desciendes, la carrera termina y se guarda tu resultado.</p></article>
+              <article><strong>Supervivencia</strong><p>Si sobrevives, avanzas otra temporada con recompensas, prestigio y más presión.</p></article>
+              <article><strong>Palmarés</strong><p>Liga, Copa, Supercopa y títulos europeos suman puntos para el ranking.</p></article>
+              <article><strong>Europa</strong><p>Champions, Europa League y Conference tienen calendario, semifinal, final y títulos propios.</p></article>
+            </div>
+          </section>
+        )}
 
         <SupportButton variant="home" />
 
@@ -242,26 +256,6 @@ export function GameHome({
           <span>{APP_VERSION}: {APP_VERSION_NAME}</span>
           <a href={FEEDBACK_URL} target="_blank" rel="noreferrer">Feedback ↗</a>
         </footer>
-      </section>
-
-      <section className="game-home-rules" aria-label="Reglas y objetivo">
-        <div>
-          <h3>Reglas clave</h3>
-          <ul>
-            <li>No puedes repetir jugador.</li>
-            <li>No puedes poner jugadores fuera de posición.</li>
-            <li>Cada formación cambia el estilo del equipo.</li>
-            <li>El Athletic histórico sustituye al Athletic real 25/26.</li>
-          </ul>
-        </div>
-
-        <div>
-          <h3>Objetivo</h3>
-          <p>
-            Crear un once capaz de pelear la Liga, sobrevivir a la Copa y dejar una
-            temporada legendaria en San Mamés.
-          </p>
-        </div>
       </section>
     </main>
   );
