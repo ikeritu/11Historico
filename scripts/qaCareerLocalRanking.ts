@@ -231,6 +231,16 @@ function testClearRanking(): void {
   assert(!memoryStorage.has(RANKING_STORAGE_KEY), "Borrar ranking debe eliminar su clave de localStorage.");
 }
 
+function testLegacyRankingTrophies(): void {
+  memoryStorage.clear();
+  const legacy = createRankingEntry({ id: "legacy" }) as Partial<CareerLocalRankingEntry>;
+  delete legacy.trophyCounts;
+  memoryStorage.set(RANKING_STORAGE_KEY, JSON.stringify([legacy]));
+  const [loaded] = loadCareerLocalRanking();
+  assert(loaded?.trophyCounts.champions === 0 && loaded.trophyCounts.liga === 0, "Entrada antigua sin palmarés debe cargar con contadores seguros.");
+  assert(loaded.trophyCounts.europaLeague === 0 && loaded.trophyCounts.conference === 0, "Los títulos europeos ausentes deben valer cero.");
+}
+
 function testRankingDoesNotTouchSavedGame(): void {
   memoryStorage.clear();
   memoryStorage.set(SAVED_GAME_STORAGE_KEY, JSON.stringify({ partida: "guardada" }));
@@ -245,6 +255,7 @@ function testRankingDoesNotTouchSavedGame(): void {
 }
 
 const tests = [
+  ["ranking antiguo sin palmarés", testLegacyRankingTrophies],
   ["Game Over suma títulos vigentes", testFinalTrophiesIncludeGameOverSeason],
   ["Fórmula de puntos arcade", testArcadeScoreFormula],
   ["Entrada guarda campos requeridos", testBuildEntryStoresRequiredFields],

@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.24.9a — Share & Retention Hotfix
+
+- Alinea la versión visible y las entradas nuevas del ranking con la fase publicada.
+- Avisa si el Game Over no se pudo guardar en el ranking local.
+- Normaliza entradas antiguas del ranking sin todos los contadores de títulos.
+
 ## v0.24.7 — Europa Career Release Stabilization
 
 - Cierra el arco completo de "Europa Career" (v0.24.0a–v0.24.6b) como versión pública estable.
