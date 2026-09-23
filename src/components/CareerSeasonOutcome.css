@@ -252,6 +252,13 @@
   font-weight: 950;
 }
 
+.career-save-warning {
+  padding: 10px 12px;
+  border-radius: 16px;
+  color: #fff;
+  background: #8c1530;
+}
+
 .career-achievements-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));

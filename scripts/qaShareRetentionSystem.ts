@@ -135,6 +135,8 @@ function testUiIntegrationExists(): void {
   assertIncludes(outcome, "europeanCareerState?.totalQualifications", "historical Europe integration");
   assertIncludes(outcome, "role=\"status\"", "share feedback");
   assertIncludes(outcome, "readOnly value={shareText}", "manual copy fallback");
+  assertIncludes(outcome, "rankingSaved={rankingPosition !== undefined}", "ranking persistence warning");
+  assertIncludes(outcome, "Esta carrera no figura en el ranking local", "ranking persistence warning text");
   assertIncludes(css, ".career-share-retention-card", "share retention styles");
   assertIncludes(css, ".career-achievements-list", "achievement styles");
 }

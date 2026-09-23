@@ -136,11 +136,13 @@ function CareerShareRetentionPanel({
   achievements,
   rankingPosition,
   isNewRecord,
+  rankingSaved,
 }: {
   shareText: string;
   achievements: CareerAchievement[];
   rankingPosition?: number;
   isNewRecord: boolean;
+  rankingSaved: boolean;
 }) {
   const [shareStatus, setShareStatus] = useState("");
   async function handleShareCareer() {
@@ -166,6 +168,12 @@ function CareerShareRetentionPanel({
       {isNewRecord && (
         <p className="career-new-record-badge">
           ⭐ Nuevo récord personal en este navegador
+        </p>
+      )}
+
+      {!rankingSaved && (
+        <p role="alert" className="career-save-warning">
+          Esta carrera no figura en el ranking local: puede haber fallado el guardado o haber quedado fuera del Top 100. Copia el resultado antes de salir.
         </p>
       )}
 
@@ -303,6 +311,7 @@ export function CareerSeasonOutcome({
                 achievements={achievements}
                 rankingPosition={rankingPosition}
                 isNewRecord={newPersonalRecord}
+                rankingSaved={rankingPosition !== undefined}
               />
             )}
           </>

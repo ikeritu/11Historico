@@ -1,5 +1,5 @@
 import { limitCareerLocalRanking } from "../career/careerRanking";
-import type { CareerLocalRankingEntry } from "../types/career";
+import type { CareerLocalRankingEntry, CareerTrophyCounts } from "../types/career";
 
 const CAREER_LOCAL_RANKING_STORAGE_KEY = "once_historico_zurigorri_career_local_ranking_v1";
 
@@ -25,6 +25,20 @@ function parseCareerLocalRanking(raw: string | null): CareerLocalRankingEntry[] 
       candidate.gameVersion &&
       candidate.createdAt,
     );
+  }).map((entry) => {
+    const trophies = entry.trophyCounts as Partial<CareerTrophyCounts> | undefined;
+    const safeCount = (value: unknown) => typeof value === "number" && Number.isFinite(value) && value >= 0 ? value : 0;
+    return {
+      ...entry,
+      trophyCounts: {
+        liga: safeCount(trophies?.liga),
+        copa: safeCount(trophies?.copa),
+        supercopa: safeCount(trophies?.supercopa),
+        champions: safeCount(trophies?.champions),
+        europaLeague: safeCount(trophies?.europaLeague),
+        conference: safeCount(trophies?.conference),
+      },
+    };
   });
 }
 
