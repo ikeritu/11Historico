@@ -487,13 +487,24 @@ export function LeagueSimulatorView({
         result: simulation.result,
       });
 
+      // finishIfReady no debe quedar como el último operando de un || junto a
+      // simulation.context.state.completed: si la temporada se completa
+      // justo en este partido de la simulación automática, el cortocircuito
+      // del || nunca llegaba a invocarlo, dejando la carrera bloqueada en
+      // "Liga terminada" sin poder avanzar. Se llama aparte, igual que en
+      // handleSimulateFullSeason/handleSimulateNextCupMatch/
+      // handleSimulateFullCupAndFinishSeason (guardado solo por
+      // !wheelOffered, para no disparar el fin de temporada mientras hay una
+      // oferta de ruleta pendiente de resolver).
+      const finished = wheelOffered ? false : finishIfReady(simulation.context);
+
       const shouldStop =
         wheelOffered ||
         !simulation.result ||
         Boolean(simulation.stoppedForCup) ||
         simulation.context.state.completed ||
         Boolean(getPendingCupFixture(simulation.context)) ||
-        finishIfReady(simulation.context);
+        finished;
 
       if (shouldStop) {
         setIsAutoSimulating(false);
