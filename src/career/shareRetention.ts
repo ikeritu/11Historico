@@ -56,12 +56,14 @@ export function getCareerAchievements(params: {
   completedSeasons: number;
   trophyCounts: CareerTrophyCounts;
   qualifiedForEurope: boolean;
+  reachedEuropeanFinal?: boolean;
   rankingPosition?: number;
 }): CareerAchievement[] {
   const achievements: CareerAchievement[] = [];
-  const { completedSeasons, trophyCounts, qualifiedForEurope, rankingPosition } = params;
+  const { completedSeasons, trophyCounts, qualifiedForEurope, reachedEuropeanFinal, rankingPosition } = params;
+  const europeanChampion = trophyCounts.champions > 0 || trophyCounts.europaLeague > 0 || trophyCounts.conference > 0;
 
-  if (qualifiedForEurope) {
+  if (qualifiedForEurope || europeanChampion) {
     achievements.push({
       id: "first_european_qualification",
       label: "Primera clasificación europea",
@@ -69,7 +71,15 @@ export function getCareerAchievements(params: {
     });
   }
 
-  if (trophyCounts.champions > 0 || trophyCounts.europaLeague > 0 || trophyCounts.conference > 0) {
+  if (reachedEuropeanFinal || europeanChampion) {
+    achievements.push({
+      id: "first_european_final",
+      label: "Primera final europea",
+      description: "La carrera alcanzó al menos una final europea.",
+    });
+  }
+
+  if (europeanChampion) {
     achievements.push({
       id: "first_european_title",
       label: "Primer título europeo",
@@ -143,5 +153,7 @@ export function isNewCareerPersonalRecord(
 ): boolean {
   const position = getCareerRankingPosition(entry, entries);
 
-  return position === 1;
+  return position === 1 && entries
+    .filter((candidate) => candidate.id !== entry?.id)
+    .every((candidate) => (entry?.arcadeScore ?? -Infinity) > candidate.arcadeScore);
 }
