@@ -367,11 +367,16 @@
   }
 
   .european-match-event-scoreboard,
-  .european-match-event-knockout-outcomes {
+  .european-match-event-knockout-outcomes,
+  .european-match-event-grid {
     grid-template-columns: 1fr;
   }
 
   .european-match-event-versus {
     min-height: 28px;
+  }
+
+  .european-match-event-actions button {
+    width: 100%;
   }
 }
